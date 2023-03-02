@@ -10,18 +10,10 @@ import {
 } from '@chakra-ui/react'
 import { createRef, useRef, useState } from 'react'
 
-export const SlotAccordion = ({ slot, index, setChosenOption, chosen }: { slot: string[], index: number, setChosenOption: Function, chosen: string | null }) => {
+export const SlotAccordion = ({ slot, index, setChosenOption, chosen , ColorList}: 
+    { slot: string[], index: number, setChosenOption: Function, chosen: string | null, ColorList: string[] }) => {
     console.log(chosen, slot)
-    const ColorList = [
-        "red",
-        "orange",
-        "yellow",
-        "green",
-        "blue",
-        "indigo",
-        "violet",
-        "purple"
-    ]
+
 
     const colorMap = {} as any
     slot.forEach((letter, i) => colorMap[letter] = ColorList[i])
