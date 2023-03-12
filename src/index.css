@@ -14,6 +14,17 @@
   -webkit-text-size-adjust: 100%;
 }
 
+aside{
+position: absolute;
+left:0;
+top:0;
+border: 2px solid black;
+display: flex;
+flex-direction: column;
+align-items:center ;
+width: 150px;
+padding: 5px;
+}
 a {
   font-weight: 500;
   color: #646cff;

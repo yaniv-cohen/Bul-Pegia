@@ -14,6 +14,7 @@ import {
 import OptionsIncrementCard from "./components/OptionsIncrementCard";
 import SlotAccordion from "./components/SlotAccordion";
 import SubmitButton from "./components/SubmitButton";
+import HistoryPanel from "./components/historyPanel";
 
 function App() {
   const letterOptionsConst = [
@@ -35,15 +36,25 @@ function App() {
     "P",
   ];
   const ColorList = [
-    "a",
-    "b",
-    "c",
-    "d",
-    "e",
-    "f",
-    "g",
-    "h",
+    "red",
+    "orange",
+    "yellow",
+    "green",
+    "blue",
+    "purple",
+    "brown",
+    "grey",
   ];
+  // const colorMap:{
+  //   "red": "a",
+  //   "orange":"b",
+  //   "yellow":"c",
+  //   "green":"d",
+  //   "blue":"e",
+  //   "purple":"f",
+  //   "brown":"g",
+  //   "grey":"h",
+  // }
   const min = 3;
   const max = 8;
   const [count, setCount] = useState(0);
@@ -63,16 +74,31 @@ function App() {
   const [availableOptions, setAvailableOptions] = useState(
     new Array(allPossibleOptions).fill(null)
   );
-  const submit = (arr: string[]) => {
+  type Game = {
+    game_id?: string;
+    remainingTurns?: number;
+    turnCount?: number;
+  };
+  const [game, setGame] = useState<Game>({});
+  const submit = async (arr: string[]) => {
     console.log(arr);
     let str = "";
     arr.forEach((color) => {
-      str += color;
+      str += letterOptionsConst[ColorList.indexOf(color)];
     });
     const url = "http://127.0.0.1:5000/game/1/guess/" + str;
-    alert(url);
-    fetch(url);
-    console.log("fetch to" + url);
+    console.log(`fetch to ` + url);
+    const result = await (await fetch(url)).json();
+    console.log(`😯 ${JSON.stringify(result, null, 2)}`);
+    const newLi = document.createElement("li");
+    newLi.innerHTML = JSON.stringify({
+      white: result.result.white,
+      black: result.result.black,
+    });
+    // newLi.key = Math.floor(Math.random() * 1000) + "";
+    setGame({ ...result });
+    const historyList = document.getElementById("resultsList")!;
+    if (typeof result.text === "string") historyList.append(newLi);
   };
   useEffect(() => {
     let options = letterOptionsConst.slice(0, optionsCount);
@@ -93,6 +119,12 @@ function App() {
   return (
     <div className="App">
       <div>
+        <Card>
+          <CardBody>
+            {game["game_id"] ? "Your game is" + game["game_id"] : "Welcome!"}
+          </CardBody>
+        </Card>
+        <HistoryPanel></HistoryPanel>
         <OptionsIncrementCard
           optionsCount={optionsCount}
           slotsCount={slotsCount}
