@@ -12,7 +12,6 @@ import { createRef, useRef, useState } from 'react'
 
 export const SlotAccordion = ({ slot, index, setChosenOption, chosen , ColorList}: 
     { slot: string[], index: number, setChosenOption: Function, chosen: string | null, ColorList: string[] }) => {
-    console.log(chosen, slot)
 
 
     const colorMap = {} as any
