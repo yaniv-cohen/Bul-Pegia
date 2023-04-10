@@ -14,37 +14,12 @@ import {
 import OptionsIncrementCard from "./components/OptionsIncrementCard";
 import SlotAccordion from "./components/SlotAccordion";
 import SubmitButton from "./components/SubmitButton";
-import HistoryPanel from "./components/historyPanel";
+import { History } from "./types/historyTypes";
+import { COLOR_LIST, LETTER_OPTIONS } from "./utils/letters";
+import Circle from "./components/utils/circle";
+import HistoryPanel from "./components/historyPanel/HistoryPanel";
 
 function App() {
-  const letterOptionsConst = [
-    "A",
-    "B",
-    "C",
-    "D",
-    "E",
-    "F",
-    "G",
-    "H",
-    "I",
-    "J",
-    "K",
-    "L",
-    "M",
-    "N",
-    "O",
-    "P",
-  ];
-  const ColorList = [
-    "red",
-    "orange",
-    "yellow",
-    "green",
-    "blue",
-    "purple",
-    "brown",
-    "grey",
-  ];
   // const colorMap:{
   //   "red": "a",
   //   "orange":"b",
@@ -63,9 +38,9 @@ function App() {
   const [chosenOptions, setChosenOptions] = useState(
     new Array(slotsCount).fill(null)
   );
-  const [slots, setSlots] = useState(
+  const [slots, setSlots] = useState<any[]>(
     new Array(slotsCount).fill(
-      new Array(slotsCount).fill(letterOptionsConst.slice(0, optionsCount))
+      new Array(slotsCount).fill(LETTER_OPTIONS.slice(0, optionsCount))
     )
   );
   const [allPossibleOptions, setAllPossibleOptions] = useState(
@@ -80,33 +55,55 @@ function App() {
     turnCount?: number;
   };
   const [game, setGame] = useState<Game>({});
+  const [history, setHistory] = useState<History>({ rounds: [] });
+
   const submit = async (arr: string[]) => {
     console.log(arr);
     let str = "";
     arr.forEach((color) => {
-      str += letterOptionsConst[ColorList.indexOf(color)];
+      str += LETTER_OPTIONS[COLOR_LIST.indexOf(color)];
     });
     const url = "http://127.0.0.1:5000/game/1/guess/" + str;
     console.log(`fetch to ` + url);
     const result = await (await fetch(url)).json();
+    setHistory({
+      rounds: [
+        ...history.rounds,
+        {
+          input: str,
+          output: { black: result.result.black, white: result.result.white },
+        },
+      ],
+    });
     console.log(`😯 ${JSON.stringify(result, null, 2)}`);
     const newLi = document.createElement("li");
+
     newLi.innerHTML = JSON.stringify({
-      white: result.result.white,
-      black: result.result.black,
+      white: parseInt(result.result.white),
+      black: parseInt(result.result.black),
     });
-    // newLi.key = Math.floor(Math.random() * 1000) + "";
     setGame({ ...result });
+    const newEle = <Circle color="green" side={50}></Circle>;
+    new Array(result.result.white).fill(null).forEach(() => {
+      console.log("adding white");
+      // newLi.appendChild(newEle);
+    });
+    // newLi.innerHTML += new Array(result.result.white).fill(null).map(()=><Circle color="green" side={50}></Circle>) ;
+    // newLi.innerHTML += new Array(result.result.black).fill(null).map(()=><Circle color="red" side={50}></Circle>) ;
+    // newLi.key = Math.floor(Math.random() * 1000) + "";
+
+    console.log(game);
+
     const historyList = document.getElementById("resultsList")!;
     if (typeof result.text === "string") historyList.append(newLi);
   };
   useEffect(() => {
-    let options = letterOptionsConst.slice(0, optionsCount);
+    let options = LETTER_OPTIONS.slice(0, optionsCount);
     setSlots(new Array(slotsCount).fill(options));
     setAllPossibleOptions(Math.pow(optionsCount, slotsCount));
   }, [optionsCount]);
   useEffect(() => {
-    let options = letterOptionsConst.slice(0, optionsCount);
+    let options = LETTER_OPTIONS.slice(0, optionsCount);
     setSlots(new Array(slotsCount).fill(options));
     setAllPossibleOptions(Math.pow(optionsCount, slotsCount));
   }, [slotsCount]);
@@ -124,7 +121,7 @@ function App() {
             {game["game_id"] ? "Your game is" + game["game_id"] : "Welcome!"}
           </CardBody>
         </Card>
-        <HistoryPanel></HistoryPanel>
+        <HistoryPanel history={history}></HistoryPanel>
         <OptionsIncrementCard
           optionsCount={optionsCount}
           slotsCount={slotsCount}
@@ -139,7 +136,7 @@ function App() {
               index={index + 1}
               slot={slot}
               setChosenOption={setChosenOption}
-              ColorList={ColorList}
+              ColorList={COLOR_LIST}
             ></SlotAccordion>
           ))}
         </Flex>

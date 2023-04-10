@@ -22,7 +22,7 @@ def guess(id, input_word):
         {
         "input_word": input_word,
         "secret_word": new_game.secret_word,
-        "result": {"white" : str(whites), "black" : str(blacks)},
+        "result": {"white" : whites, "black" : blacks},
         "game_id": new_game.game_id,
         "text" : (
         "<h1>Your result is: <div>BLACKS: " +str(blacks) +", WHITES: "+ str(whites) 
