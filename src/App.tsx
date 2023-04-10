@@ -16,8 +16,10 @@ import SlotAccordion from "./components/SlotAccordion";
 import SubmitButton from "./components/SubmitButton";
 import { History } from "./types/historyTypes";
 import { COLOR_LIST, LETTER_OPTIONS } from "./utils/letters";
-import Circle from "./components/utils/circle";
+import Circle from "./components/utils/Circle";
 import HistoryPanel from "./components/historyPanel/HistoryPanel";
+import { StartHeader } from "./components/StartHeader";
+import { GameHeader } from "./components/GameHeader";
 
 function App() {
   // const colorMap:{
@@ -33,6 +35,7 @@ function App() {
   const min = 3;
   const max = 8;
   const [count, setCount] = useState(0);
+  const [gameStarted, setGameStarted] = useState(false);
   const [optionsCount, setOptionsCount] = useState(6);
   const [slotsCount, setSlotsCount] = useState(4);
   const [chosenOptions, setChosenOptions] = useState(
@@ -115,6 +118,10 @@ function App() {
   };
   return (
     <div className="App">
+      {!gameStarted ?
+        <StartHeader slotsCount={slotsCount} startGameFunction={setGameStarted} />
+        : <GameHeader />
+        }
       <div>
         <Card>
           <CardBody>
@@ -144,9 +151,9 @@ function App() {
       <SubmitButton arr={chosenOptions} func={submit}></SubmitButton>
       <h1>{"Answer " + chosenOptions}</h1>
 
-      <Card>
+      {/* <Card>
         <p>{"Available options: " + allPossibleOptions}</p>
-      </Card>
+      </Card> */}
     </div>
   );
 }

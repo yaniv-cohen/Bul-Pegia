@@ -1,5 +1,5 @@
 import { Round } from "../../types/historyTypes";
-import Circle from "../utils/circle";
+import Circle from "../utils/Circle";
 
 export const Entry = ({ round }: { round: Round }) => {
   return (
