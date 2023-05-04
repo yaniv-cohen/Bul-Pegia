@@ -1,8 +1,5 @@
 import getMarksForGuess
-import logicOnResults
-import itertools
 import getRandomCombination
-import utils
 import uuid
 
 
@@ -48,7 +45,7 @@ class Game:
             [blacks, whites] = getMarksForGuess.getMarksForGuess(chars[:], word[:])
             print(blacks, whites)
             print("Start with "+str(len(currentPossibleResults)) + " possibilities.")
-            currentPossibleResults= logicOnResults.logicOnResluts(blacks, whites, chars, locations, usedLetters, currentPossibleResults)
+            currentPossibleResults= logicOnResluts(blacks, whites, chars, locations, usedLetters, currentPossibleResults)
             print("Now only have  "+str(len(currentPossibleResults)) + " possibilities.")
             return currentPossibleResults
         word = getRandomCombination.getRandomCombination(letters )

@@ -2,7 +2,7 @@ import itertools
 import utils
 import getMarksForGuess
 import getNextPossibleResults
-def logicOnResluts(blacks, whites,chars, locations , usedLetters,currentPossibleResults ):
+def logicOnResults(blacks, whites,chars, locations , usedLetters,currentPossibleResults ):
     print(blacks, whites,chars,  usedLetters)
     if(blacks==4):
         print("you Won!")

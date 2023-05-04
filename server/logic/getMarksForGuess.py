@@ -6,8 +6,6 @@ def getMarksForGuess(word1, word2):
         char=word1[i]
         if(char == word2[i]):
             outputBlack+=1
-            # word2[i]=""
-            # word1[i]=""
         i+=1
     i=0
     outputWhite = 0
