@@ -1,21 +1,21 @@
-import { Result } from "../types/historyTypes"
+import { Result } from "../types/historyTypes";
+import { inArray } from "../utils/inArray";
 
-export const getResult = (A: string[], B: string[]): Result => {
-    let blacks = 0
-    let whites = 0
-    for (let i = 0; i < A.length; i++) {
-        const a = A[i];
-        const b = B[i];
-        if (a === b) {
-            A[i]= ''
-            blacks++
-        }
-        else {
-            let countInB = 0
-            B.forEach(char => { if (a === char &&) countInB++ })
-            whites += countInB
-
-        }
+export const getResult = (word1: string[], word2: string[]): Result => {
+  let outputBlack = 0;
+  // console.log(word1,word2);
+  word1.forEach((char, i) => {
+    if (char === word2[i]) {
+      outputBlack++;
     }
-    return { black: blacks, white: Math.max(0, whites - blacks) }
-}
+  });
+  let outputWhite = 0;
+  const checked = [""];
+  word1.forEach((char) => {
+    if (checked.indexOf(char) === -1) {
+      outputWhite += Math.min(inArray(word1, char), inArray(word2, char));
+      checked.push(char);
+    }
+  });
+  return { black: outputBlack, white: outputWhite - outputBlack };
+};

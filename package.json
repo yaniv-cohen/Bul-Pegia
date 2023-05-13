@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
-    "test": "jest",
+    "test": "jest -- generateOptions.test",
     "build": "tsc && vite build",
     "server": "flask --app ./server/logic/app.py run",
     "preview": "vite preview"

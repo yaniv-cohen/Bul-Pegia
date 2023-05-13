@@ -20,6 +20,9 @@ import Circle from "./components/utils/Circle";
 import HistoryPanel from "./components/historyPanel/HistoryPanel";
 import { StartHeader } from "./components/StartHeader";
 import { GameHeader } from "./components/GameHeader";
+import { ResultsList } from "./components/ResultsList";
+import { getAllPermutations } from "./utils/getAllPermutations";
+import { gernerateOptions } from "./logic/generateOptions";
 
 function App() {
   // const colorMap:{
@@ -41,17 +44,21 @@ function App() {
   const [chosenOptions, setChosenOptions] = useState(
     new Array(slotsCount).fill(null)
   );
+  const [resetOnSubmit, setResetOnSubmit] = useState(false);
+  const [possibilities, setPossibilities] = useState(
+    getAllPermutations(LETTER_OPTIONS.slice(0, slotsCount), slotsCount)
+  );
   const [slots, setSlots] = useState<any[]>(
     new Array(slotsCount).fill(
       new Array(slotsCount).fill(LETTER_OPTIONS.slice(0, optionsCount))
     )
   );
   const [allPossibleOptions, setAllPossibleOptions] = useState(
-    Math.pow(optionsCount, slotsCount)
+    getAllPermutations(LETTER_OPTIONS.slice(0, optionsCount), slotsCount)
   );
-  const [availableOptions, setAvailableOptions] = useState(
-    new Array(allPossibleOptions).fill(null)
-  );
+  // const [availableOptions, setAvailableOptions] = useState(
+  //   new Array(allPossibleOptions).fill(null)
+  // );
   type Game = {
     game_id?: string;
     remainingTurns?: number;
@@ -61,6 +68,9 @@ function App() {
   const [history, setHistory] = useState<History>({ rounds: [] });
 
   const submit = async (arr: string[]) => {
+    if (resetOnSubmit) {
+      setChosenOptions(new Array(slotsCount).fill(null));
+    }
     console.log(arr);
     let str = "";
     arr.forEach((color) => {
@@ -79,6 +89,16 @@ function App() {
       ],
     });
     console.log(`😯 ${JSON.stringify(result, null, 2)}`);
+    setAllPossibleOptions(
+      gernerateOptions(
+        slotsCount,
+        LETTER_OPTIONS.slice(0, optionsCount),
+        arr,
+        result,
+        allPossibleOptions
+      )
+    );
+
     const newLi = document.createElement("li");
 
     newLi.innerHTML = JSON.stringify({
@@ -103,12 +123,12 @@ function App() {
   useEffect(() => {
     let options = LETTER_OPTIONS.slice(0, optionsCount);
     setSlots(new Array(slotsCount).fill(options));
-    setAllPossibleOptions(Math.pow(optionsCount, slotsCount));
+    // setAllPossibleOptions(Math.pow(optionsCount, slotsCount));
   }, [optionsCount]);
   useEffect(() => {
     let options = LETTER_OPTIONS.slice(0, optionsCount);
     setSlots(new Array(slotsCount).fill(options));
-    setAllPossibleOptions(Math.pow(optionsCount, slotsCount));
+    // setAllPossibleOptions(Math.pow(optionsCount, slotsCount));
   }, [slotsCount]);
 
   const setChosenOption = (index: number, value: string) => {
@@ -116,19 +136,29 @@ function App() {
     newArr[index] = value;
     setChosenOptions(newArr);
   };
+  const toggleResetOnSubmit = () => {
+    setResetOnSubmit(!resetOnSubmit);
+  };
   return (
     <div className="App">
-      {!gameStarted ?
-        <StartHeader slotsCount={slotsCount} startGameFunction={setGameStarted} />
-        : <GameHeader />
-        }
+      {!gameStarted ? (
+        <StartHeader
+          slotsCount={slotsCount}
+          startGameFunction={setGameStarted}
+        />
+      ) : (
+        <GameHeader />
+      )}
       <div>
         <Card>
           <CardBody>
-            {game["game_id"] ? "Your game is" + game["game_id"] : "Welcome!"}
+            <p>
+              {game["game_id"] ? "Your game is" + game["game_id"] : "Welcome!"}
+            </p>
           </CardBody>
         </Card>
         <HistoryPanel history={history}></HistoryPanel>
+        <SubmitButton arr={chosenOptions} func={submit}></SubmitButton>
         <OptionsIncrementCard
           optionsCount={optionsCount}
           slotsCount={slotsCount}
@@ -147,13 +177,22 @@ function App() {
             ></SlotAccordion>
           ))}
         </Flex>
+        <Flex>
+          <ResultsList history={history}></ResultsList>
+          {/* {history.rounds.map((slot, index) => (
+            <div>{slot.input}
+            </div>
+          ))} */}
+        </Flex>
       </div>
-      <SubmitButton arr={chosenOptions} func={submit}></SubmitButton>
       <h1>{"Answer " + chosenOptions}</h1>
 
-      {/* <Card>
-        <p>{"Available options: " + allPossibleOptions}</p>
-      </Card> */}
+      <Card>
+        <p>{"Available options: " + allPossibleOptions.length}</p>
+        <button onClick={toggleResetOnSubmit}>
+          {"resetOnsubmit?" + resetOnSubmit}
+        </button>
+      </Card>
     </div>
   );
 }
