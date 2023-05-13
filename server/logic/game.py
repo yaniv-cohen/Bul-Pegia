@@ -4,15 +4,6 @@ import itertools
 import uuid
 import random
 
-def permu(lists, allPossibleCombinations, prefix = '' ):
-    if not lists:
-        allPossibleCombinations.append(list(prefix))
-        return
-    first = lists[0]
-    rest = lists[1:]
-    for letter in first:
-        permu(rest, prefix + letter)
-
 class Game:
     def __init__(self, wordLength =4) -> None:
         self.game_id = str(uuid.uuid1())
@@ -27,6 +18,18 @@ class Game:
         self.usedLetters= []
         self.locations = [self.letters[:]*4]
         self.MAX_GUESS =10
+    #     self.possibleGuesses = self.permu(self.letters, {}) 
+    #     print(str(self.possibleGuesses))
+
+    # def permu(lists, allPossibleCombinations, prefix = '' ):
+    #     if not lists:
+    #         allPossibleCombinations.append(list(prefix))
+    #         return
+    #     first = lists[0]
+    #     rest = lists[1:]
+    #     for letter in first:
+    #         permu(rest, prefix + letter)
+
     def getRandomCombination(self):
         output = []
         while(len(output)<self.wordLength):

@@ -1,12 +1,13 @@
 from flask import Flask
+from flask_cors import CORS
 import game
 import time
-from flask_cors import CORS
 from flask import request
+from getNextPossibleResults import getNextPossibleResults
 app = Flask(__name__)
 CORS(app)
 
-wordLength=5
+wordLength= 4
 new_game = game.Game(wordLength)
 new_game.current_guess = ''
 print("started game in server,  id: "+ new_game.game_id )
@@ -20,6 +21,7 @@ def guess(id, input_word):
     [blacks, whites] = new_game.getMarks(list(input_word.upper()) , new_game.secret_word)
     return (
         {
+        "possibilities": getNextPossibleResults( [] , blacks , whites, [], input_word),
         "input_word": input_word,
         "secret_word": new_game.secret_word,
         "result": {"white" : whites, "black" : blacks},

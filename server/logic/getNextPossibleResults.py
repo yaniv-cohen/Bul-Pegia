@@ -7,8 +7,8 @@ def getNextPossibleResults(currentPossible: list, targetBlacks, targetWhites, us
     # print("count" + str(count))
         count+=1
         marksForPossibility = getMarksForGuess.getMarksForGuess(chars[:],possibility[:])
-        isSameMarks = (marksForPossibility) == ([targetBlacks,targetWhites])
-        if(isSameMarks ):
+        # isSameMarks = 
+        if(marksForPossibility == [targetBlacks,targetWhites] ):
             newPossibilities.append(possibility)
             # print("@@@@adding" + str(possibility))
             print("got " +str(marksForPossibility) +" for "+ str(possibility) +' ' + str(isSameMarks)) 
