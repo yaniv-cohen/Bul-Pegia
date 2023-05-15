@@ -39,7 +39,7 @@ export const SlotAccordion = ({
         {slot.map((option: typeof colorMap, slotIndex: number) => {
           const marked = colorMap[option] === chosen;
           return (
-            <Card key={colorMap[option]} width={"120px"}>
+            <Card key={colorMap[option]+slotIndex} width={"120px"}>
               <AccordionPanel
                 className={
                   marked

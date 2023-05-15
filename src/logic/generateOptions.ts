@@ -10,7 +10,7 @@ export const gernerateOptions = (
   result: Result,
   allPossibleCombinations: Array<string[]> = getAllPermutations(options, slots)
 ): any[] => {
-  console.log("starting with " + allPossibleCombinations.length);
+  console.log("🧙‍♂️starting with " + allPossibleCombinations.length, slots, options, inputWord, result);
   const newPossibleCombinations = allPossibleCombinations.filter(
     (possibility, i) => {
       const out = getResult(possibility, inputWord);

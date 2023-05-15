@@ -23,6 +23,7 @@ import { GameHeader } from "./components/GameHeader";
 import { ResultsList } from "./components/ResultsList";
 import { getAllPermutations } from "./utils/getAllPermutations";
 import { gernerateOptions } from "./logic/generateOptions";
+import CheatPanel from "./components/CheatPanel/CheatPanel";
 
 function App() {
   // const colorMap:{
@@ -45,9 +46,6 @@ function App() {
     new Array(slotsCount).fill(null)
   );
   const [resetOnSubmit, setResetOnSubmit] = useState(false);
-  const [possibilities, setPossibilities] = useState(
-    getAllPermutations(LETTER_OPTIONS.slice(0, slotsCount), slotsCount)
-  );
   const [slots, setSlots] = useState<any[]>(
     new Array(slotsCount).fill(
       new Array(slotsCount).fill(LETTER_OPTIONS.slice(0, optionsCount))
@@ -93,8 +91,8 @@ function App() {
       gernerateOptions(
         slotsCount,
         LETTER_OPTIONS.slice(0, optionsCount),
-        arr,
-        result,
+        str.split(""),
+        result.result,
         allPossibleOptions
       )
     );
@@ -136,6 +134,7 @@ function App() {
     newArr[index] = value;
     setChosenOptions(newArr);
   };
+
   const toggleResetOnSubmit = () => {
     setResetOnSubmit(!resetOnSubmit);
   };
@@ -188,11 +187,17 @@ function App() {
       <h1>{"Answer " + chosenOptions}</h1>
 
       <Card>
-        <p>{"Available options: " + allPossibleOptions.length}</p>
+        <p>
+          {"Available options: " +
+            allPossibleOptions.length +
+            "   " +
+            allPossibleOptions[0]}
+        </p>
         <button onClick={toggleResetOnSubmit}>
           {"resetOnsubmit?" + resetOnSubmit}
         </button>
       </Card>
+      <CheatPanel setSelection={setChosenOptions} options={allPossibleOptions}></CheatPanel>
     </div>
   );
 }
