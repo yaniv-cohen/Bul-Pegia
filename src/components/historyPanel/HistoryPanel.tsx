@@ -3,7 +3,7 @@ import Entry from "./Entry";
 
 export const HistoryPanel = ({ history }: { history: History }) => {
   return (
-    <aside>
+    <aside className="HistoryPanel">
       <h2>this is a aside</h2>
       <h2>Results:</h2>
 

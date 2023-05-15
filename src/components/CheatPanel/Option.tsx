@@ -1,3 +1,5 @@
+import { LETTER_OPTIONS } from "../../utils/letters";
+
 export const Option = ({
   setSelection,
   option,
@@ -11,10 +13,10 @@ export const Option = ({
         console.log(option);
         setSelection(option);
       }}
-      className="flex-row"
+      className="flex-row" 
     >
       {option.map((char) => (
-        <span>{char}</span>
+        <span className={char}>{ char+', '}</span>
       ))}
     </div>
   );
