@@ -9,14 +9,15 @@ export const Option = ({
 }) => {
   return (
     <div
+      // onTouchMoveCapture={}
       onClick={() => {
-        console.log(option);
         setSelection(option);
+        window.scrollTo(0, 0);
       }}
-      className="flex-row" 
+      className="flex-row option-row"
     >
-      {option.map((char) => (
-        <span className={char}>{ char+', '}</span>
+      {option.map((char, index) => (
+        <span key={index} className={char + ' marked colorOption'}>{char[0].toUpperCase() + ', '}</span>
       ))}
     </div>
   );

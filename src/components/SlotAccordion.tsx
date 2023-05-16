@@ -31,7 +31,7 @@ export const SlotAccordion = ({
         <h2>
           <AccordionButton className={chosen + " marked strongSext"}>
             <Box as="span" flex="1" textAlign="left">
-              {index}
+              {chosen?? "?"}
             </Box>
             <AccordionIcon />
           </AccordionButton>

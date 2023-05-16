@@ -1,0 +1,87 @@
+#root {
+  // max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.FlexRow {
+  display: flex;
+  flex-direction: row;
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+  border: 5px none;
+}
+
+.strongSext {
+  color: black;
+  font-weight: 800;
+}
+
+.color-button {
+  border-radius: 20px;
+  border: solid white;
+
+}
+
+.marked {
+  opacity: 1 !important;
+
+}
+
+.red {
+  background-color: red;
+  opacity: 0.3;
+}
+
+.orange {
+  background-color: orange;
+  opacity: 0.3;
+}
+
+.yellow {
+  background-color: yellow;
+  opacity: 0.3;
+}
+
+.green {
+  background-color: green;
+  opacity: 0.3;
+}
+
+.blue {
+  background-color: blue;
+  opacity: 0.3;
+}
+
+.indigo {
+  background-color: indigo;
+  opacity: 0.3;
+}
+
+.violet {
+  background-color: violet;
+  opacity: 0.3;
+}
+
+.purple {
+  background-color: purple;
+  opacity: 0.3;
+}
+
+.option-row {
+  margin: 3px;
+  padding: 3px;
+}
+
+.colorOption {
+  padding: 5px;
+  cursor: grab;
+}
+

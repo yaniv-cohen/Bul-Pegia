@@ -1,3 +1,4 @@
+import uuid
 from flask import Flask
 from flask_cors import CORS
 import game
@@ -8,12 +9,26 @@ app = Flask(__name__)
 CORS(app)
 
 wordLength= 4
-new_game = game.Game(wordLength)
-new_game.current_guess = ''
-print("started game in server,  id: "+ new_game.game_id )
+myGames = {}
+# fisrtGameId = "one"
+# hi=game.Game(wordLength)
+# myGames[hi.game_id] = hi
+# base_game = myGames[hi.game_id]
+# base_game.current_guess = ''
+# print(myGames[hi.game_id].game_id)
+# print("started game in server,  id: "+ base_game.game_id )
+
+@app.route("/createNewGame/<slots>/<letter_Count>")
+def createNewGame(slots, letter_Count):
+    id = str(uuid.uuid1())
+    print('making new game : ' + id)
+    myGames[id] = game.Game(int(slots))
+    print(len(myGames) )
+    return (id)
 
 @app.route("/game/<id>/guess/<input_word>")
 def guess(id, input_word):
+    new_game = myGames[str(id)]
     print("id:"+id, "  Word:"+ input_word +
            "  secret: " +','.join(new_game.secret_word))
     new_game.current_guess = input_word
@@ -25,7 +40,7 @@ def guess(id, input_word):
         "input_word": input_word,
         "secret_word": new_game.secret_word,
         "result": {"white" : whites, "black" : blacks},
-        "game_id": new_game.game_id,
+        "game_id": id,
         "text" : (
         "<h1>Your result is: <div>BLACKS: " +str(blacks) +", WHITES: "+ str(whites) 
     +"</h1><ul><li>id:"+str(new_game.game_id)+"</li><li>secret_word:"+",".join(new_game.secret_word) +"</li></ul>")

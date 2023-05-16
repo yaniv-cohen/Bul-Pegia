@@ -11,23 +11,28 @@ export const CheatPanel = ({
   options: string[][];
 }) => {
   return (
-    <aside className="CheatPanel">
+    <div>
       <h2>this is a cheat panel</h2>
       <h2>options:</h2>
+      <p>
+        {"Available options: " +
+          options.length
+        }
+      </p>
 
       <ul id="resultsList">
         {options.map((option, count) => (
           <Option
-          setSelection={setSelection}
+            setSelection={setSelection}
             key={count}
-            option={option.map(letter=>{
+            option={option.map(letter => {
               LETTER_OPTIONS.indexOf(letter)
               return COLOR_LIST[LETTER_OPTIONS.indexOf(letter)]
             })}
           ></Option>
         ))}
       </ul>
-    </aside>
+    </div>
   );
 };
 export default CheatPanel;

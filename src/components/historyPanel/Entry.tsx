@@ -8,18 +8,17 @@ export const Entry = ({
   round: Round;
 }) => {
   return (
-    <div className="flex-row">
-      {`Guess: ${round.input}`}
+    <div className="flex-row Entry">
       {round.input
         .split("")
         .map((char) => {
-          console.log('😊',char, LETTER_OPTIONS.indexOf(char), COLOR_LIST[LETTER_OPTIONS.indexOf(char)]);
-
-          return <div className={"historyChar circle " + COLOR_LIST[LETTER_OPTIONS.indexOf(char)]}>{char}</div>;
+          return <span className={"historyChar circle " + COLOR_LIST[LETTER_OPTIONS.indexOf(char)]}>
+            {COLOR_LIST[LETTER_OPTIONS.indexOf(char)].slice(0, 3) + '.'}
+          </span>
         })}
-      {new Array(round.output.black).map((index) => (
-        <Circle color="black" side={10}></Circle>
-      ))}
+      {
+        round.output.white + '/' + round.output.white
+      }
     </div>
   );
 };

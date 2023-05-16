@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import reactLogo from "./assets/react.svg";
-import "./App.css";
+import "./App.scss";
 import {
   Box,
   Button,
@@ -24,6 +24,8 @@ import { ResultsList } from "./components/ResultsList";
 import { getAllPermutations } from "./utils/getAllPermutations";
 import { gernerateOptions } from "./logic/generateOptions";
 import CheatPanel from "./components/CheatPanel/CheatPanel";
+import { ToggleButton } from "./components/utils/ToggleButton";
+import axios from "axios";
 
 function App() {
   // const colorMap:{
@@ -54,27 +56,34 @@ function App() {
   const [allPossibleOptions, setAllPossibleOptions] = useState(
     getAllPermutations(LETTER_OPTIONS.slice(0, optionsCount), slotsCount)
   );
-  // const [availableOptions, setAvailableOptions] = useState(
-  //   new Array(allPossibleOptions).fill(null)
-  // );
+  const [useCheatPanel, setUseCheatPanel] = useState(false)
+
   type Game = {
-    game_id?: string;
+    game_id: string;
     remainingTurns?: number;
     turnCount?: number;
   };
   const [game, setGame] = useState<Game>({});
   const [history, setHistory] = useState<History>({ rounds: [] });
-
+  const toggleUseCheatPanel = () => {
+    setUseCheatPanel(!useCheatPanel)
+  }
   const submit = async (arr: string[]) => {
-    if (resetOnSubmit) {
-      setChosenOptions(new Array(slotsCount).fill(null));
-    }
-    console.log(arr);
     let str = "";
     arr.forEach((color) => {
       str += LETTER_OPTIONS[COLOR_LIST.indexOf(color)];
     });
-    const url = "http://127.0.0.1:5000/game/1/guess/" + str;
+    for (const round of history.rounds) {
+      console.log(round.input, +' 👌 ' + str);
+
+      if (round.input === str)
+      {
+        setChosenOptions(new Array(slotsCount).fill(''))
+        return
+      }
+    }
+
+    const url = `http://127.0.0.1:5000/game/${game.game_id}/guess/` + str;
     console.log(`fetch to ` + url);
     const result = await (await fetch(url)).json();
     setHistory({
@@ -86,7 +95,11 @@ function App() {
         },
       ],
     });
-    console.log(`😯 ${JSON.stringify(result, null, 2)}`);
+    // console.log(`😯 ${JSON.stringify(result, null, 2)}`);
+    if (result.result.black === slotsCount) {
+      alert("you won!")
+      setGameStarted(false)
+    }
     setAllPossibleOptions(
       gernerateOptions(
         slotsCount,
@@ -97,23 +110,13 @@ function App() {
       )
     );
 
-    const newLi = document.createElement("li");
+    if (resetOnSubmit) {
+      setChosenOptions(new Array(slotsCount).fill(null));
+    }
 
-    newLi.innerHTML = JSON.stringify({
-      white: parseInt(result.result.white),
-      black: parseInt(result.result.black),
-    });
-    setGame({ ...result });
-    const newEle = <Circle color="green" side={50}></Circle>;
-    new Array(result.result.white).fill(null).forEach(() => {
-      console.log("adding white");
-      // newLi.appendChild(newEle);
-    });
     // newLi.innerHTML += new Array(result.result.white).fill(null).map(()=><Circle color="green" side={50}></Circle>) ;
     // newLi.innerHTML += new Array(result.result.black).fill(null).map(()=><Circle color="red" side={50}></Circle>) ;
     // newLi.key = Math.floor(Math.random() * 1000) + "";
-
-    console.log(game);
 
     const historyList = document.getElementById("resultsList")!;
     if (typeof result.text === "string") historyList.append(newLi);
@@ -138,68 +141,85 @@ function App() {
   const toggleResetOnSubmit = () => {
     setResetOnSubmit(!resetOnSubmit);
   };
+  const startGameFunction = async () => {
+    const url = `http://127.0.0.1:5000/createNewGame/${slotsCount}/${optionsCount}`;
+    console.log(`fetch to ` + url);
+    const result = (await axios.get(url)).data;
+    console.log(result);
+
+    setGame({ game_id: result, remainingTurns: 1, turnCount: 1 })
+    setGameStarted(true)
+    setAllPossibleOptions(getAllPermutations(LETTER_OPTIONS.slice(0, optionsCount), slotsCount))
+    setHistory({ rounds: [] })
+    console.log(`😊`, JSON.stringify(game));
+
+  }
   return (
     <div className="App">
-      {!gameStarted ? (
-        <StartHeader
-          slotsCount={slotsCount}
-          startGameFunction={setGameStarted}
-        />
-      ) : (
-        <GameHeader />
-      )}
-      <div>
-        <Card>
-          <CardBody>
-            <p>
-              {game["game_id"] ? "Your game is" + game["game_id"] : "Welcome!"}
-            </p>
-          </CardBody>
-        </Card>
-        <HistoryPanel history={history}></HistoryPanel>
-        <SubmitButton arr={chosenOptions} func={submit}></SubmitButton>
-        <OptionsIncrementCard
-          optionsCount={optionsCount}
-          slotsCount={slotsCount}
-          min={min}
-          max={max}
-          func1={setSlotsCount}
-        ></OptionsIncrementCard>
-        <Flex>
-          {slots.map((slot, index) => (
-            <SlotAccordion
-              chosen={chosenOptions[index]}
-              index={index + 1}
-              slot={slot}
-              setChosenOption={setChosenOption}
-              ColorList={COLOR_LIST}
-            ></SlotAccordion>
-          ))}
-        </Flex>
-        <Flex>
-          <ResultsList history={history}></ResultsList>
-          {/* {history.rounds.map((slot, index) => (
-            <div>{slot.input}
+      {!gameStarted ?
+        (
+          <>
+            <StartHeader
+              slotsCount={slotsCount}
+              startGameFunction={startGameFunction}>
+              <OptionsIncrementCard
+                optionsCount={optionsCount}
+                slotsCount={slotsCount}
+                min={min}
+                max={max}
+                func1={setSlotsCount}
+              ></OptionsIncrementCard>
+            </StartHeader>
+            <img width="300px" src="https://play-lh.googleusercontent.com/AKwkpj-Eq6SgEXu9SlSYO-cMMIIGh62Zqp012IaWmuFOlyM-B_y7BvDfJ9FEtvSWy6s" />
+          </>
+        ) : (
+          <>
+            <GameHeader></GameHeader>
+            <div>
+              <Card>
+                <CardBody>
+                  <p>
+                    {game["game_id"] ? "Your game is" + game["game_id"] : "Welcome!"}
+                  </p>
+                </CardBody>
+              </Card>
+              <HistoryPanel history={history}></HistoryPanel>
+              <SubmitButton arr={chosenOptions} func={submit}></SubmitButton>
+
+              <Flex>
+                {slots.map((slot, index) => (
+                  <SlotAccordion
+                    chosen={chosenOptions[index]}
+                    index={index + 1}
+                    slot={slot}
+                    setChosenOption={setChosenOption}
+                    ColorList={COLOR_LIST}
+                  ></SlotAccordion>
+                ))}
+              </Flex>
+              <Flex>
+                <ResultsList history={history}></ResultsList>
+              </Flex>
             </div>
-          ))} */}
-        </Flex>
-      </div>
-      <h1>{"Answer " + chosenOptions}</h1>
+            <Card>
 
-      <Card>
-        <p>
-          {"Available options: " +
-            allPossibleOptions.length +
-            "   " +
-            allPossibleOptions[0]}
-        </p>
-        <button onClick={toggleResetOnSubmit}>
-          {"resetOnsubmit?" + resetOnSubmit}
-        </button>
-      </Card>
-      <CheatPanel setSelection={setChosenOptions} options={allPossibleOptions}></CheatPanel>
+              <button onClick={toggleResetOnSubmit}>
+                {"resetOnsubmit?" + resetOnSubmit}
+              </button>
+            </Card>
+            <aside className="CheatPanel">
+              <ToggleButton text={useCheatPanel ? "X" : "CheatPanel >"} fn={toggleUseCheatPanel} ></ToggleButton>
+              {
+                useCheatPanel ?
+                  <CheatPanel setSelection={setChosenOptions} options={allPossibleOptions} />
+                  : <></>
+              }
+            </aside>
+
+
+          </>
+        )}
     </div>
-  );
+  )
 }
-
 export default App;
