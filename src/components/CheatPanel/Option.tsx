@@ -1,5 +1,3 @@
-import { LETTER_OPTIONS } from "../../utils/letters";
-
 export const Option = ({
   setSelection,
   option,
@@ -17,7 +15,9 @@ export const Option = ({
       className="flex-row option-row"
     >
       {option.map((char, index) => (
-        <span key={index} className={char + ' marked colorOption'}>{char[0].toUpperCase() + ', '}</span>
+        <span key={index} className={char + " marked colorOption"}>
+          {char[0].toUpperCase() + ", "}
+        </span>
       ))}
     </div>
   );

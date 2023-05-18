@@ -1,6 +1,4 @@
-import { History } from "../../types/historyTypes";
 import { COLOR_LIST, LETTER_OPTIONS } from "../../utils/letters";
-import Entry from "../historyPanel/Entry";
 import Option from "./Option";
 
 export const CheatPanel = ({

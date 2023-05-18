@@ -26,6 +26,7 @@ import { gernerateOptions } from "./logic/generateOptions";
 import CheatPanel from "./components/CheatPanel/CheatPanel";
 import { ToggleButton } from "./components/utils/ToggleButton";
 import axios from "axios";
+import { chooseBest } from "./logic/chooseBest";
 
 function App() {
   // const colorMap:{
@@ -56,34 +57,33 @@ function App() {
   const [allPossibleOptions, setAllPossibleOptions] = useState(
     getAllPermutations(LETTER_OPTIONS.slice(0, optionsCount), slotsCount)
   );
-  const [useCheatPanel, setUseCheatPanel] = useState(false)
+  const [useCheatPanel, setUseCheatPanel] = useState(false);
 
   type Game = {
     game_id: string;
     remainingTurns?: number;
     turnCount?: number;
   };
-  const [game, setGame] = useState<Game>({});
+  const [game, setGame] = useState<Game>();
   const [history, setHistory] = useState<History>({ rounds: [] });
   const toggleUseCheatPanel = () => {
-    setUseCheatPanel(!useCheatPanel)
-  }
+    setUseCheatPanel(!useCheatPanel);
+  };
   const submit = async (arr: string[]) => {
     let str = "";
     arr.forEach((color) => {
       str += LETTER_OPTIONS[COLOR_LIST.indexOf(color)];
     });
     for (const round of history.rounds) {
-      console.log(round.input, +' 👌 ' + str);
+      console.log(round.input, +" 👌 " + str);
 
-      if (round.input === str)
-      {
-        setChosenOptions(new Array(slotsCount).fill(''))
-        return
+      if (round.input === str) {
+        setChosenOptions(new Array(slotsCount).fill(""));
+        return;
       }
     }
 
-    const url = `http://127.0.0.1:5000/game/${game.game_id}/guess/` + str;
+    const url = `http://127.0.0.1:5000/game/${game?.game_id}/guess/` + str;
     console.log(`fetch to ` + url);
     const result = await (await fetch(url)).json();
     setHistory({
@@ -97,10 +97,12 @@ function App() {
     });
     // console.log(`😯 ${JSON.stringify(result, null, 2)}`);
     if (result.result.black === slotsCount) {
-      alert("you won!")
-      setGameStarted(false)
+      alert("you won!");
+      setGameStarted(false);
     }
-    setAllPossibleOptions(
+    console.log("prelength is  ", allPossibleOptions.length);
+
+    const newOptions = chooseBest(
       gernerateOptions(
         slotsCount,
         LETTER_OPTIONS.slice(0, optionsCount),
@@ -109,6 +111,12 @@ function App() {
         allPossibleOptions
       )
     );
+    console.log(
+      "🚀 ~ file: App.tsx:114 ~ submit ~ newOptions:",
+      newOptions[0],
+      newOptions[1]
+    );
+    setAllPossibleOptions(newOptions);
 
     if (resetOnSubmit) {
       setChosenOptions(new Array(slotsCount).fill(null));
@@ -118,18 +126,16 @@ function App() {
     // newLi.innerHTML += new Array(result.result.black).fill(null).map(()=><Circle color="red" side={50}></Circle>) ;
     // newLi.key = Math.floor(Math.random() * 1000) + "";
 
-    const historyList = document.getElementById("resultsList")!;
-    if (typeof result.text === "string") historyList.append(newLi);
+    // const historyList = document.getElementById("resultsList")!;
+    // if (typeof result.text === "string") historyList.append(newLi);
   };
   useEffect(() => {
     let options = LETTER_OPTIONS.slice(0, optionsCount);
     setSlots(new Array(slotsCount).fill(options));
-    // setAllPossibleOptions(Math.pow(optionsCount, slotsCount));
   }, [optionsCount]);
   useEffect(() => {
     let options = LETTER_OPTIONS.slice(0, optionsCount);
     setSlots(new Array(slotsCount).fill(options));
-    // setAllPossibleOptions(Math.pow(optionsCount, slotsCount));
   }, [slotsCount]);
 
   const setChosenOption = (index: number, value: string) => {
@@ -147,79 +153,85 @@ function App() {
     const result = (await axios.get(url)).data;
     console.log(result);
 
-    setGame({ game_id: result, remainingTurns: 1, turnCount: 1 })
-    setGameStarted(true)
-    setAllPossibleOptions(getAllPermutations(LETTER_OPTIONS.slice(0, optionsCount), slotsCount))
-    setHistory({ rounds: [] })
+    setGame({ game_id: result, remainingTurns: 1, turnCount: 1 });
+    setGameStarted(true);
+    setAllPossibleOptions(
+      getAllPermutations(LETTER_OPTIONS.slice(0, optionsCount), slotsCount)
+    );
+    setHistory({ rounds: [] });
     console.log(`😊`, JSON.stringify(game));
-
-  }
+  };
   return (
     <div className="App">
-      {!gameStarted ?
-        (
-          <>
-            <StartHeader
+      {!gameStarted ? (
+        <>
+          <StartHeader
+            slotsCount={slotsCount}
+            startGameFunction={startGameFunction}
+          >
+            <OptionsIncrementCard
+              optionsCount={optionsCount}
               slotsCount={slotsCount}
-              startGameFunction={startGameFunction}>
-              <OptionsIncrementCard
-                optionsCount={optionsCount}
-                slotsCount={slotsCount}
-                min={min}
-                max={max}
-                func1={setSlotsCount}
-              ></OptionsIncrementCard>
-            </StartHeader>
-            <img width="300px" src="https://play-lh.googleusercontent.com/AKwkpj-Eq6SgEXu9SlSYO-cMMIIGh62Zqp012IaWmuFOlyM-B_y7BvDfJ9FEtvSWy6s" />
-          </>
-        ) : (
-          <>
-            <GameHeader></GameHeader>
-            <div>
-              <Card>
-                <CardBody>
-                  <p>
-                    {game["game_id"] ? "Your game is" + game["game_id"] : "Welcome!"}
-                  </p>
-                </CardBody>
-              </Card>
-              <HistoryPanel history={history}></HistoryPanel>
-              <SubmitButton arr={chosenOptions} func={submit}></SubmitButton>
-
-              <Flex>
-                {slots.map((slot, index) => (
-                  <SlotAccordion
-                    chosen={chosenOptions[index]}
-                    index={index + 1}
-                    slot={slot}
-                    setChosenOption={setChosenOption}
-                    ColorList={COLOR_LIST}
-                  ></SlotAccordion>
-                ))}
-              </Flex>
-              <Flex>
-                <ResultsList history={history}></ResultsList>
-              </Flex>
-            </div>
+              min={min}
+              max={max}
+              func1={setSlotsCount}
+            ></OptionsIncrementCard>
+          </StartHeader>
+          <img
+            width="300px"
+            src="https://play-lh.googleusercontent.com/AKwkpj-Eq6SgEXu9SlSYO-cMMIIGh62Zqp012IaWmuFOlyM-B_y7BvDfJ9FEtvSWy6s"
+          />
+        </>
+      ) : (
+        <>
+          <GameHeader></GameHeader>
+          <div>
             <Card>
-
-              <button onClick={toggleResetOnSubmit}>
-                {"resetOnsubmit?" + resetOnSubmit}
-              </button>
+              <CardBody>
+                <p>
+                  {game && game["game_id"]
+                    ? "Your game is" + game["game_id"]
+                    : "Welcome!"}
+                </p>
+              </CardBody>
             </Card>
-            <aside className="CheatPanel">
-              <ToggleButton text={useCheatPanel ? "X" : "CheatPanel >"} fn={toggleUseCheatPanel} ></ToggleButton>
-              {
-                useCheatPanel ?
-                  <CheatPanel setSelection={setChosenOptions} options={allPossibleOptions} />
-                  : <></>
-              }
-            </aside>
+            <HistoryPanel history={history}></HistoryPanel>
+            <SubmitButton arr={chosenOptions} func={submit}></SubmitButton>
 
-
-          </>
-        )}
+            <Flex>
+              {slots.map((slot, index) => (
+                <SlotAccordion
+                  chosen={chosenOptions[index]}
+                  index={index + 1}
+                  slot={slot}
+                  setChosenOption={setChosenOption}
+                  ColorList={COLOR_LIST}
+                ></SlotAccordion>
+              ))}
+            </Flex>
+          </div>
+          <Card>
+            <button onClick={toggleResetOnSubmit}>
+              {"resetOnsubmit?" + resetOnSubmit}
+            </button>
+          </Card>
+          <aside className="CheatPanel">
+            <ToggleButton
+              text={useCheatPanel ? "X" : "CheatPanel >"}
+              fn={toggleUseCheatPanel}
+            ></ToggleButton>
+            {useCheatPanel ? (
+              <CheatPanel
+                setSelection={setChosenOptions}
+                options={allPossibleOptions}
+              />
+            ) : (
+              <></>
+            )}
+          </aside>
+        </>
+      )}
     </div>
-  )
+  );
 }
 export default App;
