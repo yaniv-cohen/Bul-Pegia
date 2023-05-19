@@ -102,21 +102,19 @@ function App() {
     }
     console.log("prelength is  ", allPossibleOptions.length);
 
-    const newOptions = chooseBest(
-      gernerateOptions(
-        slotsCount,
-        LETTER_OPTIONS.slice(0, optionsCount),
-        str.split(""),
-        result.result,
-        allPossibleOptions
-      )
+    const newOptions = gernerateOptions(
+      slotsCount,
+      LETTER_OPTIONS.slice(0, optionsCount),
+      str.split(""),
+      result.result,
+      allPossibleOptions
     );
+
+    const [bestIndex, bestOption] = chooseBest(newOptions);
     console.log(
-      "🚀 ~ file: App.tsx:114 ~ submit ~ newOptions:",
-      newOptions[0],
-      newOptions[1]
+      bestIndex, bestOption
     );
-    setAllPossibleOptions(newOptions);
+    setAllPossibleOptions([bestOption, ...newOptions.slice(0, bestIndex), ...newOptions.slice(bestIndex+1, )]);
 
     if (resetOnSubmit) {
       setChosenOptions(new Array(slotsCount).fill(null));
