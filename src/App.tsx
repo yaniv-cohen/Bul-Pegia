@@ -75,8 +75,6 @@ function App() {
       str += LETTER_OPTIONS[COLOR_LIST.indexOf(color)];
     });
     for (const round of history.rounds) {
-      console.log(round.input, +" 👌 " + str);
-
       if (round.input === str) {
         setChosenOptions(new Array(slotsCount).fill(""));
         return;
@@ -95,12 +93,10 @@ function App() {
         },
       ],
     });
-    // console.log(`😯 ${JSON.stringify(result, null, 2)}`);
     if (result.result.black === slotsCount) {
       alert("you won!");
       setGameStarted(false);
     }
-    console.log("prelength is  ", allPossibleOptions.length);
 
     const newOptions = gernerateOptions(
       slotsCount,
@@ -111,9 +107,7 @@ function App() {
     );
 
     const [bestIndex, bestOption] = chooseBest(newOptions);
-    console.log(
-      bestIndex, bestOption
-    );
+
     setAllPossibleOptions([bestOption, ...newOptions.slice(0, bestIndex), ...newOptions.slice(bestIndex+1, )]);
 
     if (resetOnSubmit) {
@@ -149,7 +143,6 @@ function App() {
     const url = `http://127.0.0.1:5000/createNewGame/${slotsCount}/${optionsCount}`;
     console.log(`fetch to ` + url);
     const result = (await axios.get(url)).data;
-    console.log(result);
 
     setGame({ game_id: result, remainingTurns: 1, turnCount: 1 });
     setGameStarted(true);
@@ -157,7 +150,6 @@ function App() {
       getAllPermutations(LETTER_OPTIONS.slice(0, optionsCount), slotsCount)
     );
     setHistory({ rounds: [] });
-    console.log(`😊`, JSON.stringify(game));
   };
   return (
     <div className="App">
