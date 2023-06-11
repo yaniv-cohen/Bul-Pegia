@@ -1,5 +1,6 @@
 import { COLOR_LIST, LETTER_OPTIONS } from "../../utils/letters";
 import Option from "./Option";
+import "./CheatPanel.scss"
 
 export const CheatPanel = ({
   setSelection,

@@ -3,8 +3,9 @@ import { ReactElement } from "react"
 
 
 
-export const StartHeader = ({ slotsCount, startGameFunction, children }: {
+export const StartHeader = ({ slotsCount, optionsCount, startGameFunction, children }: {
     slotsCount: number,
+    optionsCount: number,
     startGameFunction: Function,
     children: any
 }) => (<header>
@@ -16,7 +17,7 @@ export const StartHeader = ({ slotsCount, startGameFunction, children }: {
             <img width={"180px"} src="https://www.pngitem.com/pimgs/m/475-4755815_transparent-hitler-clipart-hitler-cute-anime-girl-hd.png" alt="" />
         </div>
         {children}
-        <Button onClick={() => { startGameFunction(true) }}>התחל!</Button>
+        <Button onClick={() => { startGameFunction(slotsCount, optionsCount) }}>התחל!</Button>
 
     </div>
 </header>)
