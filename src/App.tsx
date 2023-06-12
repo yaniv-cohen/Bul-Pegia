@@ -27,6 +27,7 @@ import CheatPanel from "./components/CheatPanel/CheatPanel";
 import { ToggleButton } from "./components/utils/ToggleButton";
 import axios from "axios";
 import { chooseBest } from "./logic/chooseBest";
+import { SERVER_URL } from "./globals";
 
 function App() {
   // const colorMap:{
@@ -81,7 +82,7 @@ function App() {
       }
     }
 
-    const url = `http://127.0.0.1:5000/game/${game?.game_id}/guess/` + str;
+    const url = `${SERVER_URL}/game/${game?.game_id}/guess/` + str;
     console.log(`fetch to ` + url);
     const result = await (await fetch(url)).json();
     setHistory({
@@ -140,7 +141,7 @@ function App() {
     setResetOnSubmit(!resetOnSubmit);
   };
   const startGameFunction = async () => {
-    const url = `http://127.0.0.1:5000/createNewGame/${slotsCount}/${optionsCount}`;
+    const url = `${SERVER_URL}/createNewGame/${slotsCount}/${optionsCount}`;
     console.log(`fetch to ` + url);
     const result = (await axios.get(url)).data;
 
