@@ -17,21 +17,21 @@ export const SlotAccordion = ({
 }: {
   slot: string[];
   index: number;
-  setChosenOption: Function;
+  setChosenOption: (arg0: number, arg1: any) => any;
   chosen: string | null;
   ColorList: string[];
 }) => {
 
   const colorMap = {} as any;
   slot.forEach((letter, i) => (colorMap[letter] = ColorList[i])); //this transforms letters to colors
-  
+
   return (
     <Accordion allowMultiple={true} id={"accordion-" + index}>
       <AccordionItem>
         <h2>
           <AccordionButton className={chosen + " marked strongSext"}>
             <Box as="span" flex="1" textAlign="left">
-              {chosen?? "?"}
+              {chosen ?? "?"}
             </Box>
             <AccordionIcon />
           </AccordionButton>
@@ -39,19 +39,20 @@ export const SlotAccordion = ({
         {slot.map((option: typeof colorMap, slotIndex: number) => {
           const marked = colorMap[option] === chosen;
           return (
-            <Card key={colorMap[option]+slotIndex} width={"120px"}>
+            <Card key={colorMap[option] + slotIndex} width={"120px"}>
               <AccordionPanel
                 className={
                   marked
                     ? "color-button marked " + colorMap[option]
-                    : `color-button notMarked ${colorMap[option]} ${
-                        chosen ? "hide" : null
-                      }` + colorMap[option]
+                    : `color-button notMarked ${colorMap[option]} ${chosen ? "hide" : null
+                    }` + colorMap[option]
                 }
                 pb={4}
               >
                 <Button
                   onClick={() => {
+                    console.log(index - 1, colorMap[option]);
+
                     setChosenOption(index - 1, colorMap[option]);
                   }}
                 >

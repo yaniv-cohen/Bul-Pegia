@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import reactLogo from "./assets/react.svg";
 import "./App.scss";
 import {
   Box,
@@ -11,37 +10,26 @@ import {
   Heading,
   Text,
 } from "@chakra-ui/react";
-import OptionsIncrementCard from "./components/OptionsIncrementCard";
 import SlotAccordion from "./components/SlotAccordion";
 import SubmitButton from "./components/SubmitButton";
 import { History } from "./types/historyTypes";
 import { COLOR_LIST, LETTER_OPTIONS } from "./utils/letters";
-import Circle from "./components/utils/Circle";
 import HistoryPanel from "./components/historyPanel/HistoryPanel";
 import { StartHeader } from "./components/StartHeader";
-import { GameHeader } from "./components/GameHeader";
-import { ResultsList } from "./components/ResultsList";
+import { GameHeader } from "./components/GameHeader/GameHeader";
 import { getAllPermutations } from "./utils/getAllPermutations";
 import { gernerateOptions } from "./logic/generateOptions";
 import CheatPanel from "./components/CheatPanel/CheatPanel";
 import { ToggleButton } from "./components/utils/ToggleButton";
 import axios from "axios";
 import { chooseBest } from "./logic/chooseBest";
-import { SERVER_URL } from "./globals";
+import { MAXIMUM_SLOTS, MINIMUN_SLOTS, SERVER_URL } from "./utils/globals";
+import { BoardBackground } from "./components/GameHeader/BoardBackground/BoardBackground";
+import { Game } from "./components/Game/Game";
+import { GameType } from "./types/Game";
 
 function App() {
-  // const colorMap:{
-  //   "red": "a",
-  //   "orange":"b",
-  //   "yellow":"c",
-  //   "green":"d",
-  //   "blue":"e",
-  //   "purple":"f",
-  //   "brown":"g",
-  //   "grey":"h",
-  // }
-  const min = 3;
-  const max = 8;
+
   const [count, setCount] = useState(0);
   const [gameStarted, setGameStarted] = useState(false);
   const [optionsCount, setOptionsCount] = useState(6);
@@ -50,7 +38,7 @@ function App() {
     new Array(slotsCount).fill(null)
   );
   const [resetOnSubmit, setResetOnSubmit] = useState(false);
-  const [slots, setSlots] = useState<any[]>(
+  const [slots, setSlots] = useState<Array<string[]>>(
     new Array(slotsCount).fill(
       new Array(slotsCount).fill(LETTER_OPTIONS.slice(0, optionsCount))
     )
@@ -58,18 +46,11 @@ function App() {
   const [allPossibleOptions, setAllPossibleOptions] = useState(
     getAllPermutations(LETTER_OPTIONS.slice(0, optionsCount), slotsCount)
   );
-  const [useCheatPanel, setUseCheatPanel] = useState(false);
 
-  type Game = {
-    game_id: string;
-    remainingTurns?: number;
-    turnCount?: number;
-  };
-  const [game, setGame] = useState<Game>();
+
+
+  const [game, setGame] = useState<GameType | undefined>();
   const [history, setHistory] = useState<History>({ rounds: [] });
-  const toggleUseCheatPanel = () => {
-    setUseCheatPanel(!useCheatPanel);
-  };
   const submit = async (arr: string[]) => {
     let str = "";
     arr.forEach((color) => {
@@ -109,7 +90,7 @@ function App() {
 
     const [bestIndex, bestOption] = chooseBest(newOptions);
 
-    setAllPossibleOptions([bestOption, ...newOptions.slice(0, bestIndex), ...newOptions.slice(bestIndex+1, )]);
+    setAllPossibleOptions([bestOption, ...newOptions.slice(0, bestIndex), ...newOptions.slice(bestIndex + 1,)]);
 
     if (resetOnSubmit) {
       setChosenOptions(new Array(slotsCount).fill(null));
@@ -154,74 +135,32 @@ function App() {
   };
   return (
     <div className="App">
-      {!gameStarted ? (
-        <>
+      <BoardBackground />
+      <GameHeader toggleResetOnSubmit={toggleResetOnSubmit}
+        resetOnSubmit={resetOnSubmit}      >
+        {
+          !gameStarted ? <></>
+            :
+            <Game allPossibleOptions={allPossibleOptions}
+              chosenOptions={chosenOptions}
+              history={history}
+              game={game as GameType}
+              setChosenOptions={setChosenOptions}
+              slots={slots}
+              submit={submit}
+              setChosenOption={setChosenOption}
+            />
+        }
+      </GameHeader>
+      {
+        !gameStarted ? (
           <StartHeader
-            slotsCount={slotsCount}
             startGameFunction={startGameFunction}
-          >
-            <OptionsIncrementCard
-              optionsCount={optionsCount}
-              slotsCount={slotsCount}
-              min={min}
-              max={max}
-              func1={setSlotsCount}
-            ></OptionsIncrementCard>
-          </StartHeader>
-          <img
-            width="300px"
-            src="https://play-lh.googleusercontent.com/AKwkpj-Eq6SgEXu9SlSYO-cMMIIGh62Zqp012IaWmuFOlyM-B_y7BvDfJ9FEtvSWy6s"
+            optionsCount={optionsCount}
+            slotsCount={slotsCount}
+            setSlotsCount={setSlotsCount}
           />
-        </>
-      ) : (
-        <>
-          <GameHeader></GameHeader>
-          <div>
-            <Card>
-              <CardBody>
-                <p>
-                  {game && game["game_id"]
-                    ? "Your game is" + game["game_id"]
-                    : "Welcome!"}
-                </p>
-              </CardBody>
-            </Card>
-            <HistoryPanel history={history}></HistoryPanel>
-            <SubmitButton arr={chosenOptions} func={submit}></SubmitButton>
-
-            <Flex>
-              {slots.map((slot, index) => (
-                <SlotAccordion
-                  chosen={chosenOptions[index]}
-                  index={index + 1}
-                  slot={slot}
-                  setChosenOption={setChosenOption}
-                  ColorList={COLOR_LIST}
-                ></SlotAccordion>
-              ))}
-            </Flex>
-          </div>
-          <Card>
-            <button onClick={toggleResetOnSubmit}>
-              {"resetOnsubmit?" + resetOnSubmit}
-            </button>
-          </Card>
-          <aside className="CheatPanel">
-            <ToggleButton
-              text={useCheatPanel ? "X" : "CheatPanel >"}
-              fn={toggleUseCheatPanel}
-            ></ToggleButton>
-            {useCheatPanel ? (
-              <CheatPanel
-                setSelection={setChosenOptions}
-                options={allPossibleOptions}
-              />
-            ) : (
-              <></>
-            )}
-          </aside>
-        </>
-      )}
+        ) : <></>}
     </div>
   );
 }

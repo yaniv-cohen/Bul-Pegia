@@ -1,8 +1,23 @@
+// $blue : #6773F5;
+// $green : #5BF586; 
+// $red : #F55B5B; 
+
+@import 'colorPallete.scss';
+@import 'background.scss';
+@import 'components/GameHeader/GameHeader.scss';
+@import 'components/GameHEader/BoardBackground/BoardBackground.scss';
+@import 'components/Logo/Logo.scss';
 #root {
   // max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  // padding: 2rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
   text-align: center;
+  // background-color: $red;
 }
 
 .FlexRow {
@@ -36,27 +51,27 @@
 }
 
 .red {
-  background-color: red;
+  background-color: $pin-red;
   opacity: 0.3;
 }
 
 .orange {
-  background-color: orange;
+  background-color: $pin-orange;
   opacity: 0.3;
 }
 
 .yellow {
-  background-color: yellow;
+  background-color: $pin-yellow;
   opacity: 0.3;
 }
 
 .green {
-  background-color: green;
+  background-color: $pin-green;
   opacity: 0.3;
 }
 
 .blue {
-  background-color: blue;
+  background-color: $pin-blue;
   opacity: 0.3;
 }
 
@@ -71,7 +86,7 @@
 }
 
 .purple {
-  background-color: purple;
+  background-color: $pin-purple;
   opacity: 0.3;
 }
 
@@ -85,3 +100,92 @@
   cursor: grab;
 }
 
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  background-color: white;
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  z-index: 20;
+  // background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+.HistoryPanel {
+  right: 0;
+  #EntryList {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+  }
+}
+
+.CheatPanel {
+  left: 0;
+}
+
+.flex-row {
+  width: 300px;
+}
+
+aside {
+  position: absolute;
+  top: 0;
+  border: 2px solid black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 150px;
+  padding: 5px;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+button:hover {
+  border-color: #646cff;
+}
+
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}

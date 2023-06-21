@@ -1,22 +1,32 @@
 import { Button } from "@chakra-ui/react"
-import { ReactElement } from "react"
+import { StartGameOptions } from "./StartGameOptions"
 
 
 
-export const StartHeader = ({ slotsCount, startGameFunction, children }: {
+export const StartHeader = ({
+    startGameFunction,
+    optionsCount,
+    slotsCount,
+    setSlotsCount
+}: {
     slotsCount: number,
     startGameFunction: Function,
-    children: any
-}) => (<header>
-    <h1>בול פגיעה</h1>
+    optionsCount: number,
+    setSlotsCount: Function,
+}) => (
     <div>
+        <StartGameOptions
+            slotsCount={slotsCount}
+            startGameFunction={startGameFunction}
+            optionsCount={optionsCount}
+            setSlotsCount={setSlotsCount}
+        />
         <div>
             <p>בחרתי צירוף של {slotsCount} צבעים</p>
             <p>?האם תצליחו לנחש מה בחרתי</p>
-            <img width={"180px"} src="https://www.pngitem.com/pimgs/m/475-4755815_transparent-hitler-clipart-hitler-cute-anime-girl-hd.png" alt="" />
+            {/* <img width={"180px"} src="https://www.pngitem.com/pimgs/m/475-4755815_transparent-hitler-clipart-hitler-cute-anime-girl-hd.png" alt="" /> */}
         </div>
-        {children}
         <Button onClick={() => { startGameFunction(true) }}>התחל!</Button>
-
     </div>
-</header>)
+
+)

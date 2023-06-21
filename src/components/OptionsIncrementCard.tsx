@@ -1,18 +1,15 @@
 
 
-import { Box, Button, Card, CardBody, CardHeader, Heading, Text } from '@chakra-ui/react'
+export const OptionsIncrementCard = ({ optionsCount, slotsCount, min, max, func1 }:
+    { optionsCount: number, slotsCount: number, min: number, max: number, func1: Function }) => {
+    const scrollForward = () => { func1(Math.min(max, slotsCount + 1)) }
+    const scrollBackward = () => { func1(Math.max(min, slotsCount - 1)) }
 
-export const  OptionsIncrementCard = ({ optionsCount  , slotsCount, min, max , func1}: {optionsCount:number  , slotsCount:number, min:number, max:number , func1: Function})=>{
-return  <Card>
-<CardBody>
-<Box>
-<CardHeader>
-<Heading size='md'>{Object.keys({ optionsCount }) + `: ${slotsCount}`}</Heading>
-</CardHeader>
-<Button onClick={() => { func1(Math.min(max, slotsCount + 1)) }}>+</Button>
-    <Button onClick={() => { func1(Math.max(min, slotsCount - 1)) }}>-</Button>
-    </Box>
-    </CardBody>
-    </Card>
+    return (
+        <div>
+            <p>{"number of colors " + optionsCount}</p>
+            <button onClick={() => console.log("-")}>-</button>
+            <button onClick={() => console.log("+")}>+</button>
+        </div>
+    )
 }
-export default OptionsIncrementCard

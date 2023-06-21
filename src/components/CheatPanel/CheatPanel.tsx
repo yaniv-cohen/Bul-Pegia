@@ -1,4 +1,5 @@
-import { COLOR_LIST, LETTER_OPTIONS } from "../../utils/letters";
+import { useEffect, useState } from "react";
+import { charsToColors } from "../../logic/charsToColors";
 import Option from "./Option";
 
 export const CheatPanel = ({
@@ -8,6 +9,16 @@ export const CheatPanel = ({
   setSelection: Function;
   options: string[][];
 }) => {
+  const [startIndex, setStartIndex] = useState(0)
+  const [pagination, setPagination] = useState(10)
+  const [currentSelection, setCurrentSelection] = useState(
+    options.slice(startIndex, startIndex + pagination)
+  )
+  useEffect(() => {
+    setCurrentSelection(
+      options.slice(startIndex, startIndex + pagination)
+    )
+  }, [options, startIndex, pagination])
   return (
     <div>
       <h2>this is a cheat panel</h2>
@@ -17,16 +28,17 @@ export const CheatPanel = ({
           options.length
         }
       </p>
-
+      <div>
+        <p>{`${startIndex}+${pagination}`}</p>
+        <button onClick={() => setStartIndex(Math.min(startIndex + pagination, options.length + 1))}>+</button>
+        <button onClick={() => setStartIndex(Math.max(startIndex - pagination, 0))}>-</button>
+      </div>
       <ul id="resultsList">
-        {options.map((option, count) => (
+        {currentSelection.map((option, count) => (
           <Option
             setSelection={setSelection}
             key={count}
-            option={option.map(letter => {
-              LETTER_OPTIONS.indexOf(letter)
-              return COLOR_LIST[LETTER_OPTIONS.indexOf(letter)]
-            })}
+            option={charsToColors(option)}
           ></Option>
         ))}
       </ul>
