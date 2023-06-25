@@ -1,17 +1,20 @@
 import { History } from "../../../types/historyTypes";
+import { FlexColumn } from "../../utils/FlexColoumn";
+import { FlexRow } from "../../utils/FlexRow";
+import { H2 } from "../../utils/Headings";
 import Entry from "./Entry";
 
 export const HistoryPanel = ({ history }: { history: History }) => {
   return (
-    <aside className="HistoryPanel">
-      <h2>Results:</h2>
+    <div className="HistoryPanel">
+      <H2 text="תוצאות:" />
 
-      <ul id="EntryList">
+      <FlexColumn id="EntryList">
         {history.rounds.map((round, index) => (
           <Entry key={index} round={round} />
         ))}
-      </ul>
-    </aside>
+      </FlexColumn>
+    </div >
   );
 };
 export default HistoryPanel;

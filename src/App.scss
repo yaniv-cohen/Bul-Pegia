@@ -4,10 +4,11 @@
 
 @import 'colorPallete.scss';
 @import 'background.scss';
+@import 'components/Game/HistoryPanel/index.scss';
 @import 'components/GameHeader/GameHeader.scss';
 @import 'components/GameHeader/BoardBackground/BoardBackground.scss';
 @import 'components/GameHeader/Logo/Logo.scss';
-@import 'components/utils/Circles.scss';
+@import 'components/utils/index.scss';
 
 #root {
   margin: 0 auto;
@@ -19,10 +20,6 @@
   text-align: center;
 }
 
-.FlexRow {
-  display: flex;
-  flex-direction: row;
-}
 
 .card {
   padding: 2em;
@@ -51,42 +48,34 @@
 
 .red {
   background-color: $pin-red;
-  opacity: 0.3;
 }
 
 .orange {
   background-color: $pin-orange;
-  opacity: 0.3;
 }
 
 .yellow {
   background-color: $pin-yellow;
-  opacity: 0.3;
 }
 
 .green {
   background-color: $pin-green;
-  opacity: 0.3;
 }
 
 .blue {
   background-color: $pin-blue;
-  opacity: 0.3;
 }
 
 .indigo {
   background-color: indigo;
-  opacity: 0.3;
 }
 
 .violet {
   background-color: violet;
-  opacity: 0.3;
 }
 
 .purple {
   background-color: $pin-purple;
-  opacity: 0.3;
 }
 
 .option-row {
@@ -116,15 +105,7 @@
   -webkit-text-size-adjust: 100%;
 }
 
-.HistoryPanel {
-  right: 0;
-  #EntryList {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
 
-  }
-}
 
 .CheatPanel {
   left: 0;

@@ -1,17 +1,12 @@
-.BoardBackground {
+#BoardBackground {
     position: absolute;
-    top: 0;
+    height: 100%;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    display: flex;
     margin-left: auto;
     margin-right: auto;
-    // left: auto;
-    // right: auto;
-
-    width: 50%;
-    // height: 900px;
-
-
-
-    z-index: -10;
-    background-color: black;
-    border: 10px solid black;
+    top: 0;
+    z-index: -1
 }

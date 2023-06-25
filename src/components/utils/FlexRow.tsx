@@ -1,3 +1,3 @@
-export const FlexRow = ({children}: any) => {
-  return <div className="FlexRow">{children}</div>;
+export const FlexRow = ({ className, children }: any) => {
+  return <div className={className + " FlexRow"}>{children}</div>;
 };

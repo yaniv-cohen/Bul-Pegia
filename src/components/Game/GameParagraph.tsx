@@ -1,14 +1,11 @@
-import { Card, CardBody } from "@chakra-ui/react";
 import { GameType } from "../../types/Game";
+import { H2 } from "../utils/Headings";
 
 export function GameParagraph({ game }: { game: GameType }) {
-    return <Card>
-        <CardBody>
-            <p>
-                {game && game["game_id"]
-                    ? ""
-                    : "Welcome!"}
-            </p>
-        </CardBody>
-    </Card>
+    return <div>
+
+        <H2 text={game && game["game_id"]
+            ? `סיבוב מספר ${game.turnCount}`
+            : "אוי שמוי! יש יש תקלה במשחק. נסה לרענן את העמוד"} />
+    </div>
 }
