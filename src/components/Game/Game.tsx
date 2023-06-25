@@ -3,8 +3,8 @@ import { useState } from "react"
 import { GameType } from "../../types/Game"
 import { History } from "../../types/historyTypes"
 import { COLOR_LIST } from "../../utils/letters"
-import CheatPanel from "../CheatPanel/CheatPanel"
-import HistoryPanel from "../historyPanel/HistoryPanel"
+import CheatPanel from "./CheatPanel/CheatPanel"
+import HistoryPanel from "./HistoryPanel/HistoryPanel"
 import SlotAccordion from "../SlotAccordion"
 import SubmitButton from "../SubmitButton"
 import { ToggleButton } from "../utils/ToggleButton"
@@ -45,7 +45,7 @@ export const Game = (
                 ))}
             </Flex>
         </div>
-
+                    
         <aside className="CheatPanel">
             <ToggleButton
                 text={useCheatPanel ? "X" : "CheatPanel >"}

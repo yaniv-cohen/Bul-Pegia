@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { charsToColors } from "../../logic/charsToColors";
+import { charsToColors } from "../../../logic/charsToColors";
 import Option from "./Option";
 
 export const CheatPanel = ({

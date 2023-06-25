@@ -6,18 +6,17 @@
 @import 'background.scss';
 @import 'components/GameHeader/GameHeader.scss';
 @import 'components/GameHeader/BoardBackground/BoardBackground.scss';
-@import 'components/Logo/Logo.scss';
+@import 'components/GameHeader/Logo/Logo.scss';
+@import 'components/utils/Circles.scss';
+
 #root {
-  // max-width: 1280px;
   margin: 0 auto;
-  // padding: 2rem;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
   text-align: center;
-  // background-color: $red;
 }
 
 .FlexRow {

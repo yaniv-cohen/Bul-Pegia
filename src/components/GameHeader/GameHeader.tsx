@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Logo } from "../Logo/Logo";
+import { Logo } from "./Logo/Logo";
 import { IconGear } from "./PrefencesTab/GearsIcon";
 import { PreferencesTab } from "./PrefencesTab/PreferencesTab";
 

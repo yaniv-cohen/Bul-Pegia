@@ -1,35 +1,19 @@
 import { useEffect, useState } from "react";
 import "./App.scss";
-import {
-  Box,
-  Button,
-  Card,
-  CardBody,
-  CardHeader,
-  Flex,
-  Heading,
-  Text,
-} from "@chakra-ui/react";
-import SlotAccordion from "./components/SlotAccordion";
-import SubmitButton from "./components/SubmitButton";
 import { History } from "./types/historyTypes";
 import { COLOR_LIST, LETTER_OPTIONS } from "./utils/letters";
-import HistoryPanel from "./components/historyPanel/HistoryPanel";
 import { StartHeader } from "./components/StartHeader";
 import { GameHeader } from "./components/GameHeader/GameHeader";
 import { getAllPermutations } from "./utils/getAllPermutations";
 import { gernerateOptions } from "./logic/generateOptions";
-import CheatPanel from "./components/CheatPanel/CheatPanel";
-import { ToggleButton } from "./components/utils/ToggleButton";
 import axios from "axios";
 import { chooseBest } from "./logic/chooseBest";
-import { MAXIMUM_SLOTS, MINIMUN_SLOTS, SERVER_URL } from "./utils/globals";
+import { SERVER_URL } from "./utils/globals";
 import { BoardBackground } from "./components/GameHeader/BoardBackground/BoardBackground";
 import { Game } from "./components/Game/Game";
 import { GameType } from "./types/Game";
 
 function App() {
-
   const [count, setCount] = useState(0);
   const [gameStarted, setGameStarted] = useState(false);
   const [optionsCount, setOptionsCount] = useState(6);
@@ -46,8 +30,6 @@ function App() {
   const [allPossibleOptions, setAllPossibleOptions] = useState(
     getAllPermutations(LETTER_OPTIONS.slice(0, optionsCount), slotsCount)
   );
-
-
 
   const [game, setGame] = useState<GameType | undefined>();
   const [history, setHistory] = useState<History>({ rounds: [] });
@@ -95,14 +77,8 @@ function App() {
     if (resetOnSubmit) {
       setChosenOptions(new Array(slotsCount).fill(null));
     }
-
-    // newLi.innerHTML += new Array(result.result.white).fill(null).map(()=><Circle color="green" side={50}></Circle>) ;
-    // newLi.innerHTML += new Array(result.result.black).fill(null).map(()=><Circle color="red" side={50}></Circle>) ;
-    // newLi.key = Math.floor(Math.random() * 1000) + "";
-
-    // const historyList = document.getElementById("resultsList")!;
-    // if (typeof result.text === "string") historyList.append(newLi);
   };
+
   useEffect(() => {
     let options = LETTER_OPTIONS.slice(0, optionsCount);
     setSlots(new Array(slotsCount).fill(options));
@@ -139,7 +115,14 @@ function App() {
       <GameHeader toggleResetOnSubmit={toggleResetOnSubmit}
         resetOnSubmit={resetOnSubmit}      >
         {
-          !gameStarted ? <></>
+          !gameStarted ? (
+            <StartHeader
+              startGameFunction={startGameFunction}
+              optionsCount={optionsCount}
+              slotsCount={slotsCount}
+              setSlotsCount={setSlotsCount}
+            />
+          )
             :
             <Game allPossibleOptions={allPossibleOptions}
               chosenOptions={chosenOptions}
@@ -152,15 +135,6 @@ function App() {
             />
         }
       </GameHeader>
-      {
-        !gameStarted ? (
-          <StartHeader
-            startGameFunction={startGameFunction}
-            optionsCount={optionsCount}
-            slotsCount={slotsCount}
-            setSlotsCount={setSlotsCount}
-          />
-        ) : <></>}
     </div>
   );
 }

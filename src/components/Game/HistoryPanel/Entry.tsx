@@ -1,6 +1,6 @@
-import { Round } from "../../types/historyTypes";
-import { COLOR_LIST, LETTER_OPTIONS } from "../../utils/letters";
-import Circle from "../utils/Circle";
+import { Round } from "../../../types/historyTypes";
+import { COLOR_LIST, LETTER_OPTIONS } from "../../../utils/letters";
+import { Circles } from "../../utils/Circles";
 
 export const Entry = ({ round }: { round: Round }) => {
   return (
@@ -17,7 +17,13 @@ export const Entry = ({ round }: { round: Round }) => {
           </span>
         );
       })}
-      {round.output.white + "/" + round.output.black}
+      {
+        <>
+          <Circles color="white-result" count={round.output.white} />
+          <Circles color="black-result" count={round.output.black} />
+        </>
+      }
+      {/* {round.output.white + "●" + "/" + round.output.black} */}
     </div>
   );
 };

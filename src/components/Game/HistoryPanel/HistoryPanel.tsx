@@ -1,4 +1,4 @@
-import { History } from "../../types/historyTypes";
+import { History } from "../../../types/historyTypes";
 import Entry from "./Entry";
 
 export const HistoryPanel = ({ history }: { history: History }) => {
