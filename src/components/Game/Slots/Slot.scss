@@ -1,0 +1,14 @@
+.chosen {
+    border: 2px solid #000;
+}
+
+.slot {
+    width: 120px;
+    color: black;
+    font-weight: 800;
+    border-radius: 35%;
+    padding:20px;
+    box-sizing: border-box;  
+    transition: 0.1s;
+    cursor: pointer;
+}

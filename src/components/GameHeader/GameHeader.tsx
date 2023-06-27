@@ -11,14 +11,8 @@ export const GameHeader = ({ children, ...rest }: any) => {
     }
 
     return (
-        <header>
-            <div style={{
-                // width: "800px",
-                gap:"40px",
-                padding: "20px", display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-betweens"
-            }}>
+        <div>
+            <header className={"GameHeader"}>
                 <Logo></Logo>
                 <div>
                     <div onClick={toggleShowPreferences}>
@@ -29,7 +23,7 @@ export const GameHeader = ({ children, ...rest }: any) => {
                         <PreferencesTab toggleResetOnSubmit={rest.toggleResetOnSubmit} resetOnSubmit={rest.resetOnSubmit} />
                         : <></>}
                 </div>
-            </div>
+            </header>
             {children}
-        </header>)
+        </div>)
 }

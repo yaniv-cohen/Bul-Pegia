@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "./App.scss";
 import { History } from "./types/historyTypes";
 import { COLOR_LIST, LETTER_OPTIONS } from "./utils/letters";
-import { StartHeader } from "./components/StartHeader";
+import { StartHeader } from "./components/StartGame/StartHeader";
 import { GameHeader } from "./components/GameHeader/GameHeader";
 import { getAllPermutations } from "./utils/getAllPermutations";
 import { gernerateOptions } from "./logic/generateOptions";
@@ -12,6 +12,7 @@ import { SERVER_URL } from "./utils/globals";
 import { BoardBackground } from "./components/GameHeader/BoardBackground/BoardBackground";
 import { Game } from "./components/Game/Game";
 import { GameType } from "./types/Game";
+import { MainCard } from "./components/utils/MainCard";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -111,7 +112,7 @@ function App() {
   };
   return (
     <div className="App">
-      <BoardBackground />
+      {/* <BoardBackground /> */}
       <GameHeader toggleResetOnSubmit={toggleResetOnSubmit}
         resetOnSubmit={resetOnSubmit}      >
         {

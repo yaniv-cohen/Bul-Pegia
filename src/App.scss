@@ -3,14 +3,22 @@
 // $red : #F55B5B; 
 
 @import 'colorPallete.scss';
-@import 'background.scss';
 @import 'components/Game/HistoryPanel/index.scss';
+@import 'components/Game/Slots/Slot.scss';
 @import 'components/GameHeader/GameHeader.scss';
 @import 'components/GameHeader/BoardBackground/BoardBackground.scss';
 @import 'components/GameHeader/Logo/Logo.scss';
 @import 'components/utils/index.scss';
 
+* {
+  box-sizing: border-box;
+  
+  
+}
+
 #root {
+  z-index: 0 ;
+  background-color: $yellow;
   margin: 0 auto;
   width: 100%;
   display: flex;
@@ -30,19 +38,11 @@
   border: 5px none;
 }
 
-.strongSext {
-  color: black;
-  font-weight: 800;
-}
+
 
 .color-button {
   border-radius: 20px;
   border: solid white;
-
-}
-
-.marked {
-  opacity: 1 !important;
 
 }
 
@@ -89,10 +89,11 @@
 }
 
 :root {
+  background-color: $yellow;
+
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  background-color: white;
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
   z-index: 20;
@@ -142,6 +143,7 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+
 }
 
 h1 {

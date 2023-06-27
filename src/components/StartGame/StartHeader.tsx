@@ -1,4 +1,5 @@
 import { Button } from "@chakra-ui/react"
+import { MainCard } from "../utils/MainCard"
 import { StartGameOptions } from "./StartGameOptions"
 
 
@@ -14,7 +15,7 @@ export const StartHeader = ({
     optionsCount: number,
     setSlotsCount: Function,
 }) => (
-    <div>
+    <MainCard>
         <StartGameOptions
             slotsCount={slotsCount}
             startGameFunction={startGameFunction}
@@ -27,6 +28,6 @@ export const StartHeader = ({
             {/* <img width={"180px"} src="https://www.pngitem.com/pimgs/m/475-4755815_transparent-hitler-clipart-hitler-cute-anime-girl-hd.png" alt="" /> */}
         </div>
         <Button onClick={() => { startGameFunction(true) }}>התחל!</Button>
-    </div>
+    </MainCard>
 
 )
