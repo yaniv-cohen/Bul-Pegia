@@ -8,37 +8,69 @@ import { getAllPermutations } from "./utils/getAllPermutations";
 import { gernerateOptions } from "./logic/generateOptions";
 import axios from "axios";
 import { chooseBest } from "./logic/chooseBest";
-import { SERVER_URL } from "./utils/globals";
-import { BoardBackground } from "./components/GameHeader/BoardBackground/BoardBackground";
+import { MAXIMUM_COLORS, MAXIMUM_SLOTS, MINIMUN_COLORS, MINIMUN_SLOTS, SERVER_URL } from "./utils/globals";
 import { Game } from "./components/Game/Game";
 import { GameType } from "./types/Game";
-import { MainCard } from "./components/utils/MainCard";
 
 function App() {
-  const [count, setCount] = useState(0);
-  const [gameStarted, setGameStarted] = useState(false);
-  const [optionsCount, setOptionsCount] = useState(6);
-  const [slotsCount, setSlotsCount] = useState(4);
-  const [chosenOptions, setChosenOptions] = useState(
-    new Array(slotsCount).fill(null)
-  );
-  const [resetOnSubmit, setResetOnSubmit] = useState(false);
-  const [slots, setSlots] = useState<Array<string[]>>(
-    new Array(slotsCount).fill(
-      new Array(slotsCount).fill(LETTER_OPTIONS.slice(0, optionsCount))
-    )
-  );
-  const [allPossibleOptions, setAllPossibleOptions] = useState(
-    getAllPermutations(LETTER_OPTIONS.slice(0, optionsCount), slotsCount)
-  );
+  // const [count, setCount] = useState(0);
 
+  //Game options
+  const [optionsCount, setOptionsCount] = useState<number>(6);
+  const [slotsCount, setSlotsCount] = useState<number>(4);
+  const [usedColors, setUsedColors] = useState<Array<string>>(COLOR_LIST.slice(0, optionsCount));
+  const [usedLetters, setUsedLetters] = useState<Array<string>>(LETTER_OPTIONS.slice(0, optionsCount));
+
+  //Game States
+  const [gameStarted, setGameStarted] = useState<boolean>(false);
   const [game, setGame] = useState<GameType | undefined>();
   const [history, setHistory] = useState<History>({ rounds: [] });
+  const [slots, setSlots] = useState<Array<string[]>>(
+    new Array(slotsCount).fill(
+      new Array(slotsCount).fill(usedLetters.slice(0, optionsCount))
+    )
+  );
+
+  //Game actions
+  const [chosenOptions, setChosenOptions] = useState<Array<string | null>>(
+    new Array(slotsCount).fill(null)
+  );
+
+  //Prefrences
+  const [resetOnSubmit, setResetOnSubmit] = useState(false);
+
+
+  //Cheat Logic
+  const [allPossibleOptions, setAllPossibleOptions] = useState(
+    getAllPermutations(usedLetters.slice(0, optionsCount), slotsCount)
+  );
+
+  useEffect(() => {
+    setUsedLetters(LETTER_OPTIONS.slice(0, optionsCount))
+    setUsedColors(COLOR_LIST.slice(0, optionsCount))
+    let options = usedLetters.slice(0, optionsCount);
+    setSlots(new Array(slotsCount).fill(options));
+  }, [optionsCount]);
+
+  useEffect(() => {
+    setSlots(new Array(slotsCount).fill(usedLetters));
+  }, [slotsCount]);
+
+  const resetGameState = () => {
+    setGameStarted(false);
+    setChosenOptions(new Array(slotsCount).fill(null))
+    setAllPossibleOptions(getAllPermutations(usedLetters.slice(0, optionsCount), slotsCount))
+    setGame(undefined)
+    setHistory({ rounds: [] })
+  }
+
   const submit = async (arr: string[]) => {
     let str = "";
     arr.forEach((color) => {
-      str += LETTER_OPTIONS[COLOR_LIST.indexOf(color)];
+      console.log(color, ' in ', usedColors);
+      str += usedLetters[usedColors.indexOf(color)];
     });
+    //prevent duplicate guesses
     for (const round of history.rounds) {
       if (round.input === str) {
         setChosenOptions(new Array(slotsCount).fill(""));
@@ -60,12 +92,12 @@ function App() {
     });
     if (result.result.black === slotsCount) {
       alert("you won!");
-      setGameStarted(false);
+      resetGameState()
     }
 
     const newOptions = gernerateOptions(
       slotsCount,
-      LETTER_OPTIONS.slice(0, optionsCount),
+      usedLetters.slice(0, optionsCount),
       str.split(""),
       result.result,
       allPossibleOptions
@@ -80,14 +112,21 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    let options = LETTER_OPTIONS.slice(0, optionsCount);
-    setSlots(new Array(slotsCount).fill(options));
-  }, [optionsCount]);
-  useEffect(() => {
-    let options = LETTER_OPTIONS.slice(0, optionsCount);
-    setSlots(new Array(slotsCount).fill(options));
-  }, [slotsCount]);
+
+
+
+  const incrementSlotsCount = (direction: number) => {
+    const numberInRange = slotsCount + direction
+    if (numberInRange <= MAXIMUM_SLOTS && numberInRange >= MINIMUN_SLOTS)
+      setSlotsCount(numberInRange)
+  }
+
+  const incrementColorsCount = (direction: number) => {
+    const numberInRange = optionsCount + direction
+    if (numberInRange <= MAXIMUM_COLORS && numberInRange >= MINIMUN_COLORS)
+      setOptionsCount(numberInRange)
+  }
+
 
   const setChosenOption = (index: number, value: string) => {
     const newArr = [...chosenOptions];
@@ -106,7 +145,7 @@ function App() {
     setGame({ game_id: result, remainingTurns: 1, turnCount: 1 });
     setGameStarted(true);
     setAllPossibleOptions(
-      getAllPermutations(LETTER_OPTIONS.slice(0, optionsCount), slotsCount)
+      getAllPermutations(usedLetters.slice(0, optionsCount), slotsCount)
     );
     setHistory({ rounds: [] });
   };
@@ -121,7 +160,8 @@ function App() {
               startGameFunction={startGameFunction}
               optionsCount={optionsCount}
               slotsCount={slotsCount}
-              setSlotsCount={setSlotsCount}
+              incrementSlotsCount={incrementSlotsCount}
+              incrementColorsCount={incrementColorsCount}
             />
           )
             :

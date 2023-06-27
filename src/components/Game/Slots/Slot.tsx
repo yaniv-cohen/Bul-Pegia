@@ -15,16 +15,14 @@ export const Slot = ({ highlighted, slot, index,
 
     return (
         <li
-          
-            className={"slot " + (value??"empty-slot") + (highlighted ? " chosen" : "")}
-            onClick={() => {
-                // jumpToNextSlot()
+
+            className={"slot " + (value ?? "empty-slot") + (highlighted ? " chosen" : "")}
+            onClick={() => { 
                 setTargetSlot(index)
-                // setChosenOption(index, ColorList[selfIndex])
             }}
         >
             {
-                (value ?? "?") 
+                (value ?? "?")
             }
         </li>
 

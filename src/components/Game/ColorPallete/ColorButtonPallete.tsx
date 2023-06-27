@@ -1,6 +1,5 @@
 import { useState } from "react"
 import { FlexColUl } from "../../utils/FlexColUl"
-import { FlexRowUl } from "../../utils/FlexRowUl"
 import { ColorButton } from "./ColorButton"
 
 export const ColorButtonPallete = ({ colors,
@@ -21,11 +20,9 @@ export const ColorButtonPallete = ({ colors,
                 colors.map((color, index) => (
                     <ColorButton
                         onClick={() => {
-                            // console.log("Color button clicked " + targetSlot);
                             checkIfsameButtonClick(index)
                             setLastClickedIndex(index)
                             setOptionByCurrentSlot(color)
-                            // setChosenOption(targetSlot, color)
                         }}
                         key={index}
                         color={color}

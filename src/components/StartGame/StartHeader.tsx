@@ -1,26 +1,26 @@
 import { Button } from "@chakra-ui/react"
 import { MainCard } from "../utils/MainCard"
-import { StartGameOptions } from "./StartGameOptions"
-
-
+import { StartGameOptions } from "./Options/StartGameOptions"
 
 export const StartHeader = ({
     startGameFunction,
     optionsCount,
     slotsCount,
-    setSlotsCount
+    incrementSlotsCount,
+    incrementColorsCount
 }: {
     slotsCount: number,
     startGameFunction: Function,
     optionsCount: number,
-    setSlotsCount: Function,
+    incrementSlotsCount: (arg0: number) => void,
+    incrementColorsCount: (arg0: number) => void
 }) => (
     <MainCard>
         <StartGameOptions
             slotsCount={slotsCount}
-            startGameFunction={startGameFunction}
-            optionsCount={optionsCount}
-            setSlotsCount={setSlotsCount}
+            colorsCount={optionsCount}
+            incrementSlotsCount={incrementSlotsCount}
+            incrementColorsCount={incrementColorsCount}
         />
         <div>
             <p>בחרתי צירוף של {slotsCount} צבעים</p>
