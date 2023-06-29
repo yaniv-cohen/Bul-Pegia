@@ -22,7 +22,7 @@ myGames = {}
 def createNewGame(slots, letter_Count):
     id = str(uuid.uuid1())
     print('making new game : ' + id)
-    myGames[id] = game.Game(int(slots))
+    myGames[id] = game.Game(int(slots), int(letter_Count))
     print(len(myGames) )
     return (id)
 

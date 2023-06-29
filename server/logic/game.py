@@ -5,10 +5,10 @@ import uuid
 import random
 
 class Game:
-    def __init__(self, wordLength =4) -> None:
+    def __init__(self, wordLength =4, letterCount =6) -> None:
         self.game_id = str(uuid.uuid1())
         self.wordLength= wordLength
-        self.letters= ["A","B","C", "D", "E", "F"]
+        self.letters= ["A","B","C", "D", "E", "F", "G", "H", "I", "J", "K"][:letterCount]
         self.colorMap=["Blue", "Green", "Yellow", "Orange", "Red", "Purple"]
         self.allPossibleCombinations = []
         self.secret_word= self.getRandomCombination()
