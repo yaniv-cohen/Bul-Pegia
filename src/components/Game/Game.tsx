@@ -60,8 +60,6 @@ export const Game = (
         <MainCard>
             <FlexColumn>
                 <GameParagraph game={game} />
-                <SubmitButton arr={chosenOptions} func={submit}></SubmitButton>
-
                 <Slots
                     chosenOptions={chosenOptions}
                     slots={slots}
@@ -69,6 +67,7 @@ export const Game = (
                     targetSlot={targetSlot}
                     setTargetSlot={setTargetSlot}
                 />
+                <SubmitButton arr={chosenOptions} func={submit}></SubmitButton>
                 <HistoryPanel history={history}></HistoryPanel>
             </FlexColumn>
         </MainCard>

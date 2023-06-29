@@ -21,13 +21,14 @@ export const CheatPanel = ({
   }, [options, startIndex, pagination])
   return (
     <div>
-      <h2>this is a cheat panel</h2>
-      <h2>options:</h2>
-      <p>
-        {"Available options: " +
-          options.length
-        }
-      </p>
+      <div>
+        <h2>{"אלגוריתם חכם עוזר לך לנצח"}</h2>
+        <p>
+          {"ניחוש מומלץ מתוך " +
+            options.length
+          }
+        </p>
+      </div>
       <div>
         <p>{`${startIndex}+${pagination}`}</p>
         <button onClick={() => setStartIndex(Math.min(startIndex + pagination, options.length - pagination))}>+</button>
