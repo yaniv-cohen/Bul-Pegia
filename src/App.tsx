@@ -113,8 +113,6 @@ function App() {
   };
 
 
-
-
   const incrementSlotsCount = (direction: number) => {
     const numberInRange = slotsCount + direction
     if (numberInRange <= MAXIMUM_SLOTS && numberInRange >= MINIMUN_SLOTS)
@@ -165,7 +163,8 @@ function App() {
             />
           )
             :
-            <Game allPossibleOptions={allPossibleOptions}
+            <Game
+              usedColors={usedColors} allPossibleOptions={allPossibleOptions}
               chosenOptions={chosenOptions}
               history={history}
               game={game as GameType}

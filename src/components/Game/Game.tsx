@@ -16,13 +16,14 @@ import { ColorButtonPallete } from "./ColorPallete/ColorButtonPallete"
 import { getFirstEmptyIndex } from "../../utils/getFirstEmptyIndex"
 
 export const Game = (
-    { game, history, chosenOptions, submit, slots,
+    { game, history, chosenOptions, submit, slots, usedColors,
         allPossibleOptions, setChosenOptions, setChosenOption }: {
             game: GameType,
             history: History,
             chosenOptions: any[],
             submit: Function,
             slots: Array<string[]>,
+            usedColors: string[],
             allPossibleOptions: any[],
             setChosenOptions: Function, setChosenOption: (arg0: number, arg1: any) => any
         }
@@ -51,7 +52,7 @@ export const Game = (
 
     return <main style={{ display: "flex", flexDirection: "row", gap: "10px" }}>
         <MainCard>
-            <ColorButtonPallete colors={COLOR_LIST}
+            <ColorButtonPallete colors={usedColors}
                 setOptionByCurrentSlot={setOptionByCurrentSlot}
                 jumpToNextSlot={jumpToNextSlot}
             />

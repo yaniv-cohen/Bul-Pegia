@@ -30,17 +30,19 @@ export const CheatPanel = ({
       </p>
       <div>
         <p>{`${startIndex}+${pagination}`}</p>
-        <button onClick={() => setStartIndex(Math.min(startIndex + pagination, options.length + 1))}>+</button>
+        <button onClick={() => setStartIndex(Math.min(startIndex + pagination, options.length - pagination))}>+</button>
         <button onClick={() => setStartIndex(Math.max(startIndex - pagination, 0))}>-</button>
       </div>
       <ul id="resultsList">
-        {currentSelection.map((option, count) => (
-          <Option
-            setSelection={setSelection}
-            key={count}
-            option={charsToColors(option)}
-          ></Option>
-        ))}
+        {currentSelection.map((option, count) => {
+          if (option)
+            return <Option
+              setSelection={setSelection}
+              key={count}
+              option={charsToColors(option)}
+            ></Option>
+        }
+        )}
       </ul>
     </div>
   );
