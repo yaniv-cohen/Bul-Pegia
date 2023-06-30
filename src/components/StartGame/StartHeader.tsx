@@ -7,13 +7,17 @@ export const StartHeader = ({
     optionsCount,
     slotsCount,
     incrementSlotsCount,
-    incrementColorsCount
+    incrementColorsCount,
+    allowRepeats,
+    toggleAllowRepeats
 }: {
     slotsCount: number,
     startGameFunction: Function,
     optionsCount: number,
     incrementSlotsCount: (arg0: number) => void,
-    incrementColorsCount: (arg0: number) => void
+    incrementColorsCount: (arg0: number) => void,
+    allowRepeats: boolean,
+    toggleAllowRepeats: () => void,
 }) => (
     <MainCard>
         <StartGameOptions
@@ -21,6 +25,8 @@ export const StartHeader = ({
             colorsCount={optionsCount}
             incrementSlotsCount={incrementSlotsCount}
             incrementColorsCount={incrementColorsCount}
+            allowRepeats={allowRepeats}
+            toggleAllowRepeats={toggleAllowRepeats}
         />
         <div>
             <p>בחרתי צירוף של {slotsCount} צבעים</p>

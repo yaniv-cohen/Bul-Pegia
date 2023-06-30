@@ -18,11 +18,11 @@ myGames = {}
 # print(myGames[hi.game_id].game_id)
 # print("started game in server,  id: "+ base_game.game_id )
 
-@app.route("/createNewGame/<slots>/<letter_Count>")
-def createNewGame(slots, letter_Count):
+@app.route("/createNewGame/<slots>/<letter_Count>/<allow_repeats>")
+def createNewGame(slots, letter_Count, allow_repeats):
     id = str(uuid.uuid1())
-    print('making new game : ' + id)
-    myGames[id] = game.Game(int(slots), int(letter_Count))
+    print('making new game : ' + id )
+    myGames[id] = game.Game(int(slots), int(letter_Count), allow_repeats)
     print(len(myGames) )
     return (id)
 

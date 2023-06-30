@@ -11,6 +11,7 @@ import { chooseBest } from "./logic/chooseBest";
 import { MAXIMUM_COLORS, MAXIMUM_SLOTS, MINIMUN_COLORS, MINIMUN_SLOTS, SERVER_URL } from "./utils/globals";
 import { Game } from "./components/Game/Game";
 import { GameType } from "./types/Game";
+import { getAllNonRepeatingPermutations } from "./utils/getAllNonRepeatingPermutations";
 
 function App() {
   // const [count, setCount] = useState(0);
@@ -18,6 +19,7 @@ function App() {
   //Game options
   const [optionsCount, setOptionsCount] = useState<number>(6);
   const [slotsCount, setSlotsCount] = useState<number>(4);
+  const [allowRepeats, setAllowRepeats] = useState<boolean>(true);
   const [usedColors, setUsedColors] = useState<Array<string>>(COLOR_LIST.slice(0, optionsCount));
   const [usedLetters, setUsedLetters] = useState<Array<string>>(LETTER_OPTIONS.slice(0, optionsCount));
 
@@ -62,6 +64,10 @@ function App() {
     setAllPossibleOptions(getAllPermutations(usedLetters.slice(0, optionsCount), slotsCount))
     setGame(undefined)
     setHistory({ rounds: [] })
+  }
+
+  const toggleAllowRepeats = () => {
+    setAllowRepeats(!allowRepeats)
   }
 
   const submit = async (arr: string[]) => {
@@ -136,46 +142,58 @@ function App() {
     setResetOnSubmit(!resetOnSubmit);
   };
   const startGameFunction = async () => {
-    const url = `${SERVER_URL}/createNewGame/${slotsCount}/${optionsCount}`;
+    const url = `${SERVER_URL}/createNewGame/${slotsCount}/${optionsCount}/${allowRepeats ? '1' : '0'}`;
+    // const url = `${SERVER_URL}/createNewGame/${slotsCount}/${optionsCount}`;
+
     console.log(`fetch to ` + url);
     const result = (await axios.get(url)).data;
 
-    setGame({ game_id: result, remainingTurns: 1, turnCount: 1 });
+    setGame({ game_id: result, remainingTurns: 15, turnCount: 1 });
     setGameStarted(true);
-    setAllPossibleOptions(
-      getAllPermutations(usedLetters.slice(0, optionsCount), slotsCount)
-    );
+    if (allowRepeats === true) {
+      setAllPossibleOptions(
+        getAllPermutations(usedLetters.slice(0, optionsCount), slotsCount)
+      );
+    }
+    else {
+
+      setAllPossibleOptions(
+        getAllNonRepeatingPermutations(usedLetters.slice(0, optionsCount), slotsCount)
+      );
+    };
     setHistory({ rounds: [] });
-  };
-  return (
-    <div className="App">
-      {/* <BoardBackground /> */}
-      <GameHeader toggleResetOnSubmit={toggleResetOnSubmit}
-        resetOnSubmit={resetOnSubmit}      >
-        {
-          !gameStarted ? (
-            <StartHeader
-              startGameFunction={startGameFunction}
-              optionsCount={optionsCount}
-              slotsCount={slotsCount}
-              incrementSlotsCount={incrementSlotsCount}
-              incrementColorsCount={incrementColorsCount}
-            />
-          )
-            :
-            <Game
-              usedColors={usedColors} allPossibleOptions={allPossibleOptions}
-              chosenOptions={chosenOptions}
-              history={history}
-              game={game as GameType}
-              setChosenOptions={setChosenOptions}
-              slots={slots}
-              submit={submit}
-              setChosenOption={setChosenOption}
-            />
-        }
-      </GameHeader>
-    </div>
-  );
-}
-export default App;
+  }
+    return (
+      <div className="App">
+        {/* <BoardBackground /> */}
+        <GameHeader toggleResetOnSubmit={toggleResetOnSubmit}
+          resetOnSubmit={resetOnSubmit}      >
+          {
+            !gameStarted ? (
+              <StartHeader
+                startGameFunction={startGameFunction}
+                optionsCount={optionsCount}
+                slotsCount={slotsCount}
+                incrementSlotsCount={incrementSlotsCount}
+                incrementColorsCount={incrementColorsCount}
+                allowRepeats={allowRepeats}
+                toggleAllowRepeats={toggleAllowRepeats}
+              />
+            )
+              :
+              <Game
+                usedColors={usedColors} allPossibleOptions={allPossibleOptions}
+                chosenOptions={chosenOptions}
+                history={history}
+                game={game as GameType}
+                setChosenOptions={setChosenOptions}
+                slots={slots}
+                submit={submit}
+                setChosenOption={setChosenOption}
+              />
+          }
+        </GameHeader>
+      </div>
+    );
+  }
+  export default App;

@@ -5,35 +5,30 @@ import uuid
 import random
 
 class Game:
-    def __init__(self, wordLength =4, letterCount =6) -> None:
+    def __init__(self, wordLength =4, letterCount =6, allowRepeats = True) -> None:
         self.game_id = str(uuid.uuid1())
         self.wordLength= wordLength
         self.letters= ["A","B","C", "D", "E", "F", "G", "H", "I", "J", "K"][:letterCount]
         self.colorMap=["Blue", "Green", "Yellow", "Orange", "Red", "Purple"]
         self.allPossibleCombinations = []
-        self.secret_word= self.getRandomCombination()
         self.guess_number=1
         self.currentPossibleResults= self.allPossibleCombinations[:]
-        print("My secret word is: " + str(self.secret_word))
         self.usedLetters= []
         self.locations = [self.letters[:]*4]
         self.MAX_GUESS =10
-    #     self.possibleGuesses = self.permu(self.letters, {}) 
-    #     print(str(self.possibleGuesses))
-
-    # def permu(lists, allPossibleCombinations, prefix = '' ):
-    #     if not lists:
-    #         allPossibleCombinations.append(list(prefix))
-    #         return
-    #     first = lists[0]
-    #     rest = lists[1:]
-    #     for letter in first:
-    #         permu(rest, prefix + letter)
+        self.allowRepeats = allowRepeats
+        self.secret_word= self.getRandomCombination()
+        print("My secret word is: " + str(self.secret_word))
 
     def getRandomCombination(self):
         output = []
-        while(len(output)<self.wordLength):
-            output.append(random.choice(self.letters))
+        print('new game with ' + str(self))
+        if(self.allowRepeats):
+            while(len(output)<self.wordLength):
+                output.append(random.choice(self.letters))
+        else:
+            random.shuffle(self.letters)
+            output.append(self.letters[:self.wordLength])
         return output
     def getMarks(self, guessed_word, target_word):
         [blacks, whites] = getMarksForGuess(guessed_word[:], target_word[:])
