@@ -17,12 +17,12 @@ export const Slot = ({ highlighted, slot, index,
         <li
 
             className={"slot " + (value ?? "empty-slot") + (highlighted ? " chosen" : "")}
-            onClick={() => { 
+            onClick={() => {
                 setTargetSlot(index)
             }}
         >
             {
-                (value ?? "?")
+                (value ? value[0].toUpperCase() + value.slice(1) : "?")
             }
         </li>
 

@@ -2,13 +2,13 @@ import { Result } from "../types/historyTypes";
 import { getAllPermutations } from "../utils/getAllPermutations";
 import { getResult } from "./getResult";
 
-export const gernerateOptions = (
+export const gernerateOptions = async (
   slots: number,
   options: string[],
   inputWord: string[],
   result: Result,
   allPossibleCombinations: Array<string[]> = getAllPermutations(options, slots)
-): string[][] => {
+): Promise<Array<string[]>> => {
   const newPossibleCombinations = allPossibleCombinations.filter(
     (possibility, i) => {
       const out = getResult(possibility, inputWord);

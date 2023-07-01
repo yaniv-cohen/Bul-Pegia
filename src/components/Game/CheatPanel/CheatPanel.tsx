@@ -1,3 +1,4 @@
+import { Button } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { charsToColors } from "../../../logic/charsToColors";
 import Option from "./Option";
@@ -15,10 +16,21 @@ export const CheatPanel = ({
     options.slice(startIndex, startIndex + pagination)
   )
   useEffect(() => {
+    console.log("current selction length  is ", currentSelection.length);
+
     setCurrentSelection(
       options.slice(startIndex, startIndex + pagination)
     )
+    if (currentSelection.length <= 0) {
+      setCurrentSelection(
+        options.slice(0, pagination)
+      )
+    }
   }, [options, startIndex, pagination])
+
+  // useEffect(() => {
+  //   setStartIndex(0)
+  // }, [currentSelection])
   return (
     <div>
       <div>
@@ -30,9 +42,13 @@ export const CheatPanel = ({
         </p>
       </div>
       <div>
-        <p>{`${startIndex}+${pagination}`}</p>
-        <button onClick={() => setStartIndex(Math.min(startIndex + pagination, options.length - pagination))}>+</button>
+        {/* <p>{`${startIndex}+${pagination}`}</p> */}
+        {/* <button onClick={() => setStartIndex(Math.min(startIndex + pagination, options.length - pagination))}>+</button>
         <button onClick={() => setStartIndex(Math.max(startIndex - pagination, 0))}>-</button>
+
+        <div> */}
+        <Button onClick={() => setStartIndex(Math.min(startIndex + pagination, options.length - pagination))}>+</Button>
+        <Button onClick={() => setStartIndex(Math.max(startIndex - pagination, 0))}>-</Button>
       </div>
       <ul id="resultsList">
         {currentSelection.map((option, count) => {
@@ -45,7 +61,7 @@ export const CheatPanel = ({
         }
         )}
       </ul>
-    </div>
+    </div >
   );
 };
 export default CheatPanel;

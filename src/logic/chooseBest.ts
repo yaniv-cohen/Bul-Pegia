@@ -20,7 +20,6 @@ export const chooseBest = (options: string[][]): [number, string[]] => {
       maxZeroes = zeros;
     }
     if (maxBlacksOutput < blacksTotal) {
-      console.log(maxBlacksOutput, blacksTotal);
       maxBlacksOutput = blacksTotal;
       outputIndex = index;
     }

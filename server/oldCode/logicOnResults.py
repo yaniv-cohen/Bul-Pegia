@@ -7,7 +7,6 @@ def logicOnResults(blacks, whites,chars, locations , usedLetters,currentPossible
     if(blacks==4):
         print("you Won!")
 
-
     if(blacks==0):
         for i in range(len(chars)):
             if(chars[i] in locations[i]):

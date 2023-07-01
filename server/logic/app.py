@@ -1,15 +1,14 @@
 import uuid
 from flask import Flask
+from game import *
 from flask_cors import CORS
-import game
-import time
 from flask import request
-from getNextPossibleResults import getNextPossibleResults
+# from getNextPossibleResults import getNextPossibleResults
 app = Flask(__name__)
 CORS(app)
 
 wordLength= 4
-myGames = {}
+myGames = {} 
 # fisrtGameId = "one"
 # hi=game.Game(wordLength)
 # myGames[hi.game_id] = hi
@@ -18,33 +17,63 @@ myGames = {}
 # print(myGames[hi.game_id].game_id)
 # print("started game in server,  id: "+ base_game.game_id )
 
-@app.route("/createNewGame/<slots>/<letter_Count>/<allow_repeats>")
-def createNewGame(slots, letter_Count, allow_repeats):
+@app.route("/createNewGame/<slots>/<letter_Count>/<allow_repeats>/<MAX_GUESS>")
+def createNewGame(slots, letter_Count, allow_repeats, MAX_GUESS):
     id = str(uuid.uuid1())
-    print('making new game : ' + id )
-    myGames[id] = game.Game(int(slots), int(letter_Count), allow_repeats)
+    print('making new game : ' + id + str(slots)+ str(letter_Count)+ str(allow_repeats))
+    print(slots+ letter_Count+ allow_repeats)
+    myGames[id] = Game(int(slots), int(letter_Count), allow_repeats , int(MAX_GUESS))
     print(len(myGames) )
     return (id)
 
 @app.route("/game/<id>/guess/<input_word>")
 def guess(id, input_word):
-    new_game = myGames[str(id)]
-    print("id:"+id, "  Word:"+ input_word +
-           "  secret: " +','.join(new_game.secret_word))
-    new_game.current_guess = input_word
-    new_game.guess_number+=1
-    [blacks, whites] = new_game.getMarks(list(input_word.upper()) , new_game.secret_word)
-    return (
-        {
-        "possibilities": getNextPossibleResults( [] , blacks , whites, [], input_word),
-        "input_word": input_word,
-        "secret_word": new_game.secret_word,
-        "result": {"white" : whites, "black" : blacks},
-        "game_id": id,
-        "text" : (
-        "<h1>Your result is: <div>BLACKS: " +str(blacks) +", WHITES: "+ str(whites) 
-    +"</h1><ul><li>id:"+str(new_game.game_id)+"</li><li>secret_word:"+",".join(new_game.secret_word) +"</li></ul>")
-    } )
+    target_game = myGames[str(id)]
+    print(target_game)
+    print("id:"+id[:5], "  Word:"+ input_word +
+           "  secret: " +','.join(target_game.secret_word) + str(target_game.guess_number) + "/"+str(target_game.MAX_GUESS))
+    if(target_game.guess_number+1>target_game.MAX_GUESS ):
+        print("lost, sorry")
+        output={
+            "secret_word": target_game.secret_word,
+            "turns": target_game.guess_number,
+            "game_id": id,
+        }
+        target_game.status = "lost"
+    else:
+        target_game.guess_number= target_game.guess_number + 1
+
+        [blacks, whites] = getMarks(list(input_word.upper()) , target_game.secret_word)
+        if(blacks== target_game.wordLength):
+            target_game.status = "won"
+            output={
+                "secret_word": target_game.secret_word,
+                "result": {"white" : whites, "black" : blacks},
+                "turns": target_game.guess_number,
+                "game_id": id,
+                "status": "won"
+            }
+        elif(target_game.guess_number == target_game.MAX_GUESS):
+            print("lost, sorry")
+            output={
+                "secret_word": target_game.secret_word,
+                "result": {"white" : whites, "black" : blacks},
+                "turns": target_game.guess_number,
+                "game_id": id,
+                "status": "lost"
+            }
+            target_game.status = "lost"
+        else:
+            output =  {
+                "input_word": input_word,
+                "result": {"white" : whites, "black" : blacks},
+                "turns": target_game.guess_number,
+                "game_id": id,
+                "status": "active"
+            } 
+    # output= getOutputForGuess(target_game, input_word)
+    print(output)
+    return output
 
 @app.route('/scoreboard')
 def scoreboard():
@@ -52,3 +81,6 @@ def scoreboard():
 @app.route('/')
 def hello_world():
     return "<p>Hello, World !</p>"
+
+
+

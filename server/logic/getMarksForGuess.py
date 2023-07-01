@@ -1,3 +1,9 @@
+def getMarks( guessed_word, target_word):
+    [blacks, whites] = getMarksForGuess(guessed_word[:], target_word[:])
+    print(blacks, whites)
+    return [blacks, whites]
+
+
 def getMarksForGuess(word1, word2):
     outputBlack = 0
     i=0

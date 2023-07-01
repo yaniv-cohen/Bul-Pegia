@@ -13,9 +13,9 @@ export const GameHeader = ({ children, ...rest }: any) => {
     return (
         <div>
             <header className={"GameHeader"}>
-                <Logo></Logo>
+                <Logo ></Logo>
                 <div>
-                    <div onClick={toggleShowPreferences}>
+                    <div onClick={toggleShowPreferences} >
                         <IconGear ></IconGear>
                     </div>
 
