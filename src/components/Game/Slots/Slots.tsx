@@ -21,6 +21,7 @@ export const Slots = ({ slots, setChosenOption, chosenOptions,
             {
                 slots.map((slot, index) => (
                     <Slot
+                    key={index}
                         setTargetSlot={setTargetSlot}
                         highlighted={index === targetSlot}
                         value={chosenOptions[index]}

@@ -1,14 +1,34 @@
 .FlexRow {
-    display: flex;
-    flex-direction: row;
-    gap:5px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
 }
 
 .FlexColoumn {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
+  gap:5px;
 }
+
 .FlexReversedColoumn {
-    display: flex;
-    flex-direction: column-reverse;
+  display: flex;
+  flex-direction: column-reverse;
+}
+.FlexUl{
+  gap: 20px;
+}
+
+.spaced-rtl {
+  direction: rtl;
+  justify-content: space-between;
+}
+.spaced-around-rtl {
+  direction: rtl;
+  justify-content: space-around;
+}
+
+.container {
+  width: max-content;
+  height: max-content;
 }

@@ -19,17 +19,27 @@ myGames = {}
 
 @app.route("/createNewGame/<slots>/<letter_Count>/<allow_repeats>/<MAX_GUESS>")
 def createNewGame(slots, letter_Count, allow_repeats, MAX_GUESS):
-    id = str(uuid.uuid1())
-    print('making new game : ' + id + str(slots)+ str(letter_Count)+ str(allow_repeats))
-    print(slots+ letter_Count+ allow_repeats)
-    myGames[id] = Game(int(slots), int(letter_Count), allow_repeats , int(MAX_GUESS))
-    print(len(myGames) )
+    id = str(uuid.uuid4())[0:4]
+    tries = 0
+    while(id in myGames):
+        tries+=1
+        id = str(uuid.uuid4())[0:4 + tries]
+    print('making new game : ' + id  + 
+          " slots: "+ str(slots)+ 
+          " letter_Count: "+ str(letter_Count)+ 
+          " allow_repeats: "+ str(allow_repeats))
+    myGames[id] = Game(id, int(slots), int(letter_Count), allow_repeats , int(MAX_GUESS))
+    obj = myGames[id]
+    for attr in dir(obj):
+        # Getting rid of dunder methods
+        if not attr.startswith("__"):
+            print(attr, getattr(obj, attr))
     return (id)
 
 @app.route("/game/<id>/guess/<input_word>")
 def guess(id, input_word):
     target_game = myGames[str(id)]
-    print(target_game)
+    # print(target_game)
     print("id:"+id[:5], "  Word:"+ input_word +
            "  secret: " +','.join(target_game.secret_word) + str(target_game.guess_number) + "/"+str(target_game.MAX_GUESS))
     if(target_game.guess_number+1>target_game.MAX_GUESS ):
@@ -49,6 +59,10 @@ def guess(id, input_word):
             output={
                 "secret_word": target_game.secret_word,
                 "result": {"white" : whites, "black" : blacks},
+                "secretWord": target_game.secret_word,
+                  "maxTurns": target_game.MAX_GUESS,
+                  "allowRepeats" : target_game.allowRepeats,
+                   "numberOfColors": target_game.letter_Count,
                 "turns": target_game.guess_number,
                 "game_id": id,
                 "status": "won"
@@ -58,6 +72,10 @@ def guess(id, input_word):
             output={
                 "secret_word": target_game.secret_word,
                 "result": {"white" : whites, "black" : blacks},
+                "secretWord": target_game.secret_word,
+                  "maxTurns": target_game.MAX_GUESS,
+                  "allowRepeats" : target_game.allowRepeats,
+                   "numberOfColors": target_game.letter_Count,
                 "turns": target_game.guess_number,
                 "game_id": id,
                 "status": "lost"

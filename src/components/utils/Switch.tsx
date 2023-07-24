@@ -2,7 +2,7 @@ export const SwitchRect = ({ value, toggleFunction }: { value: boolean, toggleFu
 
     return (
         <label className="switch">
-            <input type="checkbox" checked={value} onClick={() => toggleFunction()} />
+            <input type="checkbox" checked={value} onChange={() => toggleFunction()} />
             <span className="slider round"></span>
         </label>
     )

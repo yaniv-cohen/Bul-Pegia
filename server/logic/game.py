@@ -4,10 +4,11 @@ import uuid
 import random
 
 class Game:
-    def __init__(self, wordLength =4, letterCount =6, allowRepeats = True, MAX_GUESS=10) -> None:
-        self.game_id = str(uuid.uuid1())
+    def __init__(self, id, wordLength =4, letterCount =6, allowRepeats = True, MAX_GUESS=10) -> None:
+        self.game_id = str(id)
         self.status = "active"
         self.wordLength= wordLength
+        self.letter_Count = letterCount
         self.letters= ["A","B","C", "D", "E", "F", "G", "H", "I", "J", "K"][:letterCount]
         self.colorMap=["Blue", "Green", "Yellow", "Orange", "Red", "Purple"]
         self.guess_number=0

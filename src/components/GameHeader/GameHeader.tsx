@@ -23,6 +23,7 @@ export const GameHeader = ({ children, ...rest }: any) => {
                         <PreferencesTab toggleResetOnSubmit={rest.toggleResetOnSubmit} resetOnSubmit={rest.resetOnSubmit} />
                         : <></>}
                 </div>
+                
             </header>
             {children}
         </div>)

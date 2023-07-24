@@ -1,3 +1,3 @@
 export const FlexColUl = ({ className, children }: any) => {
-  return <ul className={className + " FlexColumn"}>{children}</ul>;
+  return <ul className={" FlexColoumn FlexUl" + className ?? ""}>{children}</ul>;
 };

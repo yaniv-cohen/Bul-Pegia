@@ -1,8 +1,10 @@
 export const Option = ({
   setSelection,
+  setStartIndex,
   option,
 }: {
   setSelection: Function;
+  setStartIndex: (arg0: number) => void;
   option: string[];
 }) => {
   return (
@@ -10,6 +12,7 @@ export const Option = ({
       // onTouchMoveCapture={}
       onClick={() => {
         setSelection(option);
+        setStartIndex(0);
         window.scrollTo(0, 0);
       }}
       className="flex-row option-row"
