@@ -39,11 +39,8 @@ def createNewGame(slots, letter_Count, allow_repeats, MAX_GUESS):
 @app.route("/game/<id>/guess/<input_word>")
 def guess(id, input_word):
     target_game = myGames[str(id)]
-    # print(target_game)
-    print("id:"+id[:5], "  Word:"+ input_word +
-           "  secret: " +','.join(target_game.secret_word) + str(target_game.guess_number) + "/"+str(target_game.MAX_GUESS))
+    # Calculate if the game is lost 
     if(target_game.guess_number+1>target_game.MAX_GUESS ):
-        print("lost, sorry")
         output={
             "secret_word": target_game.secret_word,
             "turns": target_game.guess_number,
@@ -56,7 +53,7 @@ def guess(id, input_word):
         [blacks, whites] = getMarks(list(input_word.upper()) , target_game.secret_word)
         if(blacks== target_game.wordLength):
             target_game.status = "won"
-            output={
+            output= {
                 "secret_word": target_game.secret_word,
                 "result": {"white" : whites, "black" : blacks},
                 "secretWord": target_game.secret_word,
@@ -90,15 +87,18 @@ def guess(id, input_word):
                 "status": "active"
             } 
     # output= getOutputForGuess(target_game, input_word)
-    print(output)
+    # print(output)
     return output
 
-@app.route('/scoreboard')
-def scoreboard():
-    return "<p>Scoreboard !</p>"
+# @app.route('/scoreboard')
+# def scoreboard():
+#     return "<p>Scoreboard !</p>"
+@app.route('/gameCount')
+def gameCount():
+    return str(len(myGames))
 @app.route('/')
 def hello_world():
-    return "<p>Hello, World !</p>"
+    return '<p>The endpoints are "/createNewGame/slots/letter_Count/allow_repeats/MAX_GUESS", "/game/id/guess/input_word" "/gameCount"</p>'
 
 
 
