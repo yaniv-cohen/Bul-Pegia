@@ -3,8 +3,8 @@ import { FlexColumn } from "../../utils/FlexColoumn";
 import { Option } from "./Option";
 import { SwitchRect } from "../../utils/Switch";
 import { FlexRow } from "../../utils/FlexRow";
-import ComputerIcon from "./assets/computer.svg";
-import PersonIcon from "./assets/person.svg";
+import ComputerIcon from "/assets/computer.svg";
+import PersonIcon from "/assets/person.svg";
 import { ButtonColoumn } from "../../utils/Buttons/ButtonColoumn";
 
 export const StartGameOptions = ({
