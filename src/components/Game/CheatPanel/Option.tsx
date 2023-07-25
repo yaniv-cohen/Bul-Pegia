@@ -17,7 +17,7 @@ export const Option = ({
       }}
       className="flex-row option-row"
     >
-      {option.map((char, index) => (
+      {option?.map((char, index) => (
         <span key={index} className={char + " marked colorOption"}>
           {char[0].toUpperCase() + ", "}
         </span>
