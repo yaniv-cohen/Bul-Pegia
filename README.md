@@ -2,7 +2,7 @@
 
 ## Description
 
-This is an api for creating and playing random games of the Israeli game of Bul Pgia.
+This is an api for creating and playing random games of the Israeli game of Bul Pgia or the game Mastermind.
 
 [Link to an article about the game by the Davidson Institute](https://davidson.weizmann.ac.il/online/mathcircle/articles/%D7%91%D7%95%D7%9C-%D7%A4%D7%92%D7%99%D7%A2%D7%94#:~:text=%D7%A2%D7%9C%20%D7%9B%D7%9C%20%D7%A6%D7%91%D7%A2%20%D7%A0%D7%9B%D7%95%D7%9F%20%D7%A9%D7%A0%D7%9E%D7%A6%D7%90,%22%D7%A9%D7%AA%D7%99%20%D7%A4%D7%92%D7%99%D7%A2%D7%95%D7%AA%22%20%D7%95%D7%9B%D7%95)
 
@@ -165,9 +165,11 @@ This request returns the number of games currently on the server, including fini
 Sadly, this API currently does not support error messages:
 
 ![Bul Pgia](public/bulpgiaLogo.png)
+
 ```
 This Api was created by the Yaniv Cohen squad.
 ```
+
 <!-- - `400 Bad Request`: The request was malformed or missing required parameters.
 - `401 Unauthorized`: The API key provided was invalid or missing.
 - `404 Not Found`: The requested resource was not found.
