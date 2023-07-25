@@ -1,5 +1,5 @@
 import { Button } from "@chakra-ui/react";
-import CopySVG from "/Copy.svg";
+import CopySVG from "/copy.svg";
 export const CopyButton = ({
   value,
   children,
