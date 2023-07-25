@@ -1,4 +1,4 @@
-import BackgroundImage from '../../../assets/Wooden.jpg'
+import BackgroundImage from '/assets/Wooden.jpg'
 
 export const BoardBackground = () => {
     return (
