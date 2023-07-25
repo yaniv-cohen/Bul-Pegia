@@ -3,7 +3,7 @@ import { useState } from "react";
 import { FlexColumn } from "../utils/FlexColoumn";
 import { MainCard } from "../utils/MainCard";
 import { StartGameOptions } from "./Options/StartGameOptions";
-// import screenshot from "../../assets/screenshot.png";
+// import screenshot from "../../screenshot.png";
 // import { Difficulty } from "../utils/Difficulty/Difficulty";
 
 export const StartHeader = ({
