@@ -5,9 +5,6 @@ import { SwitchRect } from "../../utils/Switch";
 export const PreferencesTab = ({ toggleResetOnSubmit, resetOnSubmit }: {
     toggleResetOnSubmit: () => void, resetOnSubmit: boolean
 }) => {
-    // const clicked = (fn: Function) => {
-    //     fn()
-    // }
     return (
         <Card>
             <FlexColumn>

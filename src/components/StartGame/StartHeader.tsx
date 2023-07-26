@@ -3,8 +3,6 @@ import { useState } from "react";
 import { FlexColumn } from "../utils/FlexColoumn";
 import { MainCard } from "../utils/MainCard";
 import { StartGameOptions } from "./Options/StartGameOptions";
-// import screenshot from "../../screenshot.png";
-// import { Difficulty } from "../utils/Difficulty/Difficulty";
 
 export const StartHeader = ({
   startGameFunction,
@@ -81,8 +79,6 @@ export const StartHeader = ({
             vsComputer={vsComputer}
             setVsComputer={setVsComputer}
           />
-          {/* <Difficulty value={2} maxValue={5}></Difficulty> */}
-
           <Button
             onClick={() => {
               startGameFunction(true);

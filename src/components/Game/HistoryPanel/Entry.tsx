@@ -1,8 +1,7 @@
 import { Round } from "../../../types/historyTypes";
-import { COLOR_LIST, LETTER_OPTIONS } from "../../../utils/letters";
-import { Circles } from "../../utils/Circles";
+import { charToColor } from "../../../utils/stringToColors";
+import { Circles } from "../../utils/Circle/Circles";
 import { FlexRow } from "../../utils/FlexRow";
-import { charToColor } from "../../utils/stringToColors";
 
 export const Entry = ({
   round,

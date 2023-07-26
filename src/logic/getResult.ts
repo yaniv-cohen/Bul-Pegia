@@ -3,7 +3,6 @@ import { inArray } from "../utils/inArray";
 
 export const getResult = (word1: string[], word2: string[]): Result => {
   let outputBlack = 0;
-  // console.log(word1,word2);
   word1.forEach((char, i) => {
     if (char === word2[i]) {
       outputBlack++;

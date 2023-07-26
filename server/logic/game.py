@@ -1,37 +1,21 @@
-from getMarksForGuess import *
-from getRandomCombination import getRandomCombination
-import uuid
-import random
+from get_random_combination import get_random_combination
 
 class Game:
-    def __init__(self, id, wordLength =4, letterCount =6, allowRepeats = True, MAX_GUESS=10) -> None:
+    def __init__(self, id, word_length =4, 
+                 letter_count =6, allow_repeats = True,
+                 max_guesseses=10) -> None:
         self.game_id = str(id)
         self.status = "active"
-        self.wordLength= wordLength
-        self.letter_Count = letterCount
-        self.letters= ["A","B","C", "D", "E", "F", "G", "H", "I", "J", "K"][:letterCount]
-        self.colorMap=["Blue", "Green", "Yellow", "Orange", "Red", "Purple"]
+        self.word_length= word_length
+        self.letter_count = letter_count
+        self.letters= ["A","B","C", "D", "E", "F", "G", "H", "I", "J", "K"][:letter_count]
+        self.color_map=["Blue", "Green", "Yellow", "Orange", "Red", "Purple"]
         self.guess_number=0
-        self.MAX_GUESS = MAX_GUESS
-        self.allowRepeats = allowRepeats
-        self.secret_word= getRandomCombination(self.wordLength, self.letters, self.allowRepeats)
+        self.max_guesses = max_guesseses
+        self.allow_repeats = allow_repeats
+        self.secret_word= get_random_combination(self.word_length, self.letters, self.allow_repeats)
 
     
-    # def newProcessGuess(self, chars, word ,currentPossibleResults):
-    #     [blacks, whites] = getMarksForGuess(chars[:], word[:])
-    #     print(blacks, whites)
-    #     print("Start with "+str(len(currentPossibleResults)) + " possibilities.")
-    #     currentPossibleResults= logicOnResults(blacks, whites, chars, self.locations, self.usedLetters, currentPossibleResults)
-    #     print("Now only have  "+str(len(currentPossibleResults)) + " possibilities.")
-    #     return currentPossibleResults
-    # def processGuess(self, guessed_word, target_word ,currentPossibleResults):
-    #     [blacks, whites] = getMarksForGuess(guessed_word[:], target_word[:])
-    #     print(blacks, whites)
-    #     print("Start with "+ str(len(currentPossibleResults)) + " possibilities.")
-    #     currentPossibleResults= logicOnResults(blacks, whites, guessed_word, self.locations, self.usedLetters, currentPossibleResults)
-    #     print("Now only have  "+str(len(currentPossibleResults)) + " possibilities.")
-    #     return currentPossibleResults
- 
-def getNumbers(input_word):
+def get_numbers(input_word):
     return ' '.join({ str(len(input_word)), str(len(input_word)/2)})
 

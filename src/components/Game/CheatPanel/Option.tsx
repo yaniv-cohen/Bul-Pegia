@@ -9,7 +9,6 @@ export const Option = ({
 }) => {
   return (
     <div
-      // onTouchMoveCapture={}
       onClick={() => {
         setSelection(option);
         setStartIndex(0);

@@ -18,5 +18,4 @@ export const getFirstEmptyIndex = (arr: any[], startingIndex = 0): number | unde
         }
         move++;
     }
-    return
 }

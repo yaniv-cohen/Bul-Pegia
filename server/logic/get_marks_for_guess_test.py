@@ -1,11 +1,11 @@
-from getMarksForGuess import getMarksForGuess
+from get_marks_for_guess import get_marks_for_guess
 
-def me(A,B,blacks, whites):
-    out=getMarksForGuess(A,B)
+def me(combination_a,combination_b, blacks, whites):
+    out=get_marks_for_guess(combination_a,combination_b)
     assert out[0] == blacks
     assert out[1] == whites
 
-def test_getMarksForGuess() -> None:
+def test_get_marks_for_guess() -> None:
     me(["A", "B", "C", "D"], ["A", "B", "C", "D"] ,4 , 0)
     me(["A", "B", "C", "D"], ["A", "B", "C", "E"] ,3 , 0)
     me(["A", "B", "A", "B"], ["A", "B", "E", "E"] ,2 , 0)

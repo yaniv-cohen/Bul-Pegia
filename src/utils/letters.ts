@@ -1,5 +1,4 @@
-export type Letter = string
-export const LETTER_OPTIONS = <Letter[]>[
+export const LETTER_OPTIONS = [
   "A",
   "B",
   "C",
@@ -26,7 +25,7 @@ export const COLOR_LIST2 = {
   purple: { shortenedName: "Prp" },
   brown: { shortenedName: "Brn" },
   grey: { shortenedName: "Gry" },
-}
+};
 
 export const COLOR_LIST = [
   "red",

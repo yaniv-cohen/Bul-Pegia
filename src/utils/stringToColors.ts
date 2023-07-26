@@ -1,4 +1,4 @@
-import { COLOR_LIST, LETTER_OPTIONS } from "../../utils/letters";
+import { COLOR_LIST, LETTER_OPTIONS } from "./letters";
 
 export const stringToColors = (input: string): string[] => {
   return input.split("").map((char) => {

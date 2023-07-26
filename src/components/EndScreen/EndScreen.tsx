@@ -20,7 +20,6 @@ export const EndScreen = ({
   const gameWon = endgameResult?.status === "won";
   return (
     <main>
-      {/* {JSON.stringify(endgameResult?.numberOfColors) + "\n"} */}
       <MainCard>
         <FlexRow className="spaced-rtl">
           <h1 className="H2 spaced-around-rtl">

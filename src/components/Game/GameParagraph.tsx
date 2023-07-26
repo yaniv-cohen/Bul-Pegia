@@ -6,7 +6,7 @@ export function GameParagraph({ game }: { game: GameType }) {
     <div>
       <H2
         text={
-          game && game["game_id"]
+          game?.gameId
             ? `סיבוב מספר ${game.turnCount! + 1}`
             : "אוי שמוי! יש יש תקלה במשחק. נסה לרענן את העמוד"
         }

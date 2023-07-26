@@ -11,22 +11,16 @@ export const CheatPanel = ({
   options: string[][];
 }) => {
   const [startIndex, setStartIndex] = useState(0);
-  const [pagination, setPagination] = useState(10);
+  const pagination = 10;
   const [currentSelection, setCurrentSelection] = useState(
     options.slice(startIndex, startIndex + pagination)
   );
   useEffect(() => {
-    // console.log("current selction length  is ", currentSelection.length);
-
     setCurrentSelection(options.slice(startIndex, startIndex + pagination));
     if (currentSelection.length <= 0) {
       setCurrentSelection(options.slice(0, pagination));
     }
   }, [options, startIndex, pagination]);
-
-  // useEffect(() => {
-  //   setStartIndex(0)
-  // }, [currentSelection])
 
   return (
     <div>

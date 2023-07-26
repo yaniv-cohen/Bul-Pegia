@@ -15,7 +15,7 @@ export const ColorButtonPallete = ({ colors,
         }
     }
     return (
-        <FlexColUl>
+        <FlexColUl >
             {
                 colors.map((color, index) => (
                     <ColorButton

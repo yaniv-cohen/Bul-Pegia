@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { GameState, GameType } from "../../types/Game";
+import {  GameType } from "../../types/Game";
 import { History, Result } from "../../types/historyTypes";
 import CheatPanel from "./CheatPanel/CheatPanel";
 import HistoryPanel from "./HistoryPanel/HistoryPanel";
@@ -12,7 +12,6 @@ import { Slots } from "./Slots/Slots";
 import { ColorButtonPallete } from "./ColorPallete/ColorButtonPallete";
 import { getFirstEmptyIndex } from "../../utils/getFirstEmptyIndex";
 import {
-  Button,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
@@ -20,7 +19,7 @@ import {
   NumberInputStepper,
 } from "@chakra-ui/react";
 import { FlexRow } from "../utils/FlexRow";
-import { validResult } from "../utils/validResult";
+import { validResult } from "../../utils/validResult";
 
 export const Game = ({
   game,
