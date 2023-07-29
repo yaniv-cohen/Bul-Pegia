@@ -59,7 +59,6 @@ export const Game = ({
 
   const jumpToNextSlot = () => {
     const nextEmptySlotIndex = getFirstEmptyIndex(chosenOptions, targetSlot);
-    console.log("next empty is " + nextEmptySlotIndex);
     if (nextEmptySlotIndex === undefined) {
       if (targetSlot >= slots.length - 1) {
         setTargetSlot(0);

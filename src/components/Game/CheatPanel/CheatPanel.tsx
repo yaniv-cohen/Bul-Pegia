@@ -26,7 +26,8 @@ export const CheatPanel = ({
     <div>
       <div>
         <h2>{"אלגוריתם חכם עוזר לך לנצח"}</h2>
-        <p>
+        <div>
+          <span className="rtl"></span>
           {"ניחוש מומלץ מתוך " + options.length}
 
           <Option
@@ -34,7 +35,7 @@ export const CheatPanel = ({
             setStartIndex={setStartIndex}
             option={charsToColors(options[0])}
           ></Option>
-        </p>
+        </div>
       </div>
       <div>
         <Button

@@ -1,6 +1,7 @@
 import { Button } from "@chakra-ui/react";
 import { useState } from "react";
 import { FlexColumn } from "../utils/FlexColoumn";
+import { FlexRow } from "../utils/FlexRow";
 import { MainCard } from "../utils/MainCard";
 import { StartGameOptions } from "./Options/StartGameOptions";
 
@@ -49,6 +50,23 @@ export const StartHeader = ({
               דוידסון
             </a>
           </p>
+          <FlexRow>
+            <a
+              href="https://github.com/yaniv-cohen/Bul-Pegia/tree/live_demo1"
+              target={"_blank"}
+            >
+              <Button width={40}>
+                <img
+                  className="icon"
+                  src={
+                    "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Octicons-mark-github.svg/2048px-Octicons-mark-github.svg.png"
+                  }
+                  alt="מול מחשב"
+                />
+              </Button>
+              <span className={"rtl"}>מפתחים - מוזמנים לשחק בעזרת ה API</span>
+            </a>
+          </FlexRow>
           <Button
             onClick={() => {
               setHowToPlay(false);

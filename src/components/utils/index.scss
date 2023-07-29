@@ -1,10 +1,14 @@
-@import './Circle/Circles.scss';
-@import './MainCard.scss';
-@import './utils.scss';
-@import './Headings.scss';
-@import './switch.scss';
-@import './icons.scss';
+@import "./Circle/Circles.scss";
+@import "./MainCard.scss";
+@import "./utils.scss";
+@import "./Headings.scss";
+@import "./switch.scss";
+@import "./icons.scss";
 
 ul {
-    list-style: none;
+  list-style: none;
+}
+
+.rtl {
+  direction: rtl;
 }

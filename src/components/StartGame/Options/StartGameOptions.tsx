@@ -53,8 +53,6 @@ export const StartGameOptions = ({
       <div>
         <Button
           onClick={() => {
-            console.log(incrementColorsCount);
-
             incrementColorsCount(1);
           }}
         >
@@ -62,8 +60,6 @@ export const StartGameOptions = ({
         </Button>
         <Button
           onClick={() => {
-            console.log("minus");
-
             incrementColorsCount(-1);
           }}
         >

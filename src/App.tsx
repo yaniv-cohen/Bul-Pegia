@@ -30,6 +30,7 @@ import {
   getGuessResponseFromServer,
   getGuessResponseFromUser,
 } from "./logic/getGuessResponse";
+import { getNewPermutations } from "./utils/getNewPremutation";
 
 function App() {
   //Game options
@@ -67,13 +68,11 @@ function App() {
   const [resetOnSubmit, setResetOnSubmit] = useState(false);
 
   //Cheat Logic
-  const [allPossibleOptions, setAllPossibleOptions] = useState(
-    getAllPermutations(usedLetters.slice(0, optionsCount), slotsCount)
+  const [allPossibleOptions, setAllPossibleOptions] = useState<string[][]>(
+    getNewPermutations(
+      getAllPermutations(usedLetters.slice(0, optionsCount), slotsCount)
+    )
   );
-
-  useEffect(() => {
-    console.log("vsComputer " + vsComputer);
-  }, [vsComputer]);
 
   useEffect(() => {
     setUsedLetters(LETTER_OPTIONS.slice(0, optionsCount));
@@ -86,16 +85,16 @@ function App() {
     setSlots(new Array(slotsCount).fill(usedLetters));
   }, [slotsCount]);
 
-  const resetGameState = (state: GameState) => {
-    setGameState(state);
-    setChosenOptions(new Array(slotsCount).fill(null));
-    setAllPossibleOptions(
-      getAllPermutations(usedLetters.slice(0, optionsCount), slotsCount)
-    );
-    setGame(undefined);
-    setEndgameResult(undefined);
-    setHistory({ rounds: [] });
-  };
+  // const resetGameState = (state: GameState) => {
+  //   setGameState(state);
+  //   setChosenOptions(new Array(slotsCount).fill(null));
+  //   setAllPossibleOptions(
+  //     getAllPermutations(usedLetters.slice(0, optionsCount), slotsCount)
+  //   );
+  //   setGame(undefined);
+  //   setEndgameResult(undefined);
+  //   setHistory({ rounds: [] });
+  // };
 
   const toggleAllowRepeats = () => {
     setAllowRepeats(!allowRepeats);
@@ -166,10 +165,6 @@ function App() {
           status: result.status,
         });
       }
-      console.log("result:");
-      console.log(result);
-
-      // resetGameState("finished");
     }
 
     setGame({
@@ -241,7 +236,9 @@ function App() {
 
     if (allowRepeats === true) {
       setAllPossibleOptions(
-        getAllPermutations(usedLetters.slice(0, optionsCount), slotsCount)
+        getNewPermutations(
+          getAllPermutations(usedLetters.slice(0, optionsCount), slotsCount)
+        )
       );
     } else {
       setAllPossibleOptions(

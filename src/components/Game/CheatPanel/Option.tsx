@@ -18,7 +18,7 @@ export const Option = ({
     >
       {option?.map((char, index) => (
         <span key={index} className={char + " marked colorOption"}>
-          {char[0].toUpperCase() + ", "}
+          {char[0].toUpperCase()}
         </span>
       ))}
     </div>

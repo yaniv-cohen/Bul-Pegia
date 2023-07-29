@@ -1,22 +1,16 @@
-// $blue : #6773F5;
-// $green : #5BF586; 
-// $red : #F55B5B; 
-
-@import 'colorPallete.scss';
-@import 'components/Game/HistoryPanel/index.scss';
-@import 'components/Game/Slots/Slot.scss';
-@import 'components/GameHeader/GameHeader.scss';
-@import 'components/GameHeader/BoardBackground/BoardBackground.scss';
-@import 'components/GameHeader/Logo/Logo.scss';
-@import 'components/utils/index.scss';
-@import 'components/StartGame/Options/Option.scss';
-@import 'components/StartGame/StartGame.scss';
-@import 'components/EndScreen/EndScreen.scss';
+@import "colorPallete.scss";
+@import "components/Game/HistoryPanel/index.scss";
+@import "components/Game/Slots/Slot.scss";
+@import "components/GameHeader/GameHeader.scss";
+@import "components/GameHeader/BoardBackground/BoardBackground.scss";
+@import "components/GameHeader/Logo/Logo.scss";
+@import "components/utils/index.scss";
+@import "components/StartGame/Options/Option.scss";
+@import "components/StartGame/StartGame.scss";
+@import "components/EndScreen/EndScreen.scss";
 
 * {
   box-sizing: border-box;
-
-
 }
 
 #root {
@@ -31,7 +25,6 @@
   text-align: center;
 }
 
-
 .card {
   padding: 2em;
 }
@@ -41,12 +34,9 @@
   border: 5px none;
 }
 
-
-
 .color-button {
   border-radius: 20px;
   border: solid white;
-
 }
 
 .red {
@@ -90,13 +80,17 @@
 }
 
 .option-row {
-  margin: 3px;
-  padding: 3px;
+  flex: 2 0 100%;
+  margin: 16px;
+  height: fit-content;
+  // padding: 3px;
 }
 
 .colorOption {
-  padding: 5px;
-  cursor: grab;
+  padding: 10px;
+  width: min-content;
+  line-break: anywhere;
+  cursor: pointer;
 }
 
 :root {
@@ -116,8 +110,6 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 }
-
-
 
 .CheatPanel {
   left: 0;
@@ -154,7 +146,6 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
-
 }
 
 h1 {
