@@ -41,6 +41,9 @@ export const StartHeader = ({
           <p style={{ direction: "rtl" }}>
             על כל צבע נכון שאיננו נמצא במיקום הנכון ברצף מקבלים "פגיעה" (לבנה).
           </p>
+          <p style={{ direction: "rtl" }}>
+            כדי להעזר בכלי בזמן משחק הקופסה  הפיזי, יש לבחור באפשרות של "מול אדם".
+          </p>
           <p>
             <a
               target="_blank"
@@ -64,7 +67,7 @@ export const StartHeader = ({
                   alt="מול מחשב"
                 />
               </Button>
-              <span className={"rtl"}>מפתחים - מוזמנים לשחק בעזרת ה API</span>
+              <span className={"rtl"}> API מפתחים - מוזמנים לשחק בעזרת ה </span>
             </a>
           </FlexRow>
           <Button
@@ -72,7 +75,7 @@ export const StartHeader = ({
               setHowToPlay(false);
             }}
           >
-            התחל!
+            למסך הראשי
           </Button>
         </FlexColumn>
       ) : (

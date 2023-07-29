@@ -85,16 +85,6 @@ function App() {
     setSlots(new Array(slotsCount).fill(usedLetters));
   }, [slotsCount]);
 
-  // const resetGameState = (state: GameState) => {
-  //   setGameState(state);
-  //   setChosenOptions(new Array(slotsCount).fill(null));
-  //   setAllPossibleOptions(
-  //     getAllPermutations(usedLetters.slice(0, optionsCount), slotsCount)
-  //   );
-  //   setGame(undefined);
-  //   setEndgameResult(undefined);
-  //   setHistory({ rounds: [] });
-  // };
 
   const toggleAllowRepeats = () => {
     setAllowRepeats(!allowRepeats);
