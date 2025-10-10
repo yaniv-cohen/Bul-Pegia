@@ -83,9 +83,7 @@ export const StartHeader = ({
               {moreInfo ? "פחות מידע" : "עוד מידע"}
             </Button>
             {moreInfo && (
-              <MainCard
-                style={{ marginTop: 8, padding: 16, background: "#f6f8fa" }}
-              >
+              <MainCard>
                 <FlexColumn>
                   <a
                     href="https://github.com/yaniv-cohen/Bul-Pegia/tree/live_demo1"

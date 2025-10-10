@@ -6,7 +6,6 @@
     "dev": "dir && vite",
     "test": "jest -- generateOptions.test",
     "build": "tsc && vite build",
-    "server": "flask --app ./server/logic/app.py run",
     "preview": "vite preview"
   },
   "dependencies": {
