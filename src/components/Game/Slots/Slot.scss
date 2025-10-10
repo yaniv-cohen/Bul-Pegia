@@ -16,4 +16,17 @@
   box-sizing: border-box;
   transition: 0.1s;
   cursor: pointer;
+  transition: 
+    box-shadow 0.2s,
+    transform 0.2s,
+    background 0.2s;
+  cursor: pointer;
+}
+
+.slot:hover {
+  box-shadow: 0 0 20px 2px #d1d1d1, 0 2px 8px #4e4e4e;
+  // background: linear-gradient(90deg, #e0eaff 0%, #c1c8ff 100%);
+  transform: scale(1.07) rotate(-2deg);
+  color: #213547;
+  outline: 5px solid #efefef;
 }

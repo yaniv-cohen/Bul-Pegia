@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Logo } from "./Logo/Logo";
 import { IconGear } from "./PrefencesTab/GearsIcon";
 import { PreferencesTab } from "./PrefencesTab/PreferencesTab";
-
-export const GameHeader = ({ children, ...rest }: any) => {
+import { MainCard } from "../utils/MainCard";
+export const GameHeader = ({ children, onLogoClick, ...rest }: any) => {
     const [showPreferences, setShowPreferences] = useState<boolean>();
 
     const toggleShowPreferences = () => {
@@ -11,11 +11,11 @@ export const GameHeader = ({ children, ...rest }: any) => {
     }
 
     return (
-        <div>
+        <MainCard>
             <header className={"GameHeader"}>
-                <Logo ></Logo>
+                <Logo  onLogoClick={onLogoClick} ></Logo>
                 <div>
-                    <div onClick={toggleShowPreferences} >
+                    <div className="prefencesButton" onClick={toggleShowPreferences} >
                         <IconGear ></IconGear>
                     </div>
 
@@ -26,5 +26,5 @@ export const GameHeader = ({ children, ...rest }: any) => {
                 
             </header>
             {children}
-        </div>)
+        </MainCard>)
 }

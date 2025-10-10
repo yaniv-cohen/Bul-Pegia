@@ -37,7 +37,7 @@ function App() {
   const [optionsCount, setOptionsCount] = useState<number>(6);
   const [slotsCount, setSlotsCount] = useState<number>(4);
   const [maxTurns, setMaxTurns] = useState<number>(10);
-  const [allowRepeats, setAllowRepeats] = useState<boolean>(true);
+  const [allowRepeats, setAllowRepeats] = useState<boolean>(false);
   const [vsComputer, setVsComputer] = useState<boolean>(true);
   const [usedColors, setUsedColors] = useState<Array<string>>(
     COLOR_LIST.slice(0, optionsCount)
@@ -87,6 +87,11 @@ function App() {
 
 
   const toggleAllowRepeats = () => {
+    if(allowRepeats && optionsCount < slotsCount) {
+      alert("כמות הצבעים חייבת להיות לפחות שווה לכמות המקומות אם לא מאפשרים חזרה על צבעים");
+      console.log
+        setOptionsCount(slotsCount);
+      }
     setAllowRepeats(!allowRepeats);
   };
   const incrementMaxTurns = (dir: number) => {
@@ -189,7 +194,8 @@ function App() {
 
   const incrementColorsCount = (direction: number) => {
     const numberInRange = optionsCount + direction;
-    if (numberInRange <= MAXIMUM_COLORS && numberInRange >= MINIMUN_COLORS)
+    if (numberInRange <= MAXIMUM_COLORS && numberInRange >= MINIMUN_COLORS
+      && !(!allowRepeats && numberInRange < slotsCount))
       setOptionsCount(numberInRange);
   };
 
@@ -244,6 +250,9 @@ function App() {
     <div className="App">
       <GameHeader
         toggleResetOnSubmit={toggleResetOnSubmit}
+        onLogoClick={()=>{
+          setGameState("start");
+        }}
         resetOnSubmit={resetOnSubmit}
       >
         {gameState === "start" ? (

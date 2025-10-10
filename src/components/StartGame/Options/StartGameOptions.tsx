@@ -6,6 +6,8 @@ import { FlexRow } from "../../utils/FlexRow";
 import ComputerIcon from "/computer.svg";
 import PersonIcon from "/person.svg";
 import { ButtonColoumn } from "../../utils/Buttons/ButtonColoumn";
+import { COLOR_LIST } from "../../../utils/letters";
+import { ColoredCirclesFromArray } from "../../utils/ColoredCirclesFromArray";
 
 export const StartGameOptions = ({
   slotsCount,
@@ -49,7 +51,12 @@ export const StartGameOptions = ({
         </Button>
       </div>
     </Option>
-    <Option text={`מספר צבעים`} currentValue={colorsCount}>
+    <Option text={`מספר צבעים`}>
+<div
+  onClick={() => {
+          incrementColorsCount(-1);
+          }}
+><ColoredCirclesFromArray          colorsCount={colorsCount} colorList={COLOR_LIST} /></div>
       <div>
         <Button
           onClick={() => {
@@ -67,7 +74,7 @@ export const StartGameOptions = ({
         </Button>
       </div>
     </Option>
-    <Option text={`מספר ניסיונות:`} currentValue={maxTurns}>
+    <Option text={`מספר ניסיונות`} currentValue={maxTurns}>
       <div>
         <Button
           onClick={() => {
@@ -85,7 +92,9 @@ export const StartGameOptions = ({
         </Button>
       </div>
     </Option>
-    <Option text={`חזרה על צבעים`} currentValue={allowRepeats ? "כן" : "לא"}>
+    <Option  text={`חזרה על צבעים`} currentValue={allowRepeats ? 
+      "כן" : "לא"
+      } onclick={toggleAllowRepeats}>
       <div>
         <SwitchRect
           value={allowRepeats}

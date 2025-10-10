@@ -1,5 +1,5 @@
 import { useState } from "react";
-import {  GameType } from "../../types/Game";
+import { GameType } from "../../types/Game";
 import { History, Result } from "../../types/historyTypes";
 import CheatPanel from "./CheatPanel/CheatPanel";
 import HistoryPanel from "./HistoryPanel/HistoryPanel";
@@ -12,6 +12,7 @@ import { Slots } from "./Slots/Slots";
 import { ColorButtonPallete } from "./ColorPallete/ColorButtonPallete";
 import { getFirstEmptyIndex } from "../../utils/getFirstEmptyIndex";
 import {
+  Button,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
@@ -20,6 +21,8 @@ import {
 } from "@chakra-ui/react";
 import { FlexRow } from "../utils/FlexRow";
 import { validResult } from "../../utils/validResult";
+import { Option } from "../StartGame/Options/Option";
+import { Circles } from "../utils/Circle/Circles";
 
 export const Game = ({
   game,
@@ -71,10 +74,16 @@ export const Game = ({
   };
 
   return (
-    <main style={{ display: "flex", flexDirection: "row", gap: "10px" }}>
+    <main
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        gap: "10px",
+      }}
+    >
       <MainCard>
         <ToggleButton
-          text={useCheatPanel ? "X" : "רמי הרמאי >"}
+          text={useCheatPanel ? "הסתר X " : "רמי הרמאי >"}
           fn={toggleUseCheatPanel}
         ></ToggleButton>
         {useCheatPanel ? (
@@ -101,68 +110,90 @@ export const Game = ({
             {vsComputer ? (
               <SubmitButton arr={chosenOptions} func={submit}></SubmitButton>
             ) : (
-              <FlexColumn>
-                <div>{JSON.stringify(manual)}</div>
-                <FlexRow className="spaced-rtl">
-                  <label htmlFor="blacks">{"שחורים"}</label>
-                  <NumberInput
-                    name="blacks"
-                    defaultValue={manual.white}
-                    value={manual.black}
-                    max={slots.length}
-                    min={0}
-                    keepWithinRange={true}
-                    clampValueOnBlur={true}
-                    onChange={(valueString) =>
-                      setManual({
-                        ...manual,
-                        black: parseInt(valueString),
-                      })
-                    }
-                  >
-                    <NumberInputField />
-                    <NumberInputStepper>
-                      <NumberIncrementStepper />
-                      <NumberDecrementStepper />
-                    </NumberInputStepper>
-                  </NumberInput>
-                </FlexRow>
-                <FlexRow className="spaced-rtl">
-                  <label htmlFor="whites">{"לבנים"}</label>
-                  <NumberInput
-                    name="whites"
-                    defaultValue={manual.white}
-                    value={manual.white}
-                    max={slots.length}
-                    min={0}
-                    keepWithinRange={true}
-                    clampValueOnBlur={true}
-                    onChange={(valueString) =>
-                      setManual({
-                        ...manual,
-                        white: parseInt(valueString),
-                      })
-                    }
-                  >
-                    <NumberInputField />
-                    <NumberInputStepper>
-                      <NumberIncrementStepper />
-                      <NumberDecrementStepper />
-                    </NumberInputStepper>
-                  </NumberInput>
-                </FlexRow>
-                <SubmitButton
-                  arr={chosenOptions}
-                  func={() => {
-                    if (validResult(manual, slots.length)) {
-                      submit(chosenOptions, manual);
-                    } else {
-                      alert("ניקוד לא חוקי");
-                      setManual({ black: 0, white: 0 });
-                    }
-                  }}
-                ></SubmitButton>
-              </FlexColumn>
+              <>
+                <FlexColumn>
+                  <Option text={`שחורים`} currentValue={manual.black}>
+                    <div>
+                      <Circles color="black" count={manual.black} />
+                      <Button
+                        onClick={() => {
+                          if (manual.black < slots.length) {
+                            const newBlack = manual.black + 1;
+                            const maxWhite = slots.length - newBlack;
+                            setManual({
+                              black: newBlack,
+                              white: Math.min(manual.white, maxWhite),
+                            });
+                          }
+                        }}
+                      >
+                        +
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          if (manual.black > 0) {
+                            setManual({
+                              black: manual.black - 1,
+                              white: manual.white,
+                            });
+                          }
+                        }}
+                      >
+                        -
+                      </Button>
+                    </div>
+                  </Option>
+
+                  <Option text={`לבנים`} currentValue={manual.white}>
+                    <div>
+                      <Circles color="white" count={manual.white} />
+                      <Button
+                        onClick={() => {
+                          if (manual.white < slots.length) {
+                            const newWhite = manual.white + 1;
+                            const maxBlack = slots.length - newWhite;
+                            setManual({
+                              black: Math.min(manual.black, maxBlack),
+                              white: newWhite,
+                            });
+                          }
+                        }}
+                      >
+                        +
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          if (manual.white > 0) {
+                            setManual({
+                              black: manual.black,
+                              white: manual.white - 1,
+                            });
+                          }
+                        }}
+                      >
+                        -
+                      </Button>
+                    </div>
+                  </Option>
+                </FlexColumn>
+                <FlexColumn>
+                  {/* <div>
+                    {JSON.stringify(manual)}
+                    {JSON.stringify(game)}
+                  </div> */}
+                  <SubmitButton
+                    arr={chosenOptions}
+                    func={() => {
+                      if (validResult(manual, slots.length)) {
+                        submit(chosenOptions, manual);
+                      } else {
+                        alert("ניקוד לא חוקי");
+                        setManual({ black: 0, white: 0 });
+                      }
+                    }}
+                  ></SubmitButton>
+                </FlexColumn>
+              </>
             )}
           </div>
           <HistoryPanel

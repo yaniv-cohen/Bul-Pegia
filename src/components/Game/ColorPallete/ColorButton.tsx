@@ -6,7 +6,13 @@ export const ColorButton = ({ color, onClick
 }) => {
     return (
         <li className={"slot " + color} onClick={() => onClick()}>
-            {color[0].toUpperCase()+ color.slice(1)}
+                <span
+              key={ color}
+              className={
+                "color-result " + color
+              }
+            > 
+            </span>
         </li>
 
     )

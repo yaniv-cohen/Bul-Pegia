@@ -15,7 +15,7 @@
 
 #root {
   z-index: 0;
-  background-color: $yellow;
+  background-color: $backgorund-color;
   margin: 0 auto;
   width: 100%;
   display: flex;
@@ -94,7 +94,7 @@
 }
 
 :root {
-  background-color: $yellow;
+  background-color: $backgorund-color;
 
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;

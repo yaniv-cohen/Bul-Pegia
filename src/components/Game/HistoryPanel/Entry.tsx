@@ -26,7 +26,6 @@ export const Entry = ({
                 // COLOR_LIST[LETTER_OPTIONS.indexOf(char)]
               }
             >
-              {color.slice(0, 3) + "."}
             </span>
           );
         })}

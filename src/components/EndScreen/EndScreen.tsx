@@ -1,4 +1,4 @@
-import { Button } from "@chakra-ui/react";
+import { Button, color } from "@chakra-ui/react";
 import { EndgameResult } from "../../types/EndgameResult";
 import { GameState } from "../../types/Game";
 import { MainCard } from "../utils/MainCard";
@@ -10,6 +10,8 @@ import { charsToColors } from "../../logic/charsToColors";
 import { FlexColUl } from "../utils/FlexColUl";
 import { FlexColumn } from "../utils/FlexColoumn";
 import { FlexRow } from "../utils/FlexRow";
+import { ColoredCirclesFromArray } from "../utils/ColoredCirclesFromArray";
+import { COLOR_LIST } from "../../utils/letters";
 export const EndScreen = ({
   endgameResult,
   setGameState,
@@ -34,18 +36,7 @@ export const EndScreen = ({
         </FlexRow>
         <FlexColUl>
           <StatsItem title="הרצף הסודי">
-            {charsToColors((endgameResult?.secretWord + "").split(",")).map(
-              (color, index) => {
-                return (
-                  <span key={color + index} className={"color-result " + color}>
-                    {
-                      //   color
-                      (color + "").slice(0, 3)
-                    }
-                  </span>
-                );
-              }
-            )}
+            <ColoredCirclesFromArray colorsCount={endgameResult?.numberOfColors??0} colorList={charsToColors((endgameResult?.secretWord + "").split(","))}/>
           </StatsItem>
           <StatsItem
             title={"מספר ניסיונות"}
@@ -53,7 +44,7 @@ export const EndScreen = ({
           ></StatsItem>
           <StatsItem
             title={"מספר צבעים"}
-            value={endgameResult?.numberOfColors}
+            value={ColoredCirclesFromArray({colorsCount:endgameResult?.numberOfColors??0,colorList:COLOR_LIST})}
           ></StatsItem>
           <StatsItem
             title={"חזרה על צבעים"}
