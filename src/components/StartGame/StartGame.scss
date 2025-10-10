@@ -1,0 +1,10 @@
+.enemy-icon {
+  height: 80px;
+  box-sizing: border-box;
+  border: 2px none red;
+}
+.selectedEnemy {
+  //   border: 2px solid red;
+  border: 4px solid $redSwitch !important;
+  padding: 20px !important;
+}

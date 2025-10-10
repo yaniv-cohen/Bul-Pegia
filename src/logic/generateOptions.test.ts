@@ -1,8 +1,8 @@
 import { LETTER_OPTIONS } from "../utils/letters";
 import { gernerateOptions } from "./generateOptions";
 
-test.only("possibilities filtering", () => {
-  const out = gernerateOptions(
+test.only("possibilities filtering", async () => {
+  const out = await gernerateOptions(
     4,
     LETTER_OPTIONS.slice(0, 5),
     ["A", "B", "C", "D"],

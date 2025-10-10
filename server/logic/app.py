@@ -1,63 +1,89 @@
 import uuid
 from flask import Flask
 from flask_cors import CORS
-import game
-import time
-from flask import request
-from getNextPossibleResults import getNextPossibleResults
+from game import Game
+from get_marks_for_guess import get_marks
 app = Flask(__name__)
 CORS(app)
 
-wordLength= 4
-myGames = {}
-# fisrtGameId = "one"
-# hi=game.Game(wordLength)
-# myGames[hi.game_id] = hi
-# base_game = myGames[hi.game_id]
-# base_game.current_guess = ''
-# print(myGames[hi.game_id].game_id)
-# print("started game in server,  id: "+ base_game.game_id )
-
-@app.route("/createNewGame/<slots>/<letter_Count>")
-def createNewGame(slots, letter_Count):
-    id = str(uuid.uuid1())
-    print('making new game : ' + id)
-    myGames[id] = game.Game(int(slots))
-    print(len(myGames) )
-    return (id)
+word_length= 4
+myGames = {} 
+@app.route("/createNewGame/<slots_count>/<letter_count>/<allow_repeats>/<max_guesses>")
+def create_new_game(slots_count, letter_count, allow_repeats, max_guesses):
+    new_game_id = str(uuid.uuid4())[0:4]
+    tries = 0
+    while(new_game_id in myGames):
+        tries+=1
+        new_game_id = str(uuid.uuid4())[0:4 + tries]
+        
+    print('making new game : ' + new_game_id  + 
+          " slots_count: "+ str(slots_count)+ 
+          " letter_count: "+ str(letter_count)+ 
+          " allow_repeats: "+ str(allow_repeats))
+    myGames[new_game_id] = Game(new_game_id, int(slots_count), int(letter_count), allow_repeats , int(max_guesses))
+    obj = myGames[new_game_id]
+    for attr in dir(obj):
+        # Getting rid of dunder methods
+        if not attr.startswith("__"):
+            print(attr, getattr(obj, attr))
+    return new_game_id
 
 @app.route("/game/<id>/guess/<input_word>")
 def guess(id, input_word):
-    new_game = myGames[str(id)]
-    print("id:"+id, "  Word:"+ input_word +
-           "  secret: " +','.join(new_game.secret_word))
-    new_game.current_guess = input_word
-    new_game.guess_number+=1
-    [blacks, whites] = new_game.getMarks(list(input_word.upper()) , new_game.secret_word)
-    return (
-        {
-        "possibilities": getNextPossibleResults( [] , blacks , whites, [], input_word),
-        "input_word": input_word,
-        "secret_word": new_game.secret_word,
-        "result": {"white" : whites, "black" : blacks},
-        "game_id": id,
-        "text" : (
-        "<h1>Your result is: <div>BLACKS: " +str(blacks) +", WHITES: "+ str(whites) 
-    +"</h1><ul><li>id:"+str(new_game.game_id)+"</li><li>secret_word:"+",".join(new_game.secret_word) +"</li></ul>")
-    } )
+    target_game = myGames[str(id)]
+    # Calculate if the game is lost 
+    if(target_game.guess_number+1>target_game.max_guesses ):
+        output={
+            "secretWord": target_game.secret_word,
+            "turns": target_game.guess_number,
+            "gameId": id,
+        }
+        target_game.status = "lost"
+    else:
+        target_game.guess_number= target_game.guess_number + 1
 
-@app.route('/scoreboard')
-def scoreboard():
-    return "<p>Scoreboard !</p>"
+        [blacks, whites] = get_marks(list(input_word.upper()) , target_game.secret_word)
+        if(blacks== target_game.word_length):
+            target_game.status = "won"
+            output= {
+                "result": {"white" : whites, "black" : blacks},
+                "secretWord": target_game.secret_word,
+                  "maxTurns": target_game.max_guesses,
+                  "allowRepeats" : target_game.allow_repeats,
+                   "numberOfColors": target_game.letter_count,
+                "turns": target_game.guess_number,
+                "gameId": id,
+                "status": "won"
+            }
+        elif(target_game.guess_number == target_game.max_guesses):
+            print("lost, sorry")
+            output={
+                "result": {"white" : whites, "black" : blacks},
+                "secretWord": target_game.secret_word,
+                  "maxTurns": target_game.max_guesses,
+                  "allowRepeats" : target_game.allow_repeats,
+                   "numberOfColors": target_game.letter_count,
+                "turns": target_game.guess_number,
+                "gameId": id,
+                "status": "lost"
+            }
+            target_game.status = "lost"
+        else:
+            output =  {
+                "inputWord": input_word,
+                "result": {"white" : whites, "black" : blacks},
+                "turns": target_game.guess_number,
+                "gameId": id,
+                "status": "active"
+            } 
+    return output
+
+@app.route('/gameCount')
+def game_count():
+    return str(len(myGames))
 @app.route('/')
 def hello_world():
-    return "<p>Hello, World !</p>"
+    return '<p>The endpoints are "/createNewGame/slots/letter_count/allow_repeats/max_guesses", "/game/id/guess/input_word" "/gameCount"</p>'
 
-# if __name__ == "__main__":
-#     from waitress import serve
-#     serve(app, host="0.0.0.0", port=8080)
 
-# if app.config['LOG_WITH_GUNICORN']:
-#     gunicorn_error_logger = logging.getLogger('gunicorn.error')
-#     app.logger.handlers.extend(gunicorn_error_logger.handlers)
-#     app.logger.setLevel(logging.DEBUG)
+

@@ -1,116 +1,197 @@
 import { useEffect, useState } from "react";
 import "./App.scss";
-import {
-  Card,
-  CardBody,
-  Flex,
-} from "@chakra-ui/react";
-import OptionsIncrementCard from "./components/OptionsIncrementCard";
-import SlotAccordion from "./components/SlotAccordion";
-import SubmitButton from "./components/SubmitButton";
-import { History } from "./types/historyTypes";
+import { History, Result } from "./types/historyTypes";
 import { COLOR_LIST, LETTER_OPTIONS } from "./utils/letters";
-import HistoryPanel from "./components/historyPanel/HistoryPanel";
-import { GameHeader } from "./components/GameHeader";
+import { StartHeader } from "./components/StartGame/StartHeader";
+import { GameHeader } from "./components/GameHeader/GameHeader";
 import { getAllPermutations } from "./utils/getAllPermutations";
 import { gernerateOptions } from "./logic/generateOptions";
-import CheatPanel from "./components/CheatPanel/CheatPanel";
-import { ToggleButton } from "./components/utils/ToggleButton";
 import axios from "axios";
 import { chooseBest } from "./logic/chooseBest";
-import { Game } from "./types/shared";
-import { MAX_SLOTS_COUNT, MIN_SLOTS_COUNT, SERVER_URL } from "./gameSettings";
-import { StartScreen } from "./components/StartScreen";
+import {
+  MAXIMUM_COLORS,
+  MAXIMUM_SLOTS,
+  MINIMUN_COLORS,
+  MINIMUN_SLOTS,
+  SERVER_URL,
+} from "./globals";
+import { Game } from "./components/Game/Game";
+import {
+  EndGameResponse,
+  GameState,
+  GameType,
+  GuessResponse,
+} from "./types/Game";
+import { getAllNonRepeatingPermutations } from "./utils/getAllNonRepeatingPermutations";
+import { EndScreen } from "./components/EndScreen/EndScreen";
+import { EndgameResult } from "./types/EndgameResult";
+import { getValidGuess } from "./logic/getValiGuess";
+import {
+  getGuessResponseFromServer,
+  getGuessResponseFromUser,
+} from "./logic/getGuessResponse";
+import { getNewPermutations } from "./utils/getNewPremutation";
 
 function App() {
-  // const colorMap:{
-  //   "red": "a",
-  //   "orange":"b",
-  //   "yellow":"c",
-  //   "green":"d",
-  //   "blue":"e",
-  //   "purple":"f",
-  //   "brown":"g",
-  //   "grey":"h",
-  // }
-
-  const [count, setCount] = useState(0);
-  const [gameStarted, setGameStarted] = useState(false);
-  const [optionsCount, setOptionsCount] = useState(6);
-  const [slotsCount, setSlotsCount] = useState(4);
-  const [chosenOptions, setChosenOptions] = useState(
-    new Array(slotsCount).fill(null)
+  //Game options
+  const [optionsCount, setOptionsCount] = useState<number>(6);
+  const [slotsCount, setSlotsCount] = useState<number>(4);
+  const [maxTurns, setMaxTurns] = useState<number>(10);
+  const [allowRepeats, setAllowRepeats] = useState<boolean>(true);
+  const [vsComputer, setVsComputer] = useState<boolean>(true);
+  const [usedColors, setUsedColors] = useState<Array<string>>(
+    COLOR_LIST.slice(0, optionsCount)
   );
-  const [resetOnSubmit, setResetOnSubmit] = useState(false);
-  const [slots, setSlots] = useState<any[]>(
+  const [usedLetters, setUsedLetters] = useState<Array<string>>(
+    LETTER_OPTIONS.slice(0, optionsCount)
+  );
+
+  //Game States
+  const [gameState, setGameState] = useState<GameState>("start");
+  const [endgameResult, setEndgameResult] = useState<EndgameResult | undefined>(
+    undefined
+  );
+  const [game, setGame] = useState<GameType | undefined>();
+  const [history, setHistory] = useState<History>({ rounds: [] });
+  const [slots, setSlots] = useState<Array<string[]>>(
     new Array(slotsCount).fill(
-      new Array(slotsCount).fill(LETTER_OPTIONS.slice(0, optionsCount))
+      new Array(slotsCount).fill(usedLetters.slice(0, optionsCount))
     )
   );
-  const [allPossibleOptions, setAllPossibleOptions] = useState(
-    getAllPermutations(LETTER_OPTIONS.slice(0, optionsCount), slotsCount)
+
+  //Game actions
+  const [chosenOptions, setChosenOptions] = useState<Array<string | null>>(
+    new Array(slotsCount).fill(null)
   );
-  const [useCheatPanel, setUseCheatPanel] = useState(false);
+
+  //Prefrences
+  const [resetOnSubmit, setResetOnSubmit] = useState(false);
+
+  //Cheat Logic
+  const [allPossibleOptions, setAllPossibleOptions] = useState<string[][]>(
+    getNewPermutations(
+      getAllPermutations(usedLetters.slice(0, optionsCount), slotsCount)
+    )
+  );
+
+  useEffect(() => {
+    setUsedLetters(LETTER_OPTIONS.slice(0, optionsCount));
+    setUsedColors(COLOR_LIST.slice(0, optionsCount));
+    let options = usedLetters.slice(0, optionsCount);
+    setSlots(new Array(slotsCount).fill(options));
+  }, [optionsCount]);
+
+  useEffect(() => {
+    setSlots(new Array(slotsCount).fill(usedLetters));
+  }, [slotsCount]);
 
 
-  const [game, setGame] = useState<Game>();
-  const [history, setHistory] = useState<History>({ rounds: [] });
-  const toggleUseCheatPanel = () => {
-    setUseCheatPanel(!useCheatPanel);
+  const toggleAllowRepeats = () => {
+    setAllowRepeats(!allowRepeats);
   };
-  const submit = async (arr: string[]) => {
-    let str = "";
-    arr.forEach((color) => {
-      str += LETTER_OPTIONS[COLOR_LIST.indexOf(color)];
-    });
+  const incrementMaxTurns = (dir: number) => {
+    setMaxTurns(Math.min(Math.max(maxTurns + dir, 1), 20));
+  };
+
+  const submit = async (arr: string[], manualInput?: Result) => {
+    const guessAsChars = getValidGuess(arr, usedLetters, usedColors);
+    if (!guessAsChars) {
+      return;
+    }
+    //prevent duplicate guesses
     for (const round of history.rounds) {
-      if (round.input === str) {
+      if (round.input === guessAsChars) {
         setChosenOptions(new Array(slotsCount).fill(""));
         return;
       }
     }
-    const url = `${SERVER_URL}/game/${game?.game_id}/guess/` + str;
-    console.log(`fetch to ` + url);
-    const result = await (await fetch(url)).json();
+    let result: EndGameResponse | GuessResponse;
+    if (manualInput && !vsComputer) {
+      result = getGuessResponseFromUser(
+        guessAsChars,
+        game,
+        manualInput,
+        slotsCount,
+        allowRepeats,
+        optionsCount,
+        maxTurns
+      );
+    } else {
+      result = await getGuessResponseFromServer(guessAsChars, game, SERVER_URL);
+    }
+
     setHistory({
       rounds: [
         ...history.rounds,
         {
-          input: str,
+          input: guessAsChars,
           output: { black: result.result.black, white: result.result.white },
         },
       ],
     });
-    if (result.result.black === slotsCount) {
-      alert("you won!");
-      setGameStarted(false);
+
+    if (result.status === "won" || result.status === "lost") {
+      setGameState("finished");
+      if (result.status === "won") {
+        setEndgameResult({
+          gameId: result.gameId,
+          history: history,
+          secretWord: result.secretWord,
+          allowRepeats: result.allowRepeats === "1",
+          numberOfColors: result.numberOfColors,
+          maxTurns: result.maxTurns,
+          turns: result.turns,
+          status: result.status,
+        });
+      } else {
+        setEndgameResult({
+          gameId: result.gameId,
+          history: history,
+          secretWord: result.secretWord,
+          maxTurns: result.turns,
+          allowRepeats: result.allowRepeats === "1",
+          numberOfColors: result.numberOfColors,
+          turns: result.turns,
+          status: result.status,
+        });
+      }
     }
 
-    const newOptions = gernerateOptions(
+    setGame({
+      ...game!,
+      turnCount: result.turns,
+    });
+    const newOptions = await gernerateOptions(
       slotsCount,
-      LETTER_OPTIONS.slice(0, optionsCount),
-      str.split(""),
+      usedLetters.slice(0, optionsCount),
+      guessAsChars.split(""),
       result.result,
       allPossibleOptions
     );
-
     const [bestIndex, bestOption] = chooseBest(newOptions);
 
-    setAllPossibleOptions([bestOption, ...newOptions.slice(0, bestIndex), ...newOptions.slice(bestIndex + 1,)]);
+    setAllPossibleOptions([
+      bestOption,
+      ...newOptions.slice(0, bestIndex),
+      ...newOptions.slice(bestIndex + 1),
+    ]);
 
     if (resetOnSubmit) {
       setChosenOptions(new Array(slotsCount).fill(null));
     }
   };
-  useEffect(() => {
-    let options = LETTER_OPTIONS.slice(0, optionsCount);
-    setSlots(new Array(slotsCount).fill(options));
-  }, [optionsCount]);
 
-  useEffect(() => {
-    let options = LETTER_OPTIONS.slice(0, optionsCount);
-    setSlots(new Array(slotsCount).fill(options));
-  }, [slotsCount]);
+  const incrementSlotsCount = (direction: number) => {
+    const numberInRange = slotsCount + direction;
+    if (numberInRange <= MAXIMUM_SLOTS && numberInRange >= MINIMUN_SLOTS)
+      setSlotsCount(numberInRange);
+  };
+
+  const incrementColorsCount = (direction: number) => {
+    const numberInRange = optionsCount + direction;
+    if (numberInRange <= MAXIMUM_COLORS && numberInRange >= MINIMUN_COLORS)
+      setOptionsCount(numberInRange);
+  };
 
   const setChosenOption = (index: number, value: string) => {
     const newArr = [...chosenOptions];
@@ -121,73 +202,86 @@ function App() {
   const toggleResetOnSubmit = () => {
     setResetOnSubmit(!resetOnSubmit);
   };
-  const startGameFunction = async (slotsCount: number, optionsCount: number) => {
-    const url = `${SERVER_URL}/createNewGame/${slotsCount}/${optionsCount}`;
-    console.log(`fetch to ` + url);
-    const result = (await axios.get(url)).data;
+  const startGameFunction = async () => {
+    let rawResult: string | undefined;
+    if (vsComputer) {
+      const url = `${SERVER_URL}/createNewGame/${slotsCount}/${optionsCount}/${
+        allowRepeats ? "1" : "0"
+      }/${maxTurns}`;
 
-    setGame({ game_id: result, remainingTurns: 1, turnCount: 1 });
-    setGameStarted(true);
-    setAllPossibleOptions(
-      getAllPermutations(LETTER_OPTIONS.slice(0, optionsCount), slotsCount)
-    );
+      console.log(`Fetch to ` + url);
+      rawResult = (await axios.get(url)).data;
+    } else {
+      rawResult = "";
+    }
+    const result = rawResult;
+    setGame({
+      remainingTurns: maxTurns,
+      turnCount: 0,
+      gameId: result,
+    });
+
+    setGameState("active");
     setHistory({ rounds: [] });
+
+    if (allowRepeats === true) {
+      setAllPossibleOptions(
+        getNewPermutations(
+          getAllPermutations(usedLetters.slice(0, optionsCount), slotsCount)
+        )
+      );
+    } else {
+      setAllPossibleOptions(
+        getAllNonRepeatingPermutations(
+          usedLetters.slice(0, optionsCount),
+          slotsCount
+        )
+      );
+    }
   };
+
   return (
     <div className="App">
-      {!gameStarted ?
-        <StartScreen slotsCount={optionsCount} optionsCount={optionsCount}
-          startGameFunction={startGameFunction} setSlotsCount={setSlotsCount} >
-        </StartScreen>
-        : (
-          <>
-            <GameHeader></GameHeader>
-            <div>
-              <Card>
-                <CardBody>
-                  <p>
-                    {game && game["game_id"]
-                      ? "Your game is" + game["game_id"]
-                      : "Welcome!"}
-                  </p>
-                </CardBody>
-              </Card>
-              <HistoryPanel history={history}></HistoryPanel>
-              <SubmitButton arr={chosenOptions} func={submit}></SubmitButton>
-
-              <Flex>
-                {slots.map((slot, index) => (
-                  <SlotAccordion
-                    chosen={chosenOptions[index]}
-                    index={index + 1}
-                    slot={slot}
-                    setChosenOption={setChosenOption}
-                    ColorList={COLOR_LIST}
-                  ></SlotAccordion>
-                ))}
-              </Flex>
-            </div>
-            <Card>
-              <button onClick={toggleResetOnSubmit}>
-                {"resetOnsubmit?" + resetOnSubmit}
-              </button>
-            </Card>
-            <aside className="CheatPanel">
-              <ToggleButton
-                text={useCheatPanel ? "X" : "CheatPanel >"}
-                fn={toggleUseCheatPanel}
-              ></ToggleButton>
-              {useCheatPanel ? (
-                <CheatPanel
-                  setSelection={setChosenOptions}
-                  options={allPossibleOptions}
-                />
-              ) : (
-                <></>
-              )}
-            </aside>
-          </>
+      <GameHeader
+        toggleResetOnSubmit={toggleResetOnSubmit}
+        resetOnSubmit={resetOnSubmit}
+      >
+        {gameState === "start" ? (
+          <StartHeader
+            startGameFunction={startGameFunction}
+            optionsCount={optionsCount}
+            slotsCount={slotsCount}
+            maxTurns={maxTurns}
+            incrementSlotsCount={incrementSlotsCount}
+            incrementColorsCount={incrementColorsCount}
+            incrementMaxTurns={incrementMaxTurns}
+            allowRepeats={allowRepeats}
+            toggleAllowRepeats={toggleAllowRepeats}
+            vsComputer={vsComputer}
+            setVsComputer={setVsComputer}
+          />
+        ) : gameState === "active" ? (
+          <Game
+            vsComputer={vsComputer}
+            usedColors={usedColors}
+            allPossibleOptions={allPossibleOptions}
+            chosenOptions={chosenOptions}
+            history={history}
+            game={game as GameType}
+            setChosenOptions={setChosenOptions}
+            slots={slots}
+            submit={submit}
+            setChosenOption={setChosenOption}
+          />
+        ) : endgameResult ? (
+          <EndScreen
+            setGameState={setGameState}
+            endgameResult={endgameResult}
+          />
+        ) : (
+          <></>
         )}
+      </GameHeader>
     </div>
   );
 }
