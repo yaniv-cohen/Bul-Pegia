@@ -65,7 +65,7 @@ function App() {
   );
 
   //Prefrences
-  const [resetOnSubmit, setResetOnSubmit] = useState(false);
+  const [resetOnSubmit, setResetOnSubmit] = useState(true);
 
   //Cheat Logic
   const [allPossibleOptions, setAllPossibleOptions] = useState<string[][]>(
