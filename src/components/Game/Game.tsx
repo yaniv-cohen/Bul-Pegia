@@ -83,7 +83,7 @@ export const Game = ({
     >
       <MainCard>
         <ToggleButton
-          text={useCheatPanel ? "הסתר X " : "רמי הרמאי >"}
+          text={useCheatPanel ? "הסתר X " : "אלגוריתם חכם >"}
           fn={toggleUseCheatPanel}
         ></ToggleButton>
         {useCheatPanel ? (
