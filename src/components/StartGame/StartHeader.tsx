@@ -40,23 +40,35 @@ export const StartHeader = ({
           <div
             style={{
               marginBottom: 16,
-              background: "#f6f8fa",
-              padding: 12,
-              borderRadius: 8,
+              borderRadius: 20,
+              boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
             }}
           >
-            <h2>הוראות</h2>
-            <p style={{ direction: "rtl" }}>
-              על כל צבע נכון שנמצא במיקום הנכון ברצף מקבלים "בול" (נקודה שחורה).
-            </p>
-            <p style={{ direction: "rtl" }}>
-              על כל צבע נכון שאיננו נמצא במיקום הנכון ברצף מקבלים "פגיעה"
-              (לבנה).
-            </p>
-            <p style={{ direction: "rtl" }}>
-              כדי להעזר בכלי בזמן משחק הקופסה הפיזי, יש לבחור באפשרות של "מול
-              אדם".
-            </p>
+            <h1
+              style={{
+                fontWeight: "800",
+                fontSize: "2rem",
+                color: "#333",
+                textAlign: "center",
+                fontFamily: "'Rubik', sans-serif", // If you have this font imported
+              }}
+            >
+              הוראות
+            </h1>
+            <ul style={{ listStyle: "inside", marginBottom: "1.5rem" }}>
+              <li style={{ direction: "rtl" }}>
+                קיבלתם <strong>בול (שחור)</strong>? סימן שהצבע והמיקום נכונים!
+                <span className="circle black-result">●</span>
+              </li>
+              <li style={{ direction: "rtl" }}>
+                קיבלתם <strong>פגיעה (לבן)</strong>? הצבע נכון, אבל המיקום לא.
+                <span className="circle white-result">●</span>
+              </li>
+              <li style={{ direction: "rtl" }}>
+                משחקים בקופסה בבית? בחרו באפשרות <strong>"מול אדם"</strong>{" "}
+                והיעזרו באלגוריתם שלנו כדי לנצח.
+              </li>
+            </ul>
           </div>
 
           <StartGameOptions
