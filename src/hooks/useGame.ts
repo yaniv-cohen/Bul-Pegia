@@ -56,17 +56,17 @@ export const useGame = () => {
   const [possibleOptions, setPossibleOptions] = useState<string[][]>([]);
   const [resetOnSubmit, setResetOnSubmit] = useState(false);
 
-  const updateSettings = (changes: Partial<GameSettings>) =>
-    setSettings((current) => ({ ...current, ...changes }));
+  const updateSettings = (update: (current: GameSettings) => Partial<GameSettings>) =>
+    setSettings((current) => ({ ...current, ...update(current) }));
 
   const incrementSlotsCount = (direction: number) =>
-    updateSettings({ slotsCount: clamp(slotsCount + direction, MINIMUM_SLOTS, MAXIMUM_SLOTS) });
+    updateSettings((s) => ({ slotsCount: clamp(s.slotsCount + direction, MINIMUM_SLOTS, MAXIMUM_SLOTS) }));
   const incrementColorsCount = (direction: number) =>
-    updateSettings({ colorsCount: clamp(colorsCount + direction, MINIMUM_COLORS, MAXIMUM_COLORS) });
+    updateSettings((s) => ({ colorsCount: clamp(s.colorsCount + direction, MINIMUM_COLORS, MAXIMUM_COLORS) }));
   const incrementMaxTurns = (direction: number) =>
-    updateSettings({ maxTurns: clamp(maxTurns + direction, MINIMUM_TURNS, MAXIMUM_TURNS) });
-  const toggleAllowRepeats = () => updateSettings({ allowRepeats: !allowRepeats });
-  const setVsComputer = (value: boolean) => updateSettings({ vsComputer: value });
+    updateSettings((s) => ({ maxTurns: clamp(s.maxTurns + direction, MINIMUM_TURNS, MAXIMUM_TURNS) }));
+  const toggleAllowRepeats = () => updateSettings((s) => ({ allowRepeats: !s.allowRepeats }));
+  const setVsComputer = (value: boolean) => updateSettings(() => ({ vsComputer: value }));
 
   const setChosenOption = (index: number, color: string | null) =>
     setChosenOptions((current) => current.map((value, i) => (i === index ? color : value)));
@@ -178,7 +178,7 @@ export const useGame = () => {
     setVsComputer,
     setChosenOption,
     setChosenOptions,
-    toggleResetOnSubmit: () => setResetOnSubmit(!resetOnSubmit),
+    toggleResetOnSubmit: () => setResetOnSubmit((value) => !value),
     startGame,
     backToStart,
     submit,
