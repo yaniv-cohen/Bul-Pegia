@@ -130,6 +130,24 @@ describe("vs computer", () => {
     expect(screen.getByRole("button", { name: "התחל!" })).toBeInTheDocument();
   });
 
+  test("the Guess button lights up once every slot is filled, and not for a repeat", async () => {
+    const user = renderApp();
+    await startGame(user);
+    const guessButton = screen.getByRole("button", { name: "נחש!" });
+    expect(guessButton).toHaveAttribute("data-ready", "false");
+
+    await pickColors(user, ["אדום", "כתום", "צהוב"]);
+    expect(guessButton).toHaveAttribute("data-ready", "false");
+    await pickColors(user, ["ירוק"]);
+    expect(guessButton).toHaveAttribute("data-ready", "true");
+
+    mockedSubmitGuess.mockResolvedValue(active(0, 0));
+    await user.click(guessButton);
+    await screen.findByRole("region", { name: "ניחושים קודמים" });
+    // Same four colors are still selected, but that guess was already made.
+    expect(screen.getByRole("button", { name: "נחש!" })).toHaveAttribute("data-ready", "false");
+  });
+
   test("an incomplete guess warns instead of submitting", async () => {
     const user = renderApp();
     await startGame(user);

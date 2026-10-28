@@ -19,6 +19,7 @@ import { HumanScore } from "./HumanScore/HumanScore";
 import { KeyPegState, keyPegsToResult } from "./KeyPegs/KeyPegs";
 import { getFirstEmptyIndex } from "../../utils/getFirstEmptyIndex";
 import { validResult } from "../../utils/validResult";
+import { getValidGuess } from "../../logic/getValidGuess";
 import { GameController, SubmitOutcome } from "../../hooks/useGame";
 import { useKeyboardControls } from "../../hooks/useKeyboardControls";
 
@@ -47,6 +48,9 @@ export const Game = ({ controller }: { controller: GameController }) => {
       ? `${manualScore.black} שחורים ולבן אחד זה ניקוד שלא יכול לקרות`
       : undefined;
   const contradiction = !vsComputer && rounds.length > 0 && possibleOptions.length === 0;
+  const guess = getValidGuess(chosenOptions);
+  const guessReady =
+    !!guess && !scoreError && !rounds.some((round) => round.input === guess);
 
   const jumpToNextSlot = () => {
     const nextEmptySlotIndex = getFirstEmptyIndex(chosenOptions, targetSlot);
@@ -108,15 +112,6 @@ export const Game = ({ controller }: { controller: GameController }) => {
           jumpToNextSlot={jumpToNextSlot}
           showShortcuts={!isMobile}
         />
-        <Button
-          size="lg"
-          className="Controls__submit"
-          onClick={submit}
-          isLoading={submitting}
-          isDisabled={!!scoreError}
-        >
-          {"נחש!"}
-        </Button>
       </section>
 
       <section className="Board">
@@ -136,6 +131,21 @@ export const Game = ({ controller }: { controller: GameController }) => {
         <Slots chosenOptions={chosenOptions} targetSlot={targetSlot} setTargetSlot={setTargetSlot} />
 
         {!vsComputer && <HumanScore pegs={scorePegs} setPegs={setScorePegs} error={scoreError} />}
+
+        <Button
+          size="lg"
+          className={"GuessButton" + (guessReady ? " GuessButton--ready" : "")}
+          variant={guessReady ? "solid" : "outline"}
+          alignSelf="center"
+          width={isMobile ? "100%" : "auto"}
+          minWidth="220px"
+          onClick={submit}
+          isLoading={submitting}
+          isDisabled={!!scoreError}
+          data-ready={guessReady}
+        >
+          {"נחש!"}
+        </Button>
         {contradiction && (
           <p className="Board__warning" role="alert">
             {"הניקוד שהוזן עד עכשיו סותר את עצמו - אין רצף שמתאים לכל התוצאות"}
