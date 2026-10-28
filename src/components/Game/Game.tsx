@@ -1,55 +1,69 @@
 import { useState } from "react";
-import {  GameType } from "../../types/Game";
-import { History, Result } from "../../types/historyTypes";
-import CheatPanel from "./CheatPanel/CheatPanel";
-import HistoryPanel from "./HistoryPanel/HistoryPanel";
-import SubmitButton from "../utils/SubmitButton";
-import { ToggleButton } from "../utils/ToggleButton";
-import { GameParagraph } from "./GameParagraph";
-import { FlexColumn } from "../utils/FlexColoumn";
-import { MainCard } from "../utils/MainCard";
-import { Slots } from "./Slots/Slots";
-import { ColorButtonPallete } from "./ColorPallete/ColorButtonPallete";
-import { getFirstEmptyIndex } from "../../utils/getFirstEmptyIndex";
 import {
+  Button,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
   NumberInputField,
   NumberInputStepper,
 } from "@chakra-ui/react";
+import CheatPanel from "./CheatPanel/CheatPanel";
+import HistoryPanel from "./HistoryPanel/HistoryPanel";
+import { FlexColumn } from "../utils/FlexColumn";
 import { FlexRow } from "../utils/FlexRow";
+import { MainCard } from "../utils/MainCard";
+import { H2 } from "../utils/Headings";
+import { Slots } from "./Slots/Slots";
+import { ColorButtonPalette } from "./ColorPalette/ColorButtonPalette";
+import { getFirstEmptyIndex } from "../../utils/getFirstEmptyIndex";
 import { validResult } from "../../utils/validResult";
+import { GameController } from "../../hooks/useGame";
+import { Result } from "../../types/game";
 
-export const Game = ({
-  game,
-  history,
-  chosenOptions,
-  submit,
-  slots,
-  usedColors,
-  allPossibleOptions,
-  setChosenOptions,
-  setChosenOption,
-  vsComputer,
+const ScoreInput = ({
+  label,
+  value,
+  max,
+  onChange,
 }: {
-  game: GameType;
-  history: History;
-  chosenOptions: any[];
-  submit: (arr: string[], manualInput?: Result) => void;
-  slots: Array<string[]>;
-  usedColors: string[];
-  allPossibleOptions: any[];
-  setChosenOptions: Function;
-  setChosenOption: (arg0: number, arg1: any) => any;
-  vsComputer: boolean;
-}) => {
+  label: string;
+  value: number;
+  max: number;
+  onChange: (value: number) => void;
+}) => (
+  <FlexRow className="spaced-rtl">
+    <label>{label}</label>
+    <NumberInput
+      value={value}
+      max={max}
+      min={0}
+      keepWithinRange
+      clampValueOnBlur
+      onChange={(_, valueAsNumber) => onChange(Number.isNaN(valueAsNumber) ? 0 : valueAsNumber)}
+    >
+      <NumberInputField />
+      <NumberInputStepper>
+        <NumberIncrementStepper />
+        <NumberDecrementStepper />
+      </NumberInputStepper>
+    </NumberInput>
+  </FlexRow>
+);
+
+export const Game = ({ controller }: { controller: GameController }) => {
+  const { chosenOptions, setChosenOption, settings, game } = controller;
+  const slotsCount = settings.slotsCount;
   const [useCheatPanel, setUseCheatPanel] = useState(false);
   const [targetSlot, setTargetSlot] = useState(0);
   const [manual, setManual] = useState<Result>({ black: 0, white: 0 });
 
-  const toggleUseCheatPanel = () => {
-    setUseCheatPanel(!useCheatPanel);
+  const jumpToNextSlot = () => {
+    const nextEmptySlotIndex = getFirstEmptyIndex(chosenOptions, targetSlot);
+    if (nextEmptySlotIndex !== undefined) {
+      setTargetSlot(nextEmptySlotIndex);
+    } else {
+      setTargetSlot(targetSlot >= slotsCount - 1 ? 0 : targetSlot + 1);
+    }
   };
 
   const setOptionByCurrentSlot = (color: string) => {
@@ -57,123 +71,57 @@ export const Game = ({
     jumpToNextSlot();
   };
 
-  const jumpToNextSlot = () => {
-    const nextEmptySlotIndex = getFirstEmptyIndex(chosenOptions, targetSlot);
-    if (nextEmptySlotIndex === undefined) {
-      if (targetSlot >= slots.length - 1) {
-        setTargetSlot(0);
-      } else {
-        setTargetSlot(targetSlot + 1);
-      }
+  const submitManual = () => {
+    if (validResult(manual, slotsCount)) {
+      controller.submit(manual);
     } else {
-      setTargetSlot(nextEmptySlotIndex ?? targetSlot + 1);
+      alert("ניקוד לא חוקי");
+      setManual({ black: 0, white: 0 });
     }
   };
 
   return (
     <main style={{ display: "flex", flexDirection: "row", gap: "10px" }}>
       <MainCard>
-        <ToggleButton
-          text={useCheatPanel ? "X" : "רמי הרמאי >"}
-          fn={toggleUseCheatPanel}
-        ></ToggleButton>
-        {useCheatPanel ? (
-          <CheatPanel
-            setSelection={setChosenOptions}
-            options={allPossibleOptions}
-          />
-        ) : (
-          <></>
+        <button style={{ padding: "10px" }} onClick={() => setUseCheatPanel(!useCheatPanel)}>
+          {useCheatPanel ? "X" : "רמי הרמאי >"}
+        </button>
+        {useCheatPanel && (
+          <CheatPanel setSelection={controller.setChosenOptions} options={controller.possibleOptions} />
         )}
       </MainCard>
 
       <MainCard>
         <FlexColumn>
-          <GameParagraph game={game} />
-          <Slots
-            chosenOptions={chosenOptions}
-            slots={slots}
-            setChosenOption={setChosenOption}
-            targetSlot={targetSlot}
-            setTargetSlot={setTargetSlot}
-          />
+          <H2 text={`סיבוב מספר ${game.turnCount + 1}`} />
+          <Slots chosenOptions={chosenOptions} targetSlot={targetSlot} setTargetSlot={setTargetSlot} />
           <div>
-            {vsComputer ? (
-              <SubmitButton arr={chosenOptions} func={submit}></SubmitButton>
+            {settings.vsComputer ? (
+              <Button onClick={() => controller.submit()}>נחש</Button>
             ) : (
               <FlexColumn>
-                <div>{JSON.stringify(manual)}</div>
-                <FlexRow className="spaced-rtl">
-                  <label htmlFor="blacks">{"שחורים"}</label>
-                  <NumberInput
-                    name="blacks"
-                    defaultValue={manual.white}
-                    value={manual.black}
-                    max={slots.length}
-                    min={0}
-                    keepWithinRange={true}
-                    clampValueOnBlur={true}
-                    onChange={(valueString) =>
-                      setManual({
-                        ...manual,
-                        black: parseInt(valueString),
-                      })
-                    }
-                  >
-                    <NumberInputField />
-                    <NumberInputStepper>
-                      <NumberIncrementStepper />
-                      <NumberDecrementStepper />
-                    </NumberInputStepper>
-                  </NumberInput>
-                </FlexRow>
-                <FlexRow className="spaced-rtl">
-                  <label htmlFor="whites">{"לבנים"}</label>
-                  <NumberInput
-                    name="whites"
-                    defaultValue={manual.white}
-                    value={manual.white}
-                    max={slots.length}
-                    min={0}
-                    keepWithinRange={true}
-                    clampValueOnBlur={true}
-                    onChange={(valueString) =>
-                      setManual({
-                        ...manual,
-                        white: parseInt(valueString),
-                      })
-                    }
-                  >
-                    <NumberInputField />
-                    <NumberInputStepper>
-                      <NumberIncrementStepper />
-                      <NumberDecrementStepper />
-                    </NumberInputStepper>
-                  </NumberInput>
-                </FlexRow>
-                <SubmitButton
-                  arr={chosenOptions}
-                  func={() => {
-                    if (validResult(manual, slots.length)) {
-                      submit(chosenOptions, manual);
-                    } else {
-                      alert("ניקוד לא חוקי");
-                      setManual({ black: 0, white: 0 });
-                    }
-                  }}
-                ></SubmitButton>
+                <ScoreInput
+                  label="שחורים"
+                  value={manual.black}
+                  max={slotsCount}
+                  onChange={(black) => setManual({ ...manual, black })}
+                />
+                <ScoreInput
+                  label="לבנים"
+                  value={manual.white}
+                  max={slotsCount}
+                  onChange={(white) => setManual({ ...manual, white })}
+                />
+                <Button onClick={submitManual}>נחש</Button>
               </FlexColumn>
             )}
           </div>
-          <HistoryPanel
-            setChosenOption={setChosenOption}
-            history={history}
-          ></HistoryPanel>
+          <HistoryPanel setChosenOption={setChosenOption} rounds={controller.rounds} />
         </FlexColumn>
       </MainCard>
       <MainCard>
-        <ColorButtonPallete
-          colors={usedColors}
+        <ColorButtonPalette
+          colors={controller.usedColors}
           setOptionByCurrentSlot={setOptionByCurrentSlot}
           jumpToNextSlot={jumpToNextSlot}
         />

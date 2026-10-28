@@ -10,7 +10,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:server": "python -m pytest server",
-    "server": "flask --app ./server/logic/app.py run"
+    "server": "flask --app server.app run"
   },
   "dependencies": {
     "@chakra-ui/react": "^2.4.9",

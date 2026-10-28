@@ -1,3 +1,5 @@
-export const MainCard = ({ children }: { children: any }) => {
-    return <div className={'MainCard'}>{children}</div>
-}
+import { ReactNode } from "react";
+
+export const MainCard = ({ children }: { children: ReactNode }) => {
+  return <div className="MainCard">{children}</div>;
+};

@@ -2,30 +2,24 @@ import { FlexRowUl } from "../../utils/FlexRowUl";
 import { Slot } from "./Slot";
 
 export const Slots = ({
-  slots,
-  setChosenOption,
   chosenOptions,
   targetSlot,
   setTargetSlot,
 }: {
+  chosenOptions: Array<string | null>;
   targetSlot: number;
-  setTargetSlot: (arg0: number) => void;
-
-  slots: Array<string[]>;
-
-  chosenOptions: string[];
-  setChosenOption: Function;
+  setTargetSlot: (index: number) => void;
 }) => {
   return (
     <FlexRowUl>
-      {slots.map((slot, index) => (
+      {chosenOptions.map((value, index) => (
         <Slot
           key={index}
           setTargetSlot={setTargetSlot}
           highlighted={index === targetSlot}
-          value={chosenOptions[index]}
+          value={value}
           index={index}
-        ></Slot>
+        />
       ))}
     </FlexRowUl>
   );

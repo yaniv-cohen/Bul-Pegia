@@ -1,24 +1,15 @@
 export const Option = ({
-  setSelection,
-  setStartIndex,
+  onSelect,
   option,
 }: {
-  setSelection: Function;
-  setStartIndex: (arg0: number) => void;
+  onSelect: (colors: string[]) => void;
   option: string[];
 }) => {
   return (
-    <div
-      onClick={() => {
-        setSelection(option);
-        setStartIndex(0);
-        window.scrollTo(0, 0);
-      }}
-      className="flex-row option-row"
-    >
-      {option?.map((char, index) => (
-        <span key={index} className={char + " marked colorOption"}>
-          {char[0].toUpperCase()}
+    <div onClick={() => onSelect(option)} className="flex-row option-row">
+      {option.map((color, index) => (
+        <span key={index} className={color + " marked colorOption"}>
+          {color[0].toUpperCase()}
         </span>
       ))}
     </div>

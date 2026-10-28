@@ -1,47 +1,30 @@
-import { EndGameResponse, GameType, GuessResponse } from "../types/Game";
-import { Result } from "../types/historyTypes";
+import { EndGameResponse, GuessResponse, Result } from "../types/game";
 
+/** Build a server-like response from a score entered by a human opponent. */
 export const getGuessResponseFromUser = (
-  guessAsChars: string,
-  game: GameType | undefined,
+  guess: string,
+  gameId: string,
+  turnCount: number,
   manualInput: Result,
   slotsCount: number,
   allowRepeats: boolean,
-  optionsCount: number,
+  colorsCount: number,
   maxTurns: number
 ): EndGameResponse | GuessResponse => {
-  let rawResult: GuessResponse | EndGameResponse;
-
-  if (manualInput.black < slotsCount) {
-    rawResult = {
-      turns: (game?.turnCount ?? 0) + 1,
-      result: manualInput,
-      status: "active",
-    } as GuessResponse;
-  } else {
-    rawResult = {
-      gameId: game?.gameId,
-      turns: (game?.turnCount ?? 0) + 1,
-      maxTurns: maxTurns,
-      allowRepeats: allowRepeats ? "1" : "0",
-      numberOfColors: optionsCount,
-      result: manualInput,
-      secretWord: guessAsChars.split(""),
-      status: "won",
-    } as EndGameResponse;
+  const turns = turnCount + 1;
+  const won = manualInput.black === slotsCount;
+  if (!won && turns < maxTurns) {
+    return { gameId, turns, result: manualInput, status: "active" };
   }
-
-  return rawResult;
+  return {
+    gameId,
+    turns,
+    maxTurns,
+    allowRepeats: allowRepeats ? "1" : "0",
+    numberOfColors: colorsCount,
+    result: manualInput,
+    // The opponent's secret is only known when it was guessed.
+    secretWord: won ? guess.split("") : [],
+    status: won ? "won" : "lost",
+  };
 };
-
-export async function getGuessResponseFromServer(
-  guessAsChars: string,
-  game: GameType | undefined,
-  SERVER_URL: string
-): Promise<EndGameResponse | GuessResponse> {
-  const url = `${SERVER_URL}/game/${game?.gameId}/guess/` + guessAsChars;
-  console.log(`fetch to ` + url);
-  return (await (await fetch(url)).json()) as unknown as
-    | GuessResponse
-    | EndGameResponse;
-}

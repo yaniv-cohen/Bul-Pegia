@@ -1,4 +1,4 @@
-import { Result } from "../types/historyTypes";
+import { Result } from "../types/game";
 import { inArray } from "../utils/inArray";
 
 export const getResult = (word1: string[], word2: string[]): Result => {

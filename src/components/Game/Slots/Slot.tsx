@@ -4,19 +4,15 @@ export const Slot = ({
   value,
   setTargetSlot,
 }: {
-  setTargetSlot: (arg0: number) => void;
+  setTargetSlot: (index: number) => void;
   highlighted: boolean;
-  value: string;
+  value: string | null;
   index: number;
 }) => {
   return (
     <li
-      className={
-        "slot " + (value ?? "empty-slot") + (highlighted ? " chosen" : "")
-      }
-      onClick={() => {
-        setTargetSlot(index);
-      }}
+      className={"slot " + (value ?? "empty-slot") + (highlighted ? " chosen" : "")}
+      onClick={() => setTargetSlot(index)}
     >
       {value ? value[0].toUpperCase() + value.slice(1) : "?"}
     </li>

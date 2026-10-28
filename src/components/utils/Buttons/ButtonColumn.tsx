@@ -1,19 +1,18 @@
 import { Button } from "@chakra-ui/react";
+import { ReactNode } from "react";
 
-export const ButtonColoumn = ({
-  fn,
+export const ButtonColumn = ({
+  onClick,
   className,
   children,
 }: {
-  fn: Function;
+  onClick: () => void;
   className?: string;
-  children: any;
+  children: ReactNode;
 }) => {
   return (
     <Button
-      onClick={() => {
-        fn();
-      }}
+      onClick={onClick}
       className={className}
       style={{
         display: "flex",

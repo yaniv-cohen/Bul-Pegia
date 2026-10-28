@@ -1,3 +1,5 @@
-export const FlexRow = ({ className, children }: any) => {
-  return <div className={className + " FlexRow"}>{children}</div>;
+import { ReactNode } from "react";
+
+export const FlexRow = ({ className = "", children }: { className?: string; children: ReactNode }) => {
+  return <div className={`${className} FlexRow`}>{children}</div>;
 };

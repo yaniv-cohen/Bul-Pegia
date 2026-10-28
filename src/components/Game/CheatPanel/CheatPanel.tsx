@@ -1,70 +1,53 @@
 import { Button } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import { charsToColors } from "../../../logic/charsToColors";
+import { useState } from "react";
+import { charsToColors } from "../../../utils/colors";
 import Option from "./Option";
+
+const PAGE_SIZE = 10;
 
 export const CheatPanel = ({
   setSelection,
   options,
 }: {
-  setSelection: Function;
+  setSelection: (colors: string[]) => void;
   options: string[][];
 }) => {
   const [startIndex, setStartIndex] = useState(0);
-  const pagination = 10;
-  const [currentSelection, setCurrentSelection] = useState(
-    options.slice(startIndex, startIndex + pagination)
-  );
-  useEffect(() => {
-    setCurrentSelection(options.slice(startIndex, startIndex + pagination));
-    if (currentSelection.length <= 0) {
-      setCurrentSelection(options.slice(0, pagination));
-    }
-  }, [options, startIndex, pagination]);
+  // The options list shrinks after every guess, so keep the page in range.
+  const pageStart = startIndex < options.length ? startIndex : 0;
+  const page = options.slice(pageStart, pageStart + PAGE_SIZE);
+
+  const onSelect = (colors: string[]) => {
+    setSelection(colors);
+    setStartIndex(0);
+    window.scrollTo(0, 0);
+  };
 
   return (
     <div>
       <div>
         <h2>{"אלגוריתם חכם עוזר לך לנצח"}</h2>
         <div>
-          <span className="rtl"></span>
           {"ניחוש מומלץ מתוך " + options.length}
-
-          <Option
-            setSelection={setSelection}
-            setStartIndex={setStartIndex}
-            option={charsToColors(options[0])}
-          ></Option>
+          {options.length > 0 && (
+            <Option onSelect={onSelect} option={charsToColors(options[0])} />
+          )}
         </div>
       </div>
       <div>
         <Button
           onClick={() =>
-            setStartIndex(
-              Math.min(startIndex + pagination, options.length - pagination)
-            )
+            setStartIndex(Math.max(Math.min(pageStart + PAGE_SIZE, options.length - PAGE_SIZE), 0))
           }
         >
           +
         </Button>
-        <Button
-          onClick={() => setStartIndex(Math.max(startIndex - pagination, 0))}
-        >
-          -
-        </Button>
+        <Button onClick={() => setStartIndex(Math.max(pageStart - PAGE_SIZE, 0))}>-</Button>
       </div>
       <ul id="resultsList">
-        {currentSelection.map((option, count) => {
-          if (option)
-            return (
-              <Option
-                setSelection={setSelection}
-                setStartIndex={setStartIndex}
-                key={count}
-                option={charsToColors(option)}
-              ></Option>
-            );
-        })}
+        {page.map((option, index) => (
+          <Option key={pageStart + index} onSelect={onSelect} option={charsToColors(option)} />
+        ))}
       </ul>
     </div>
   );

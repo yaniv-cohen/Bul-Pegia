@@ -1,5 +1,5 @@
-import { Round } from "../../../types/historyTypes";
-import { charToColor } from "../../../utils/stringToColors";
+import { Round } from "../../../types/game";
+import { charToColor } from "../../../utils/colors";
 import { Circles } from "../../utils/Circle/Circles";
 import { FlexRow } from "../../utils/FlexRow";
 
@@ -8,7 +8,7 @@ export const Entry = ({
   setChosenOption,
 }: {
   round: Round;
-  setChosenOption: (arg0: number, arg1: any) => any;
+  setChosenOption: (index: number, color: string) => void;
 }) => {
   return (
     <FlexRow className="Entry">
@@ -18,13 +18,8 @@ export const Entry = ({
           return (
             <span
               key={char + index}
-              onClick={() => {
-                setChosenOption(index, color);
-              }}
-              className={
-                "color-result " + color
-                // COLOR_LIST[LETTER_OPTIONS.indexOf(char)]
-              }
+              onClick={() => setChosenOption(index, color)}
+              className={"color-result " + color}
             >
               {color.slice(0, 3) + "."}
             </span>

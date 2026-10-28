@@ -1,30 +1,33 @@
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import { Logo } from "./Logo/Logo";
-import { IconGear } from "./PrefencesTab/GearsIcon";
-import { PreferencesTab } from "./PrefencesTab/PreferencesTab";
+import { IconGear } from "./PreferencesTab/GearsIcon";
+import { PreferencesTab } from "./PreferencesTab/PreferencesTab";
 
-export const GameHeader = ({ children, ...rest }: any) => {
-    const [showPreferences, setShowPreferences] = useState<boolean>();
+export const GameHeader = ({
+  children,
+  toggleResetOnSubmit,
+  resetOnSubmit,
+}: {
+  children: ReactNode;
+  toggleResetOnSubmit: () => void;
+  resetOnSubmit: boolean;
+}) => {
+  const [showPreferences, setShowPreferences] = useState(false);
 
-    const toggleShowPreferences = () => {
-        setShowPreferences(!showPreferences)
-    }
-
-    return (
+  return (
+    <div>
+      <header className="GameHeader">
+        <Logo />
         <div>
-            <header className={"GameHeader"}>
-                <Logo ></Logo>
-                <div>
-                    <div onClick={toggleShowPreferences} >
-                        <IconGear ></IconGear>
-                    </div>
-
-                    {showPreferences ?
-                        <PreferencesTab toggleResetOnSubmit={rest.toggleResetOnSubmit} resetOnSubmit={rest.resetOnSubmit} />
-                        : <></>}
-                </div>
-                
-            </header>
-            {children}
-        </div>)
-}
+          <div onClick={() => setShowPreferences(!showPreferences)}>
+            <IconGear />
+          </div>
+          {showPreferences && (
+            <PreferencesTab toggleResetOnSubmit={toggleResetOnSubmit} resetOnSubmit={resetOnSubmit} />
+          )}
+        </div>
+      </header>
+      {children}
+    </div>
+  );
+};

@@ -1,17 +1,18 @@
+import { ReactNode } from "react";
+
 export const StatsItem = ({
   title,
   value,
   children,
 }: {
   title: string;
-  value?: string | React.ReactNode;
-  children?: any;
+  value?: ReactNode;
+  children?: ReactNode;
 }) => {
-  if (!title || (!value && !children)) return <></>;
   return (
-    <li className="FlexRow spaced-rtl ">
+    <li className="FlexRow spaced-rtl">
       <span>{title + ":"}</span>
-      {value ? <span className="container">{value}</span> : <></>}
+      {value !== undefined && <span className="container">{value}</span>}
       {children}
     </li>
   );

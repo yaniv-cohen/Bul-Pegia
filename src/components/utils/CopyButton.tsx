@@ -1,11 +1,13 @@
 import { Button } from "@chakra-ui/react";
+import { ReactNode } from "react";
 import CopySVG from "/copy.svg";
+
 export const CopyButton = ({
   value,
   children,
 }: {
   value: string;
-  children: any;
+  children: ReactNode;
 }) => {
   return (
     <Button
@@ -15,7 +17,7 @@ export const CopyButton = ({
       }}
     >
       {children}
-      <img src={CopySVG} alt="Click to copy" className="icon" />
+      <img src={CopySVG} alt="העתק" className="icon" />
     </Button>
   );
 };

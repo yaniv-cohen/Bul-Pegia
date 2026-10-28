@@ -1,88 +1,60 @@
 import { Button } from "@chakra-ui/react";
-import { EndgameResult } from "../../types/EndgameResult";
-import { GameState } from "../../types/Game";
+import { EndgameResult } from "../../types/game";
 import { MainCard } from "../utils/MainCard";
 import { StatsItem } from "./StatsItem";
-import Tropy from "/trophy.svg";
+import Trophy from "/trophy.svg";
 import SadIcon from "/sad.svg";
 import { CopyButton } from "../utils/CopyButton";
-import { charsToColors } from "../../logic/charsToColors";
+import { charsToColors } from "../../utils/colors";
 import { FlexColUl } from "../utils/FlexColUl";
-import { FlexColumn } from "../utils/FlexColoumn";
+import { FlexColumn } from "../utils/FlexColumn";
 import { FlexRow } from "../utils/FlexRow";
+
+const MAX_ID_LENGTH = 6;
+
 export const EndScreen = ({
   endgameResult,
-  setGameState,
+  playAgain,
 }: {
-  endgameResult?: EndgameResult;
-  setGameState: (arg0: GameState) => void;
+  endgameResult: EndgameResult;
+  playAgain: () => void;
 }) => {
-  const gameWon = endgameResult?.status === "won";
+  const gameWon = endgameResult.status === "won";
+  const { gameId } = endgameResult;
   return (
     <main>
       <MainCard>
         <FlexRow className="spaced-rtl">
-          <h1 className="H2 spaced-around-rtl">
-            {gameWon ? "ניצחון!" : "הפסדת!"}
-          </h1>
-
-          <img
-            src={gameWon ? Tropy : SadIcon}
-            alt="גביע ניצחון"
-            className="win_loss_image"
-          />
+          <h1 className="H2 spaced-around-rtl">{gameWon ? "ניצחון!" : "הפסדת!"}</h1>
+          <img src={gameWon ? Trophy : SadIcon} alt="" className="win_loss_image" />
         </FlexRow>
         <FlexColUl>
-          <StatsItem title="הרצף הסודי">
-            {charsToColors((endgameResult?.secretWord + "").split(",")).map(
-              (color, index) => {
-                return (
-                  <span key={color + index} className={"color-result " + color}>
-                    {
-                      //   color
-                      (color + "").slice(0, 3)
-                    }
-                  </span>
-                );
-              }
-            )}
-          </StatsItem>
-          <StatsItem
-            title={"מספר ניסיונות"}
-            value={endgameResult?.turns + "/" + endgameResult?.maxTurns}
-          ></StatsItem>
-          <StatsItem
-            title={"מספר צבעים"}
-            value={endgameResult?.numberOfColors}
-          ></StatsItem>
-          <StatsItem
-            title={"חזרה על צבעים"}
-            value={endgameResult?.allowRepeats ? "כן" : "לא"}
-          ></StatsItem>
-          <StatsItem title={"מזהה משחק"}>
-            {endgameResult?.gameId ? (
-              <CopyButton value={endgameResult?.gameId + ""}>
-                {endgameResult?.gameId ?? "".length <= 6
-                  ? endgameResult?.gameId
-                  : endgameResult?.gameId.slice(0, 6) + "... "}
+          {endgameResult.secretWord.length > 0 && (
+            <StatsItem title="הרצף הסודי">
+              {charsToColors(endgameResult.secretWord).map((color, index) => (
+                <span key={color + index} className={"color-result " + color}>
+                  {color.slice(0, 3)}
+                </span>
+              ))}
+            </StatsItem>
+          )}
+          <StatsItem title="מספר ניסיונות" value={`${endgameResult.turns}/${endgameResult.maxTurns}`} />
+          <StatsItem title="מספר צבעים" value={endgameResult.numberOfColors} />
+          <StatsItem title="חזרה על צבעים" value={endgameResult.allowRepeats ? "כן" : "לא"} />
+          {gameId && (
+            <StatsItem title="מזהה משחק">
+              <CopyButton value={gameId}>
+                {gameId.length <= MAX_ID_LENGTH ? gameId : gameId.slice(0, MAX_ID_LENGTH) + "... "}
               </CopyButton>
-            ) : undefined}
-          </StatsItem>
+            </StatsItem>
+          )}
         </FlexColUl>
         <FlexColumn>
           <div>
-            <Button
-              onClick={() => {
-                setGameState("start");
-              }}
-            >
-              {"שחק שוב"}
-            </Button>
+            <Button onClick={playAgain}>{"שחק שוב"}</Button>
           </div>
           <div>
-            <CopyButton value={JSON.stringify(endgameResult)}>
-              {"ייצא משחק"}
-            </CopyButton>
+            <CopyButton value={JSON.stringify(endgameResult)}>{"ייצא משחק"}</CopyButton>
           </div>
         </FlexColumn>
       </MainCard>

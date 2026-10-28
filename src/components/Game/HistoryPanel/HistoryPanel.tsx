@@ -1,19 +1,24 @@
-import { History } from "../../../types/historyTypes";
-import { FlexReversedColoumn } from "../../utils/FlexReversedColoumn";
+import { Round } from "../../../types/game";
+import { FlexReversedColumn } from "../../utils/FlexReversedColumn";
 import { H2 } from "../../utils/Headings";
 import Entry from "./Entry";
 
-export const HistoryPanel = ({ history, setChosenOption }: { history: History, setChosenOption: (arg0: number, arg1: any) => any }) => {
+export const HistoryPanel = ({
+  rounds,
+  setChosenOption,
+}: {
+  rounds: Round[];
+  setChosenOption: (index: number, color: string) => void;
+}) => {
   return (
     <div className="HistoryPanel">
       <H2 text="תוצאות:" />
-
-      <FlexReversedColoumn id="EntryList">
-        {history.rounds.map((round, index) => (
-          <Entry key={index} round={round} setChosenOption={setChosenOption}/>
+      <FlexReversedColumn>
+        {rounds.map((round, index) => (
+          <Entry key={index} round={round} setChosenOption={setChosenOption} />
         ))}
-      </FlexReversedColoumn>
-    </div >
+      </FlexReversedColumn>
+    </div>
   );
 };
 export default HistoryPanel;
