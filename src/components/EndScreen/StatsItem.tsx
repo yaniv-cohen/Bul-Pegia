@@ -10,9 +10,9 @@ export const StatsItem = ({
   children?: ReactNode;
 }) => {
   return (
-    <li className="FlexRow spaced-rtl">
-      <span>{title + ":"}</span>
-      {value !== undefined && <span className="container">{value}</span>}
+    <li className="StatsItem">
+      <span className="StatsItem__title">{title}</span>
+      {value !== undefined && <span className="StatsItem__value">{value}</span>}
       {children}
     </li>
   );

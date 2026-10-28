@@ -1,7 +1,4 @@
-import { Card } from "@chakra-ui/react";
-import { Option } from "../../StartGame/Options/Option";
-import { FlexColumn } from "../../utils/FlexColumn";
-import { SwitchRect } from "../../utils/Switch";
+import { FormControl, FormLabel, Switch } from "@chakra-ui/react";
 
 export const PreferencesTab = ({
   toggleResetOnSubmit,
@@ -11,12 +8,11 @@ export const PreferencesTab = ({
   resetOnSubmit: boolean;
 }) => {
   return (
-    <Card>
-      <FlexColumn>
-        <Option text="מחק בחירה אחרי ניחוש:" currentValue={resetOnSubmit ? "כן" : "לא"}>
-          <SwitchRect value={resetOnSubmit} toggleFunction={toggleResetOnSubmit} />
-        </Option>
-      </FlexColumn>
-    </Card>
+    <FormControl display="flex" alignItems="center" gap={3}>
+      <FormLabel htmlFor="reset-on-submit" mb={0}>
+        {"מחק בחירה אחרי ניחוש"}
+      </FormLabel>
+      <Switch id="reset-on-submit" isChecked={resetOnSubmit} onChange={toggleResetOnSubmit} />
+    </FormControl>
   );
 };

@@ -1,3 +1,6 @@
+import { COLOR_NAMES } from "../../../utils/colors";
+import { Peg } from "../../utils/Peg/Peg";
+
 export const Option = ({
   onSelect,
   option,
@@ -6,13 +9,16 @@ export const Option = ({
   option: string[];
 }) => {
   return (
-    <div onClick={() => onSelect(option)} className="flex-row option-row">
+    <button
+      type="button"
+      className="CheatOption"
+      onClick={() => onSelect(option)}
+      aria-label={"בחר: " + option.map((color) => COLOR_NAMES[color]).join(", ")}
+    >
       {option.map((color, index) => (
-        <span key={index} className={color + " marked colorOption"}>
-          {color[0].toUpperCase()}
-        </span>
+        <Peg key={index} color={color} size="sm" />
       ))}
-    </div>
+    </button>
   );
 };
 export default Option;

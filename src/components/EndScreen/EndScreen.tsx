@@ -6,9 +6,7 @@ import Trophy from "/trophy.svg";
 import SadIcon from "/sad.svg";
 import { CopyButton } from "../utils/CopyButton";
 import { charsToColors } from "../../utils/colors";
-import { FlexColUl } from "../utils/FlexColUl";
-import { FlexColumn } from "../utils/FlexColumn";
-import { FlexRow } from "../utils/FlexRow";
+import { Peg } from "../utils/Peg/Peg";
 
 const MAX_ID_LENGTH = 6;
 
@@ -20,43 +18,50 @@ export const EndScreen = ({
   playAgain: () => void;
 }) => {
   const gameWon = endgameResult.status === "won";
-  const { gameId } = endgameResult;
+  const { gameId, secretWord } = endgameResult;
   return (
-    <main>
+    <main className="EndScreen">
       <MainCard>
-        <FlexRow className="spaced-rtl">
-          <h1 className="H2 spaced-around-rtl">{gameWon ? "ניצחון!" : "הפסדת!"}</h1>
-          <img src={gameWon ? Trophy : SadIcon} alt="" className="win_loss_image" />
-        </FlexRow>
-        <FlexColUl>
-          {endgameResult.secretWord.length > 0 && (
-            <StatsItem title="הרצף הסודי">
-              {charsToColors(endgameResult.secretWord).map((color, index) => (
-                <span key={color + index} className={"color-result " + color}>
-                  {color.slice(0, 3)}
-                </span>
+        <div className={"EndScreen__banner" + (gameWon ? " EndScreen__banner--won" : "")}>
+          <img src={gameWon ? Trophy : SadIcon} alt="" className="EndScreen__icon" />
+          <h1>{gameWon ? "ניצחון!" : "הפסדת!"}</h1>
+          <p>
+            {gameWon
+              ? `פיצחת את הרצף ב-${endgameResult.turns} ניסיונות`
+              : "נגמרו הניסיונות. בפעם הבאה!"}
+          </p>
+        </div>
+
+        {secretWord.length > 0 && (
+          <div className="EndScreen__secret">
+            <span>{"הרצף הסודי"}</span>
+            <div className="EndScreen__pegs">
+              {charsToColors(secretWord).map((color, index) => (
+                <Peg key={index} color={color} />
               ))}
-            </StatsItem>
-          )}
+            </div>
+          </div>
+        )}
+
+        <ul className="EndScreen__stats">
           <StatsItem title="מספר ניסיונות" value={`${endgameResult.turns}/${endgameResult.maxTurns}`} />
           <StatsItem title="מספר צבעים" value={endgameResult.numberOfColors} />
           <StatsItem title="חזרה על צבעים" value={endgameResult.allowRepeats ? "כן" : "לא"} />
           {gameId && (
             <StatsItem title="מזהה משחק">
               <CopyButton value={gameId}>
-                {gameId.length <= MAX_ID_LENGTH ? gameId : gameId.slice(0, MAX_ID_LENGTH) + "... "}
+                {gameId.length <= MAX_ID_LENGTH ? gameId : gameId.slice(0, MAX_ID_LENGTH) + "…"}
               </CopyButton>
             </StatsItem>
           )}
-        </FlexColUl>
-        <FlexColumn>
-          <div>
-            <Button onClick={playAgain}>{"שחק שוב"}</Button>
-          </div>
-          <div>
-            <CopyButton value={JSON.stringify(endgameResult)}>{"ייצא משחק"}</CopyButton>
-          </div>
-        </FlexColumn>
+        </ul>
+
+        <div className="EndScreen__actions">
+          <Button size="lg" onClick={playAgain}>
+            {"שחק שוב"}
+          </Button>
+          <CopyButton value={JSON.stringify(endgameResult)}>{"ייצא משחק"}</CopyButton>
+        </div>
       </MainCard>
     </main>
   );

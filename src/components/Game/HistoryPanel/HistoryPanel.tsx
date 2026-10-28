@@ -1,6 +1,4 @@
 import { Round } from "../../../types/game";
-import { FlexReversedColumn } from "../../utils/FlexReversedColumn";
-import { H2 } from "../../utils/Headings";
 import Entry from "./Entry";
 
 export const HistoryPanel = ({
@@ -10,15 +8,17 @@ export const HistoryPanel = ({
   rounds: Round[];
   setChosenOption: (index: number, color: string) => void;
 }) => {
+  if (rounds.length === 0) {
+    return <p className="History__empty">{"הניחושים שלך יופיעו כאן"}</p>;
+  }
   return (
-    <div className="HistoryPanel">
-      <H2 text="תוצאות:" />
-      <FlexReversedColumn>
+    <section className="History" aria-label="ניחושים קודמים">
+      <ol className="History__list">
         {rounds.map((round, index) => (
-          <Entry key={index} round={round} setChosenOption={setChosenOption} />
+          <Entry key={index} number={index + 1} round={round} setChosenOption={setChosenOption} />
         ))}
-      </FlexReversedColumn>
-    </div>
+      </ol>
+    </section>
   );
 };
 export default HistoryPanel;

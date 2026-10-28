@@ -1,174 +1,107 @@
 @import "colorPalette.scss";
-@import "components/Game/HistoryPanel/index.scss";
-@import "components/Game/Slots/Slot.scss";
-@import "components/GameHeader/GameHeader.scss";
-@import "components/GameHeader/Logo/Logo.scss";
-@import "components/utils/index.scss";
-@import "components/StartGame/Options/Option.scss";
+@import "components/utils/Peg/Peg.scss";
 @import "components/StartGame/StartGame.scss";
+@import "components/Game/Game.scss";
 @import "components/EndScreen/EndScreen.scss";
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
-#root {
-  z-index: 0;
-  background-color: $yellow;
-  margin: 0 auto;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  text-align: center;
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-  border: 5px none;
-}
-
-.color-button {
-  border-radius: 20px;
-  border: solid white;
-}
-
-.red {
-  background-color: $pin-red;
-}
-
-.orange {
-  background-color: $pin-orange;
-}
-
-.yellow {
-  background-color: $pin-yellow;
-}
-
-.green {
-  background-color: $pin-green;
-}
-
-.blue {
-  background-color: $pin-blue;
-}
-
-.indigo {
-  background-color: indigo;
-}
-
-.violet {
-  background-color: violet;
-}
-
-.purple {
-  background-color: $pin-purple;
-}
-
-.brown {
-  background-color: $pin-brown;
-}
-
-.grey {
-  background-color: $pin-grey;
-}
-
-.option-row {
-  flex: 2 0 100%;
-  margin: 16px;
-  height: fit-content;
-  // padding: 3px;
-}
-
-.colorOption {
-  padding: 10px;
-  width: min-content;
-  line-break: anywhere;
-  cursor: pointer;
-}
-
-:root {
-  background-color: $yellow;
-
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  z-index: 20;
-  // background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
-}
-
-.CheatPanel {
-  left: 0;
-}
-
-.flex-row {
-  width: 300px;
-}
-
-aside {
-  position: absolute;
-  top: 0;
-  border: 2px solid black;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 150px;
-  padding: 5px;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-
-a:hover {
-  color: #535bf2;
+html,
+body {
+  margin: 0;
+  min-height: 100%;
 }
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
-  min-height: 100vh;
+  font-family: Rubik, system-ui, sans-serif;
+  line-height: 1.5;
+  color: var(--on-dark);
+  background:
+    radial-gradient(circle at 15% 10%, rgba(255, 107, 107, 0.18), transparent 40%),
+    radial-gradient(circle at 85% 90%, rgba(58, 134, 255, 0.18), transparent 45%),
+    var(--bg);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
+a {
+  color: var(--accent-strong);
   font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
-button:hover {
-  border-color: #646cff;
+.App {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px 24px;
 }
 
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+.GameHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0;
+}
+
+.Logo {
+  height: 56px;
+  border-radius: 12px;
+  box-shadow: var(--shadow-soft);
+  transform: rotate(-2deg);
+}
+
+.MainCard {
+  width: 100%;
+  padding: 24px;
+  border-radius: var(--radius);
+  background: var(--card);
+  color: var(--ink);
+  box-shadow: var(--shadow);
+}
+
+.icon {
+  height: 18px;
+}
+
+.KeyPeg {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.25);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.KeyPeg--black {
+  background: radial-gradient(circle at 35% 30%, #555, #0d0d12 60%);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.KeyPeg--white {
+  background: radial-gradient(circle at 35% 30%, #fff, #d9dbe6 70%);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+@media (max-width: $mobile) {
+  .MainCard {
+    padding: 18px;
+  }
+
+  .Logo {
+    height: 44px;
+  }
 }

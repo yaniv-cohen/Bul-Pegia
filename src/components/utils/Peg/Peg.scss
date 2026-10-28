@@ -1,0 +1,101 @@
+$peg-colors: "red", "orange", "yellow", "green", "blue", "purple", "brown", "grey";
+
+.Peg {
+  --size: 52px;
+  --peg-color: transparent;
+  --inset: inset 0 -4px 8px rgba(0, 0, 0, 0.28);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: var(--size);
+  height: var(--size);
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  font: inherit;
+  font-weight: 800;
+  font-size: calc(var(--size) * 0.32);
+  color: rgba(255, 255, 255, 0.92);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  background:
+    radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.7) 0, rgba(255, 255, 255, 0) 38%),
+    var(--peg-color);
+  box-shadow:
+    var(--inset),
+    0 3px 6px rgba(0, 0, 0, 0.3);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+button.Peg {
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-2px) scale(1.04);
+  }
+
+  &:active {
+    transform: scale(0.94);
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--sun);
+    outline-offset: 3px;
+  }
+}
+
+.Peg--sm {
+  --size: 26px;
+}
+
+.Peg--md {
+  --size: 52px;
+}
+
+.Peg--lg {
+  --size: 60px;
+}
+
+@each $color in $peg-colors {
+  .Peg--#{$color} {
+    --peg-color: var(--peg-#{$color});
+  }
+}
+
+.Peg--yellow {
+  color: rgba(27, 31, 59, 0.8);
+  text-shadow: none;
+}
+
+.Peg--empty {
+  --inset: inset 0 3px 8px rgba(0, 0, 0, 0.55);
+  background: rgba(0, 0, 0, 0.28);
+  box-shadow: var(--inset);
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.Peg--selected {
+  box-shadow:
+    var(--inset),
+    0 0 0 3px var(--bg),
+    0 0 0 6px var(--sun);
+  animation: peg-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes peg-pulse {
+  50% {
+    box-shadow:
+      var(--inset),
+      0 0 0 3px var(--bg),
+      0 0 0 9px rgba(255, 209, 102, 0.55);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .Peg,
+  .Peg--selected {
+    animation: none;
+    transition: none;
+  }
+}

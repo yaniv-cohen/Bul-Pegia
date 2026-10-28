@@ -1,5 +1,6 @@
-import { FlexRowUl } from "../../utils/FlexRowUl";
-import { Slot } from "./Slot";
+import { CSSProperties } from "react";
+import { Peg } from "../../utils/Peg/Peg";
+import { COLOR_NAMES } from "../../../utils/colors";
 
 export const Slots = ({
   chosenOptions,
@@ -11,16 +12,18 @@ export const Slots = ({
   setTargetSlot: (index: number) => void;
 }) => {
   return (
-    <FlexRowUl>
-      {chosenOptions.map((value, index) => (
-        <Slot
-          key={index}
-          setTargetSlot={setTargetSlot}
-          highlighted={index === targetSlot}
-          value={value}
-          index={index}
-        />
+    <ol className="Slots" style={{ "--count": chosenOptions.length } as CSSProperties}>
+      {chosenOptions.map((color, index) => (
+        <li key={index}>
+          <Peg
+            color={color}
+            size="lg"
+            selected={index === targetSlot}
+            onClick={() => setTargetSlot(index)}
+            label={`מקום ${index + 1}: ${color ? COLOR_NAMES[color] : "ריק"}`}
+          />
+        </li>
       ))}
-    </FlexRowUl>
+    </ol>
   );
 };

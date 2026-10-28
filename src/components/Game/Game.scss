@@ -1,0 +1,302 @@
+// Desktop: palette | board | cheat panel (columns run right-to-left)
+.GameScreen {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) 300px;
+  align-items: start;
+  gap: 20px;
+}
+
+.Controls {
+  position: sticky;
+  top: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  border-radius: var(--radius);
+  background: var(--bg-raised);
+  box-shadow: var(--shadow);
+}
+
+.Palette {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.Board {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px;
+  border-radius: var(--radius);
+  color: var(--on-dark);
+  background:
+    linear-gradient(rgba(27, 31, 59, 0.72), rgba(27, 31, 59, 0.86)),
+    url("/Wooden.jpg") center / cover;
+  box-shadow: var(--shadow);
+}
+
+.Board__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.Board__title {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 500;
+
+  strong {
+    font-weight: 800;
+    color: var(--sun);
+  }
+}
+
+.Board__max {
+  color: rgba(244, 242, 255, 0.6);
+}
+
+.Board__hint {
+  margin: 0;
+  font-size: 0.8rem;
+  color: rgba(244, 242, 255, 0.6);
+  text-align: center;
+}
+
+.Board__warning {
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  background: rgba(229, 72, 77, 0.2);
+  color: #ffd0d2;
+}
+
+.Slots {
+  --gap: 12px;
+  display: flex;
+  justify-content: center;
+  gap: var(--gap);
+  padding: 16px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.25);
+
+  .Peg {
+    // Shrink to fit up to 8 slots on narrow screens.
+    --size: min(60px, calc((100vw - 96px) / var(--count) - var(--gap)));
+  }
+}
+
+.HumanScore {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.HumanScore__title {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.HumanScore__row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.HumanScore__count {
+  font-weight: 700;
+}
+
+.HumanScore__error {
+  margin: 0;
+  color: #ffb4b6;
+  font-size: 0.9rem;
+}
+
+.KeyPegs {
+  display: grid;
+  grid-template-columns: repeat(var(--columns), auto);
+  gap: 4px;
+}
+
+.KeyPegs--editable {
+  gap: 8px;
+
+  .KeyPeg {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 2px dashed rgba(255, 255, 255, 0.35);
+    cursor: pointer;
+
+    &:focus-visible {
+      outline: 3px solid var(--sun);
+      outline-offset: 2px;
+    }
+  }
+
+  .KeyPeg--black,
+  .KeyPeg--white {
+    border-style: solid;
+    border-color: transparent;
+  }
+}
+
+.History__empty {
+  margin: 0;
+  color: rgba(244, 242, 255, 0.55);
+  text-align: center;
+}
+
+.History__list {
+  display: flex;
+  // Newest guess first.
+  flex-direction: column-reverse;
+  gap: 8px;
+}
+
+.Entry {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.Entry__number {
+  min-width: 2ch;
+  font-size: 0.85rem;
+  color: rgba(244, 242, 255, 0.55);
+}
+
+.Entry__guess {
+  display: flex;
+  flex: 1;
+  gap: 6px;
+}
+
+.CheatColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border-radius: var(--radius);
+  background: var(--card);
+  color: var(--ink);
+  box-shadow: var(--shadow);
+}
+
+.CheatPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.CheatPanel__lead,
+.CheatPanel__empty {
+  margin: 0;
+  color: var(--ink-muted);
+  font-size: 0.9rem;
+}
+
+.CheatPanel__best {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-weight: 500;
+
+  .CheatOption {
+    background: #fff4d6;
+    border-color: var(--sun);
+  }
+}
+
+.CheatPanel__list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.CheatOption {
+  display: flex;
+  gap: 6px;
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--card-muted);
+  border-radius: 999px;
+  background: #fff;
+  cursor: pointer;
+  transition: background 0.15s;
+
+  &:hover {
+    background: var(--card-muted);
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--sun);
+    outline-offset: 2px;
+  }
+}
+
+.CheatPanel__pages {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: var(--ink-muted);
+}
+
+// Phones: one column, palette pinned to the bottom of the screen.
+@media (max-width: $mobile) {
+  .GameScreen {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+    // Room for the fixed palette bar.
+    padding-bottom: 150px;
+  }
+
+  .Board {
+    padding: 16px;
+  }
+
+  .Slots {
+    --gap: 8px;
+    padding: 10px;
+  }
+
+  .Controls {
+    position: fixed;
+    inset: auto 0 0 0;
+    z-index: 10;
+    top: auto;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+    border-radius: var(--radius) var(--radius) 0 0;
+  }
+
+  .Palette {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+
+    .Peg {
+      --size: 38px;
+    }
+  }
+
+  .Controls__submit {
+    width: 100%;
+  }
+}

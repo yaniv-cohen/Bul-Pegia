@@ -1,17 +1,9 @@
 import { ReactNode } from "react";
 
-export const Option = ({
-  text,
-  currentValue,
-  children,
-}: {
-  text: string;
-  currentValue: ReactNode;
-  children: ReactNode;
-}) => (
+/** One labelled setting row on the start screen. */
+export const Option = ({ text, children }: { text: string; children: ReactNode }) => (
   <div className="Option">
-    <h3>{text}</h3>
-    <h3>{currentValue}</h3>
+    <span className="Option__label">{text}</span>
     {children}
   </div>
 );

@@ -6,49 +6,62 @@ import Option from "./Option";
 const PAGE_SIZE = 10;
 
 export const CheatPanel = ({
-  setSelection,
+  onSelect,
   options,
 }: {
-  setSelection: (colors: string[]) => void;
+  onSelect: (colors: string[]) => void;
   options: string[][];
 }) => {
   const [startIndex, setStartIndex] = useState(0);
+  // The first option is the recommendation shown above the list.
+  const others = options.slice(1);
   // The options list shrinks after every guess, so keep the page in range.
-  const pageStart = startIndex < options.length ? startIndex : 0;
-  const page = options.slice(pageStart, pageStart + PAGE_SIZE);
-
-  const onSelect = (colors: string[]) => {
-    setSelection(colors);
+  const pageStart = startIndex < others.length ? startIndex : 0;
+  const page = others.slice(pageStart, pageStart + PAGE_SIZE);
+  const select = (colors: string[]) => {
+    onSelect(colors);
     setStartIndex(0);
-    window.scrollTo(0, 0);
   };
 
+  if (options.length === 0) {
+    return <p className="CheatPanel__empty">{"אין רצף שמתאים לכל התוצאות עד עכשיו"}</p>;
+  }
+
   return (
-    <div>
-      <div>
-        <h2>{"אלגוריתם חכם עוזר לך לנצח"}</h2>
-        <div>
-          {"ניחוש מומלץ מתוך " + options.length}
-          {options.length > 0 && (
-            <Option onSelect={onSelect} option={charsToColors(options[0])} />
-          )}
-        </div>
+    <div className="CheatPanel">
+      <p className="CheatPanel__lead">{"אלגוריתם חכם עוזר לך לנצח"}</p>
+      <div className="CheatPanel__best">
+        <span>{`ניחוש מומלץ מתוך ${options.length.toLocaleString("he-IL")}:`}</span>
+        <Option onSelect={select} option={charsToColors(options[0])} />
       </div>
-      <div>
-        <Button
-          onClick={() =>
-            setStartIndex(Math.max(Math.min(pageStart + PAGE_SIZE, options.length - PAGE_SIZE), 0))
-          }
-        >
-          +
-        </Button>
-        <Button onClick={() => setStartIndex(Math.max(pageStart - PAGE_SIZE, 0))}>-</Button>
-      </div>
-      <ul id="resultsList">
+      <ul className="CheatPanel__list">
         {page.map((option, index) => (
-          <Option key={pageStart + index} onSelect={onSelect} option={charsToColors(option)} />
+          <li key={pageStart + index}>
+            <Option onSelect={select} option={charsToColors(option)} />
+          </li>
         ))}
       </ul>
+      {others.length > PAGE_SIZE && (
+        <div className="CheatPanel__pages">
+          <Button
+            size="sm"
+            variant="ghost"
+            isDisabled={pageStart === 0}
+            onClick={() => setStartIndex(Math.max(pageStart - PAGE_SIZE, 0))}
+          >
+            {"→ הקודם"}
+          </Button>
+          <span>{`${pageStart + 1}–${Math.min(pageStart + PAGE_SIZE, others.length)}`}</span>
+          <Button
+            size="sm"
+            variant="ghost"
+            isDisabled={pageStart + PAGE_SIZE >= others.length}
+            onClick={() => setStartIndex(pageStart + PAGE_SIZE)}
+          >
+            {"הבא ←"}
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

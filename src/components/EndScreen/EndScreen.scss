@@ -1,3 +1,89 @@
-.win_loss_image{
-    height:150px;
+.EndScreen {
+  max-width: 480px;
+  margin: 8px auto 0;
+
+  .MainCard {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+}
+
+.EndScreen__banner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  border-radius: var(--radius);
+  background: var(--card-muted);
+  text-align: center;
+
+  h1 {
+    margin: 4px 0 0;
+    font-size: 2rem;
+    font-weight: 800;
+  }
+
+  p {
+    margin: 0;
+    color: var(--ink-muted);
+  }
+}
+
+.EndScreen__banner--won {
+  background: linear-gradient(135deg, #d9fbe9, #fff4d6);
+}
+
+.EndScreen__icon {
+  height: 96px;
+}
+
+.EndScreen__secret {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+}
+
+.EndScreen__pegs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-radius: 999px;
+  background: var(--bg);
+}
+
+.EndScreen__stats {
+  display: flex;
+  flex-direction: column;
+}
+
+.StatsItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 44px;
+  border-bottom: 1px solid var(--card-muted);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.StatsItem__title {
+  color: var(--ink-muted);
+}
+
+.StatsItem__value {
+  font-weight: 700;
+}
+
+.EndScreen__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
 }

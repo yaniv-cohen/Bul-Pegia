@@ -11,7 +11,18 @@ export const COLOR_LIST = [
   "grey",
 ];
 
-export const charToColor = (char: string): string =>
+export const COLOR_NAMES: Record<string, string> = {
+  red: "אדום",
+  orange: "כתום",
+  yellow: "צהוב",
+  green: "ירוק",
+  blue: "כחול",
+  purple: "סגול",
+  brown: "חום",
+  grey: "אפור",
+};
+
+export const charToColor =(char: string): string =>
   COLOR_LIST[LETTER_OPTIONS.indexOf(char)];
 
 export const charsToColors = (chars: string[]): string[] =>

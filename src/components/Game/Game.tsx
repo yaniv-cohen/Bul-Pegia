@@ -1,61 +1,52 @@
 import { useState } from "react";
 import {
   Button,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
+  Drawer,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerHeader,
+  DrawerOverlay,
+  useBreakpointValue,
+  useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import CheatPanel from "./CheatPanel/CheatPanel";
 import HistoryPanel from "./HistoryPanel/HistoryPanel";
-import { FlexColumn } from "../utils/FlexColumn";
-import { FlexRow } from "../utils/FlexRow";
-import { MainCard } from "../utils/MainCard";
-import { H2 } from "../utils/Headings";
 import { Slots } from "./Slots/Slots";
 import { ColorButtonPalette } from "./ColorPalette/ColorButtonPalette";
+import { HumanScore } from "./HumanScore/HumanScore";
+import { KeyPegState, keyPegsToResult } from "./KeyPegs/KeyPegs";
 import { getFirstEmptyIndex } from "../../utils/getFirstEmptyIndex";
 import { validResult } from "../../utils/validResult";
-import { GameController } from "../../hooks/useGame";
-import { Result } from "../../types/game";
+import { GameController, SubmitOutcome } from "../../hooks/useGame";
+import { useKeyboardControls } from "../../hooks/useKeyboardControls";
 
-const ScoreInput = ({
-  label,
-  value,
-  max,
-  onChange,
-}: {
-  label: string;
-  value: number;
-  max: number;
-  onChange: (value: number) => void;
-}) => (
-  <FlexRow className="spaced-rtl">
-    <label>{label}</label>
-    <NumberInput
-      value={value}
-      max={max}
-      min={0}
-      keepWithinRange
-      clampValueOnBlur
-      onChange={(_, valueAsNumber) => onChange(Number.isNaN(valueAsNumber) ? 0 : valueAsNumber)}
-    >
-      <NumberInputField />
-      <NumberInputStepper>
-        <NumberIncrementStepper />
-        <NumberDecrementStepper />
-      </NumberInputStepper>
-    </NumberInput>
-  </FlexRow>
-);
+const OUTCOME_MESSAGES: Record<Exclude<SubmitOutcome, "ok">, string> = {
+  incomplete: "צריך למלא את כל המקומות לפני ניחוש",
+  duplicate: "כבר ניחשת את הרצף הזה",
+  error: "תקלה בתקשורת עם השרת, נסה שוב",
+};
+
+const emptyScore = (slotsCount: number): KeyPegState[] => new Array(slotsCount).fill("empty");
 
 export const Game = ({ controller }: { controller: GameController }) => {
-  const { chosenOptions, setChosenOption, settings, game } = controller;
-  const slotsCount = settings.slotsCount;
-  const [useCheatPanel, setUseCheatPanel] = useState(false);
+  const { chosenOptions, setChosenOption, settings, game, rounds, possibleOptions } = controller;
+  const { slotsCount, vsComputer, maxTurns } = settings;
+  const toast = useToast();
+  const isMobile = useBreakpointValue({ base: true, md: false }, { ssr: false }) ?? false;
+  const cheatDrawer = useDisclosure();
+  const [showCheat, setShowCheat] = useState(false);
   const [targetSlot, setTargetSlot] = useState(0);
-  const [manual, setManual] = useState<Result>({ black: 0, white: 0 });
+  const [scorePegs, setScorePegs] = useState(() => emptyScore(slotsCount));
+  const [submitting, setSubmitting] = useState(false);
+
+  const manualScore = keyPegsToResult(scorePegs);
+  const scoreError =
+    !vsComputer && !validResult(manualScore, slotsCount)
+      ? `${manualScore.black} שחורים ולבן אחד זה ניקוד שלא יכול לקרות`
+      : undefined;
+  const contradiction = !vsComputer && rounds.length > 0 && possibleOptions.length === 0;
 
   const jumpToNextSlot = () => {
     const nextEmptySlotIndex = getFirstEmptyIndex(chosenOptions, targetSlot);
@@ -66,66 +57,116 @@ export const Game = ({ controller }: { controller: GameController }) => {
     }
   };
 
-  const setOptionByCurrentSlot = (color: string) => {
+  const pickColor = (color: string) => {
     setChosenOption(targetSlot, color);
     jumpToNextSlot();
   };
 
-  const submitManual = () => {
-    if (validResult(manual, slotsCount)) {
-      controller.submit(manual);
-    } else {
-      alert("ניקוד לא חוקי");
-      setManual({ black: 0, white: 0 });
+  const submit = async () => {
+    if (submitting || scoreError) return;
+    setSubmitting(true);
+    const outcome = await controller.submit(vsComputer ? undefined : manualScore);
+    setSubmitting(false);
+    if (outcome === "ok") {
+      setScorePegs(emptyScore(slotsCount));
+      if (controller.resetOnSubmit) setTargetSlot(0);
+      return;
+    }
+    if (!toast.isActive(outcome)) {
+      toast({
+        id: outcome,
+        status: outcome === "error" ? "error" : "warning",
+        title: OUTCOME_MESSAGES[outcome],
+        position: "top",
+        duration: 2500,
+      });
     }
   };
 
-  return (
-    <main style={{ display: "flex", flexDirection: "row", gap: "10px" }}>
-      <MainCard>
-        <button style={{ padding: "10px" }} onClick={() => setUseCheatPanel(!useCheatPanel)}>
-          {useCheatPanel ? "X" : "רמי הרמאי >"}
-        </button>
-        {useCheatPanel && (
-          <CheatPanel setSelection={controller.setChosenOptions} options={controller.possibleOptions} />
-        )}
-      </MainCard>
+  useKeyboardControls({
+    colors: controller.usedColors,
+    slotsCount,
+    targetSlot,
+    setTargetSlot,
+    pickColor,
+    clearSlot: () => setChosenOption(targetSlot, null),
+    submit,
+  });
 
-      <MainCard>
-        <FlexColumn>
-          <H2 text={`סיבוב מספר ${game.turnCount + 1}`} />
-          <Slots chosenOptions={chosenOptions} targetSlot={targetSlot} setTargetSlot={setTargetSlot} />
-          <div>
-            {settings.vsComputer ? (
-              <Button onClick={() => controller.submit()}>נחש</Button>
-            ) : (
-              <FlexColumn>
-                <ScoreInput
-                  label="שחורים"
-                  value={manual.black}
-                  max={slotsCount}
-                  onChange={(black) => setManual({ ...manual, black })}
-                />
-                <ScoreInput
-                  label="לבנים"
-                  value={manual.white}
-                  max={slotsCount}
-                  onChange={(white) => setManual({ ...manual, white })}
-                />
-                <Button onClick={submitManual}>נחש</Button>
-              </FlexColumn>
-            )}
-          </div>
-          <HistoryPanel setChosenOption={setChosenOption} rounds={controller.rounds} />
-        </FlexColumn>
-      </MainCard>
-      <MainCard>
+  const selectSuggestion = (colors: string[]) => {
+    controller.setChosenOptions(colors);
+    cheatDrawer.onClose();
+  };
+  const cheatPanel = <CheatPanel onSelect={selectSuggestion} options={possibleOptions} />;
+
+  return (
+    <main className="GameScreen">
+      <section className="Controls" aria-label="בחירת צבעים">
         <ColorButtonPalette
           colors={controller.usedColors}
-          setOptionByCurrentSlot={setOptionByCurrentSlot}
+          pickColor={pickColor}
           jumpToNextSlot={jumpToNextSlot}
+          showShortcuts={!isMobile}
         />
-      </MainCard>
+        <Button
+          size="lg"
+          className="Controls__submit"
+          onClick={submit}
+          isLoading={submitting}
+          isDisabled={!!scoreError}
+        >
+          {"נחש!"}
+        </Button>
+      </section>
+
+      <section className="Board">
+        <header className="Board__header">
+          <h2 className="Board__title">
+            {"סיבוב "}
+            <strong>{game.turnCount + 1}</strong>
+            <span className="Board__max">{` / ${maxTurns}`}</span>
+          </h2>
+          {isMobile && (
+            <Button size="sm" variant="outline" colorScheme="whiteAlpha" color="white" onClick={cheatDrawer.onOpen}>
+              {"רמי הרמאי"}
+            </Button>
+          )}
+        </header>
+
+        <Slots chosenOptions={chosenOptions} targetSlot={targetSlot} setTargetSlot={setTargetSlot} />
+
+        {!vsComputer && <HumanScore pegs={scorePegs} setPegs={setScorePegs} error={scoreError} />}
+        {contradiction && (
+          <p className="Board__warning" role="alert">
+            {"הניקוד שהוזן עד עכשיו סותר את עצמו - אין רצף שמתאים לכל התוצאות"}
+          </p>
+        )}
+        {!isMobile && (
+          <p className="Board__hint">
+            {`מקלדת: 1–${controller.usedColors.length} לבחירת צבע · חיצים למעבר · Backspace למחיקה · Enter לניחוש`}
+          </p>
+        )}
+
+        <HistoryPanel setChosenOption={setChosenOption} rounds={rounds} />
+      </section>
+
+      {isMobile ? (
+        <Drawer isOpen={cheatDrawer.isOpen} onClose={cheatDrawer.onClose} placement="bottom">
+          <DrawerOverlay />
+          <DrawerContent borderTopRadius="xl" maxH="80vh">
+            <DrawerCloseButton />
+            <DrawerHeader>{"רמי הרמאי"}</DrawerHeader>
+            <DrawerBody pb={6}>{cheatPanel}</DrawerBody>
+          </DrawerContent>
+        </Drawer>
+      ) : (
+        <aside className="CheatColumn">
+          <Button variant={showCheat ? "ghost" : "outline"} onClick={() => setShowCheat(!showCheat)}>
+            {showCheat ? "הסתר את רמי" : "רמי הרמאי"}
+          </Button>
+          {showCheat && cheatPanel}
+        </aside>
+      )}
     </main>
   );
 };

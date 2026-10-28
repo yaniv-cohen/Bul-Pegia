@@ -1,16 +1,32 @@
-$blue : #6773F5;
-$green : #5BF586;
-$red : #F55B5B;
-$yellow: #F5C927;
-// $yellow: #F5C927;
+// Design tokens - keep in sync with src/theme.ts
+:root {
+  --bg: #1b1f3b;
+  --bg-raised: #262b52;
+  --card: #fdfbf7;
+  --card-muted: #f1ede4;
+  --ink: #1b1f3b;
+  --ink-muted: #6b6f8a;
+  --on-dark: #f4f2ff;
 
-// https://coolors.co/palette/ff595e-ff924c-ffca3a-8ac926-1982c4-6a4c93
-$pin-red: #FF595E;
-$pin-orange: #FF924C;
-$pin-yellow: #FFCA3A;
-$pin-green: #8AC926;
-$pin-blue: #1982C4;
-$pin-purple: #6A4C93;
-$pin-brown: #8f601e;
-$pin-grey: #aaaaaa;
-//
+  --accent: #ff6b6b;
+  --accent-strong: #f04848;
+  --success: #3ddc97;
+  --sun: #ffd166;
+  --danger: #e5484d;
+
+  --radius: 16px;
+  --radius-sm: 10px;
+  --shadow: 0 12px 32px rgba(10, 12, 35, 0.35);
+  --shadow-soft: 0 4px 14px rgba(10, 12, 35, 0.18);
+
+  --peg-red: #ff4d5e;
+  --peg-orange: #ff8c42;
+  --peg-yellow: #ffd23f;
+  --peg-green: #2ec27e;
+  --peg-blue: #3a86ff;
+  --peg-purple: #8b5cf6;
+  --peg-brown: #a0673a;
+  --peg-grey: #9aa1b1;
+}
+
+$mobile: 767px;

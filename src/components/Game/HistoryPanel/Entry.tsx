@@ -1,42 +1,36 @@
 import { Round } from "../../../types/game";
 import { charToColor } from "../../../utils/colors";
-import { Circles } from "../../utils/Circle/Circles";
-import { FlexRow } from "../../utils/FlexRow";
+import { Peg } from "../../utils/Peg/Peg";
+import { KeyPegs, resultToKeyPegs } from "../KeyPegs/KeyPegs";
 
 export const Entry = ({
+  number,
   round,
   setChosenOption,
 }: {
+  number: number;
   round: Round;
   setChosenOption: (index: number, color: string) => void;
 }) => {
+  const letters = round.input.split("");
   return (
-    <FlexRow className="Entry">
-      <div>
-        {round.input.split("").map((char, index) => {
+    <li className="Entry">
+      <span className="Entry__number">{number}</span>
+      <div className="Entry__guess">
+        {letters.map((char, index) => {
           const color = charToColor(char);
           return (
-            <span
-              key={char + index}
+            <Peg
+              key={index}
+              color={color}
+              size="sm"
               onClick={() => setChosenOption(index, color)}
-              className={"color-result " + color}
-            >
-              {color.slice(0, 3) + "."}
-            </span>
+            />
           );
         })}
       </div>
-      <div style={{ padding: 0 }}>
-        {round.output.white + round.output.black ? (
-          <>
-            <Circles color="white-result" count={round.output.white} />
-            <Circles color="black-result" count={round.output.black} />
-          </>
-        ) : (
-          <Circles color="transperant-result" count={1} />
-        )}
-      </div>
-    </FlexRow>
+      <KeyPegs pegs={resultToKeyPegs(round.output, letters.length)} />
+    </li>
   );
 };
 export default Entry;

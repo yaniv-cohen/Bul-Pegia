@@ -1,4 +1,12 @@
-import { ReactNode, useState } from "react";
+import { ReactNode } from "react";
+import {
+  IconButton,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverContent,
+  PopoverTrigger,
+} from "@chakra-ui/react";
 import { Logo } from "./Logo/Logo";
 import { IconGear } from "./PreferencesTab/GearsIcon";
 import { PreferencesTab } from "./PreferencesTab/PreferencesTab";
@@ -12,22 +20,29 @@ export const GameHeader = ({
   toggleResetOnSubmit: () => void;
   resetOnSubmit: boolean;
 }) => {
-  const [showPreferences, setShowPreferences] = useState(false);
-
   return (
-    <div>
+    <>
       <header className="GameHeader">
         <Logo />
-        <div>
-          <div onClick={() => setShowPreferences(!showPreferences)}>
-            <IconGear />
-          </div>
-          {showPreferences && (
-            <PreferencesTab toggleResetOnSubmit={toggleResetOnSubmit} resetOnSubmit={resetOnSubmit} />
-          )}
-        </div>
+        <Popover placement="bottom-start">
+          <PopoverTrigger>
+            <IconButton
+              aria-label="העדפות"
+              icon={<IconGear />}
+              variant="ghost"
+              colorScheme="whiteAlpha"
+              color="white"
+            />
+          </PopoverTrigger>
+          <PopoverContent width="auto">
+            <PopoverArrow />
+            <PopoverBody>
+              <PreferencesTab toggleResetOnSubmit={toggleResetOnSubmit} resetOnSubmit={resetOnSubmit} />
+            </PopoverBody>
+          </PopoverContent>
+        </Popover>
       </header>
       {children}
-    </div>
+    </>
   );
 };
