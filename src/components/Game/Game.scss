@@ -208,6 +208,24 @@
   color: rgba(244, 242, 255, 0.55);
 }
 
+// Clue pegs: only the blacks and whites earned, in a fixed-width box so rows line up.
+.Entry {
+  --clue-size: 20px;
+  --clue-gap: 5px;
+
+  // Same 2-row grid for every round (sized by slot count), filled row by row.
+  .KeyPegs {
+    grid-template-columns: repeat(var(--clue-columns), var(--clue-size));
+    grid-template-rows: repeat(2, var(--clue-size));
+    gap: var(--clue-gap);
+  }
+
+  .KeyPeg {
+    width: var(--clue-size);
+    height: var(--clue-size);
+  }
+}
+
 .Entry__guess {
   display: flex;
   flex: 1;
@@ -298,6 +316,11 @@
 
   .Board {
     padding: 16px;
+  }
+
+  .Entry {
+    --clue-size: 18px;
+    --clue-gap: 4px;
   }
 
   .Slots {

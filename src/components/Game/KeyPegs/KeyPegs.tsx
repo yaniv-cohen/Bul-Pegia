@@ -9,10 +9,10 @@ const KEY_PEG_LABELS: Record<KeyPegState, string> = {
   empty: "ריק",
 };
 
-export const resultToKeyPegs = (result: Result, slotsCount: number): KeyPegState[] => [
+/** Only the pegs that were earned - no placeholders for the rest. */
+export const resultToKeyPegs = (result: Result): KeyPegState[] => [
   ...new Array<KeyPegState>(result.black).fill("black"),
   ...new Array<KeyPegState>(result.white).fill("white"),
-  ...new Array<KeyPegState>(Math.max(slotsCount - result.black - result.white, 0)).fill("empty"),
 ];
 
 export const keyPegsToResult = (pegs: KeyPegState[]): Result => ({
@@ -28,7 +28,7 @@ export const KeyPegs = ({
   pegs: KeyPegState[];
   onPegClick?: (index: number) => void;
 }) => {
-  const style = { "--columns": Math.ceil(pegs.length / 2) } as CSSProperties;
+  const style = { "--columns": Math.max(1, Math.ceil(pegs.length / 2)) } as CSSProperties;
   const result = keyPegsToResult(pegs);
 
   if (onPegClick) {

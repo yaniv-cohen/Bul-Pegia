@@ -114,7 +114,11 @@ describe("vs computer", () => {
 
     expect(mockedSubmitGuess).toHaveBeenCalledWith("ab12", "ABCD");
     const history = await screen.findByRole("region", { name: "ניחושים קודמים" });
-    expect(within(history).getByRole("img", { name: "1 שחורים, 2 לבנים" })).toBeInTheDocument();
+    const clue = within(history).getByRole("img", { name: "1 שחורים, 2 לבנים" });
+    // Only the earned pegs are drawn - no empty placeholders.
+    expect(clue.querySelectorAll(".KeyPeg--black")).toHaveLength(1);
+    expect(clue.querySelectorAll(".KeyPeg--white")).toHaveLength(2);
+    expect(clue.querySelectorAll(".KeyPeg--empty")).toHaveLength(0);
     expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent("סיבוב 2 / 10");
 
     mockedSubmitGuess.mockResolvedValueOnce(won(2));
@@ -146,6 +150,17 @@ describe("vs computer", () => {
     await screen.findByRole("region", { name: "ניחושים קודמים" });
     // Same four colors are still selected, but that guess was already made.
     expect(screen.getByRole("button", { name: "נחש!" })).toHaveAttribute("data-ready", "false");
+  });
+
+  test("a guess with no hits shows no clue pegs at all", async () => {
+    const user = renderApp();
+    await startGame(user);
+    mockedSubmitGuess.mockResolvedValue(active(0, 0));
+    await pickColors(user, ["אדום", "אדום", "אדום", "אדום"]);
+    await user.click(screen.getByRole("button", { name: "נחש!" }));
+    const history = await screen.findByRole("region", { name: "ניחושים קודמים" });
+    const clue = within(history).getByRole("img", { name: "0 שחורים, 0 לבנים" });
+    expect(clue.children).toHaveLength(0);
   });
 
   test("an incomplete guess warns instead of submitting", async () => {

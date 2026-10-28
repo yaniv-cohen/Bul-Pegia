@@ -1,3 +1,4 @@
+import { CSSProperties } from "react";
 import { Round } from "../../../types/game";
 import { LetterPeg } from "../../utils/Peg/Peg";
 import { KeyPegs, resultToKeyPegs } from "../KeyPegs/KeyPegs";
@@ -13,7 +14,7 @@ export const Entry = ({
 }) => {
   const letters = round.input.split("");
   return (
-    <li className="Entry">
+    <li className="Entry" style={{ "--clue-columns": Math.ceil(letters.length / 2) } as CSSProperties}>
       <span className="Entry__number">{number}</span>
       <div className="Entry__guess">
         {letters.map((letter, index) => (
@@ -25,7 +26,7 @@ export const Entry = ({
           />
         ))}
       </div>
-      <KeyPegs pegs={resultToKeyPegs(round.output, letters.length)} />
+      <KeyPegs pegs={resultToKeyPegs(round.output)} />
     </li>
   );
 };
