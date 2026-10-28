@@ -16,17 +16,6 @@ export const LETTER_OPTIONS = [
   "O",
   "P",
 ];
-export const COLOR_LIST2 = {
-  red: { shortenedName: "Red" },
-  orange: { shortenedName: "Orge" },
-  yellow: { shortenedName: "Ylw" },
-  green: { shortenedName: "Grn" },
-  blue: { shortenedName: "Blu" },
-  purple: { shortenedName: "Prp" },
-  brown: { shortenedName: "Brn" },
-  grey: { shortenedName: "Gry" },
-};
-
 export const COLOR_LIST = [
   "red",
   "orange",

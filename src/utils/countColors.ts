@@ -1,4 +1,4 @@
-export const countColors = (arr: string[], maxTarget = 2): number => {
+export const countColors = (arr: string[]): number => {
   const colors = new Set();
   for (const letter of arr) {
     if (!colors.has(letter)) {

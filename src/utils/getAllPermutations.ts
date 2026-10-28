@@ -9,7 +9,6 @@ export const getAllPermutations = (
   const output: Array<string[]> = [];
   arr.forEach((char) => {
     const out = getAllPermutations(arr, len - 1, [...base, char]);
-    // if (out.length > 0)
     out.forEach((perm) => {
       output.push(perm);
     });

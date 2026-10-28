@@ -10,7 +10,6 @@ export const getAllNonRepeatingPermutations = (
   arr.forEach((char,index) => {
     const newArr = [...arr.slice(0,index), ...arr.slice(index+1)];
     const out = getAllNonRepeatingPermutations(newArr, len - 1, [...base, char]);
-    // if (out.length > 0)
     out.forEach((perm) => {
       output.push(perm);
     });

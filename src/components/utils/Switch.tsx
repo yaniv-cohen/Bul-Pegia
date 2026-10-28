@@ -7,11 +7,3 @@ export const SwitchRect = ({ value, toggleFunction }: { value: boolean, toggleFu
         </label>
     )
 }
-export const SwitchRound = () => {
-    return (
-        <label className="switch">
-            <input type="checkbox" />
-            <span className="slider round"></span>
-        </label>
-    )
-}
