@@ -102,6 +102,8 @@ Where the tests live:
 
 ### Front end
 
+Render reads the Node version from `.node-version` (Node 20). Without it, Render uses an old Node that the build tools no longer support.
+
 ```bash
 VITE_SERVER_URL=https://bul-pgia-back.onrender.com npm run build
 ```
@@ -120,6 +122,7 @@ This writes a static site to `dist/`. Serve it from any static host (Render stat
 | CORS error in the browser console | API not running Flask-Cors, or a proxy stripping headers | `CORS(app)` is enabled in `create_app()`. Check the proxy/host config. |
 | `Address already in use` on :5000 or :5173 | Another process holds the port | `flask --app server.app run --port 5001` (and update `.env`), or `npm run dev -- --port 5174`. On macOS, AirPlay uses port 5000. |
 | `AttributeError: module 'ast' has no attribute 'Str'` | Old Flask/Werkzeug or pytest on Python 3.12+ | `pip install -r requirements-dev.txt` to get the pinned versions. |
+| Render build fails with `Cannot find module './OptionsIncrementCard'` | Render is building an old branch (`main` before this cleanup) that still has the broken `StartScreen.tsx` | Deploy from a branch that includes the cleanup (merge `refactor-tests-ui` into `main`). |
 | Front end still calls the old API URL | `VITE_SERVER_URL` is read at build/dev-server start | Restart `npm run dev` or rebuild. |
 
 ### Resetting state
