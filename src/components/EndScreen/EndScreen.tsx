@@ -5,8 +5,7 @@ import { StatsItem } from "./StatsItem";
 import Trophy from "/trophy.svg";
 import SadIcon from "/sad.svg";
 import { CopyButton } from "../utils/CopyButton";
-import { charsToColors } from "../../utils/colors";
-import { Peg } from "../utils/Peg/Peg";
+import { LetterPeg } from "../utils/Peg/Peg";
 
 const MAX_ID_LENGTH = 6;
 
@@ -36,8 +35,8 @@ export const EndScreen = ({
           <div className="EndScreen__secret">
             <span>{"הרצף הסודי"}</span>
             <div className="EndScreen__pegs">
-              {charsToColors(secretWord).map((color, index) => (
-                <Peg key={index} color={color} />
+              {secretWord.map((letter, index) => (
+                <LetterPeg key={index} letter={letter} />
               ))}
             </div>
           </div>

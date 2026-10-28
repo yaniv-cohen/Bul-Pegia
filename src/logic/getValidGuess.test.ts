@@ -1,10 +1,10 @@
 import { getValidGuess } from "./getValidGuess";
 
-test("converts colors to letters", () => {
-  expect(getValidGuess(["red", "orange", "red", "grey"])).toBe("ABAH");
+test("joins the letters", () => {
+  expect(getValidGuess(["A", "B", "A", "H"])).toBe("ABAH");
 });
 
 test("returns undefined when a slot is empty", () => {
-  expect(getValidGuess(["red", null, "red"])).toBeUndefined();
-  expect(getValidGuess(["red", "", "red"])).toBeUndefined();
+  expect(getValidGuess(["A", null, "A"])).toBeUndefined();
+  expect(getValidGuess(["A", "", "A"])).toBeUndefined();
 });

@@ -5,6 +5,7 @@ import { vi } from "vitest";
 import App from "./App";
 import { createGame, submitGuess } from "./api";
 import { theme } from "./theme";
+import { PaletteProvider } from "./hooks/usePalette";
 import { EndGameResponse, GuessResponse } from "./types/game";
 
 vi.mock("./api", () => ({
@@ -37,7 +38,9 @@ const renderApp = () => {
   const user = userEvent.setup();
   render(
     <ChakraProvider theme={theme}>
-      <App />
+      <PaletteProvider>
+        <App />
+      </PaletteProvider>
     </ChakraProvider>
   );
   return user;
@@ -59,6 +62,7 @@ const pickColors = async (user: ReturnType<typeof userEvent.setup>, colors: stri
 
 beforeEach(() => {
   vi.resetAllMocks();
+  localStorage.clear();
   mockedCreateGame.mockResolvedValue("ab12");
 });
 
@@ -189,5 +193,69 @@ describe("vs human", () => {
 
     expect(await screen.findByRole("heading", { name: "ניצחון!" })).toBeInTheDocument();
     expect(mockedSubmitGuess).not.toHaveBeenCalled();
+  });
+});
+
+describe("pin colors", () => {
+  const openColorEditor = async (user: ReturnType<typeof userEvent.setup>) => {
+    await user.click(screen.getByRole("button", { name: "העדפות" }));
+    await user.click(await screen.findByRole("button", { name: "צבעי היתדות" }));
+    return screen.findByRole("dialog");
+  };
+
+  test("pin 6 can be white instead of purple; the server still gets its letter", async () => {
+    const user = renderApp();
+    const editor = await openColorEditor(user);
+    await user.click(within(editor).getByRole("button", { name: "יתד 6: סגול" }));
+    await user.click(within(editor).getByRole("button", { name: "לבן" }));
+    expect(within(editor).getByRole("button", { name: "יתד 6: לבן" })).toBeInTheDocument();
+    await user.click(within(editor).getByRole("button", { name: "Close" }));
+
+    await startGame(user);
+    mockedSubmitGuess.mockResolvedValue(active(0, 0));
+    await pickColors(user, ["לבן", "לבן", "לבן", "לבן"]);
+    expect(slot(1)).toHaveAccessibleName("מקום 1: לבן");
+    await user.click(screen.getByRole("button", { name: "נחש!" }));
+    expect(mockedSubmitGuess).toHaveBeenCalledWith("ab12", "FFFF");
+
+    // The choice is remembered for the next visit.
+    expect(JSON.parse(localStorage.getItem("bul-pgia.palette")!)[5]).toBe("white");
+  });
+
+  test("a color already in use swaps between the two pins", async () => {
+    const user = renderApp();
+    const editor = await openColorEditor(user);
+    await user.click(within(editor).getByRole("button", { name: "יתד 6: סגול" }));
+    await user.click(within(editor).getByRole("button", { name: "אדום (יתחלף עם יתד 1)" }));
+    expect(within(editor).getByRole("button", { name: "יתד 1: סגול" })).toBeInTheDocument();
+    expect(within(editor).getByRole("button", { name: "יתד 6: אדום" })).toBeInTheDocument();
+
+    await user.click(within(editor).getByRole("button", { name: "איפוס לצבעי ברירת המחדל" }));
+    expect(within(editor).getByRole("button", { name: "יתד 1: אדום" })).toBeInTheDocument();
+  });
+
+  test("changing a color mid-game repaints the board and history", async () => {
+    const user = renderApp();
+    await startGame(user);
+    mockedSubmitGuess.mockResolvedValue(active(0, 0));
+    await pickColors(user, ["אדום", "אדום", "כתום", "כתום"]);
+    await user.click(screen.getByRole("button", { name: "נחש!" }));
+    const history = await screen.findByRole("region", { name: "ניחושים קודמים" });
+    expect(within(history).getAllByRole("button", { name: "אדום" })).toHaveLength(2);
+
+    const editor = await openColorEditor(user);
+    await user.click(within(editor).getByRole("button", { name: "שחור" })); // pin 1 is selected by default
+    await user.click(within(editor).getByRole("button", { name: "Close" }));
+
+    expect(within(history).getAllByRole("button", { name: "שחור" })).toHaveLength(2);
+    expect(within(history).queryByRole("button", { name: "אדום" })).toBeNull();
+    expect(slot(1)).toHaveAccessibleName("מקום 1: שחור");
+  });
+
+  test("a corrupt saved palette falls back to the default colors", () => {
+    localStorage.setItem("bul-pgia.palette", '["red","red"]');
+    renderApp();
+    // Start screen renders and the game uses default names.
+    expect(screen.getByRole("button", { name: "התחל!" })).toBeInTheDocument();
   });
 });

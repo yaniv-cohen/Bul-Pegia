@@ -1,11 +1,7 @@
-import { colorToChar } from "../utils/colors";
-
 /** Returns the guess as a string of letters, or undefined if a slot is empty. */
-export const getValidGuess = (
-  colors: Array<string | null>
-): string | undefined => {
-  if (!colors.every((color): color is string => !!color)) {
+export const getValidGuess = (letters: Array<string | null>): string | undefined => {
+  if (!letters.every((letter): letter is string => !!letter)) {
     return;
   }
-  return colors.map(colorToChar).join("");
+  return letters.join("");
 };

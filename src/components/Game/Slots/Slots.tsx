@@ -1,6 +1,6 @@
 import { CSSProperties } from "react";
-import { Peg } from "../../utils/Peg/Peg";
-import { COLOR_NAMES } from "../../../utils/colors";
+import { LetterPeg } from "../../utils/Peg/Peg";
+import { usePalette } from "../../../hooks/usePalette";
 
 export const Slots = ({
   chosenOptions,
@@ -11,16 +11,17 @@ export const Slots = ({
   targetSlot: number;
   setTargetSlot: (index: number) => void;
 }) => {
+  const { swatchFor } = usePalette();
   return (
     <ol className="Slots" style={{ "--count": chosenOptions.length } as CSSProperties}>
-      {chosenOptions.map((color, index) => (
+      {chosenOptions.map((letter, index) => (
         <li key={index}>
-          <Peg
-            color={color}
+          <LetterPeg
+            letter={letter}
             size="lg"
             selected={index === targetSlot}
             onClick={() => setTargetSlot(index)}
-            label={`מקום ${index + 1}: ${color ? COLOR_NAMES[color] : "ריק"}`}
+            label={`מקום ${index + 1}: ${letter ? swatchFor(letter).name : "ריק"}`}
           />
         </li>
       ))}

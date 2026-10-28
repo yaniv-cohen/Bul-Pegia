@@ -1,5 +1,3 @@
-$peg-colors: "red", "orange", "yellow", "green", "blue", "purple", "brown", "grey";
-
 .Peg {
   --size: 52px;
   --peg-color: transparent;
@@ -57,13 +55,9 @@ button.Peg {
   --size: 60px;
 }
 
-@each $color in $peg-colors {
-  .Peg--#{$color} {
-    --peg-color: var(--peg-#{$color});
-  }
-}
-
-.Peg--yellow {
+// Light pegs (white, yellow...) get dark text and a hairline so they don't fade into light backgrounds.
+.Peg--light {
+  --inset: inset 0 -4px 8px rgba(0, 0, 0, 0.18), inset 0 0 0 1px rgba(27, 31, 59, 0.25);
   color: rgba(27, 31, 59, 0.8);
   text-shadow: none;
 }

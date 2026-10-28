@@ -1,6 +1,5 @@
 import { Button } from "@chakra-ui/react";
 import { useState } from "react";
-import { charsToColors } from "../../../utils/colors";
 import Option from "./Option";
 
 const PAGE_SIZE = 10;
@@ -9,7 +8,7 @@ export const CheatPanel = ({
   onSelect,
   options,
 }: {
-  onSelect: (colors: string[]) => void;
+  onSelect: (letters: string[]) => void;
   options: string[][];
 }) => {
   const [startIndex, setStartIndex] = useState(0);
@@ -18,8 +17,8 @@ export const CheatPanel = ({
   // The options list shrinks after every guess, so keep the page in range.
   const pageStart = startIndex < others.length ? startIndex : 0;
   const page = others.slice(pageStart, pageStart + PAGE_SIZE);
-  const select = (colors: string[]) => {
-    onSelect(colors);
+  const select = (letters: string[]) => {
+    onSelect(letters);
     setStartIndex(0);
   };
 
@@ -32,12 +31,12 @@ export const CheatPanel = ({
       <p className="CheatPanel__lead">{"אלגוריתם חכם עוזר לך לנצח"}</p>
       <div className="CheatPanel__best">
         <span>{`ניחוש מומלץ מתוך ${options.length.toLocaleString("he-IL")}:`}</span>
-        <Option onSelect={select} option={charsToColors(options[0])} />
+        <Option onSelect={select} option={options[0]} />
       </div>
       <ul className="CheatPanel__list">
         {page.map((option, index) => (
           <li key={pageStart + index}>
-            <Option onSelect={select} option={charsToColors(option)} />
+            <Option onSelect={select} option={option} />
           </li>
         ))}
       </ul>

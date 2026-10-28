@@ -1,35 +1,35 @@
 import { useState } from "react";
-import { Peg } from "../../utils/Peg/Peg";
+import { LetterPeg } from "../../utils/Peg/Peg";
 
 export const ColorButtonPalette = ({
-  colors,
-  pickColor,
+  letters,
+  pickLetter,
   jumpToNextSlot,
   showShortcuts,
 }: {
-  colors: string[];
-  pickColor: (color: string) => void;
+  letters: string[];
+  pickLetter: (letter: string) => void;
   jumpToNextSlot: () => void;
   showShortcuts: boolean;
 }) => {
   const [lastClickedIndex, setLastClickedIndex] = useState<number | null>(null);
   return (
     <ul className="Palette">
-      {colors.map((color, index) => (
-        <li key={color}>
-          <Peg
-            color={color}
+      {letters.map((letter, index) => (
+        <li key={letter}>
+          <LetterPeg
+            letter={letter}
             onClick={() => {
               // Picking the same color twice in a row skips ahead to the next slot.
               if (index === lastClickedIndex) {
                 jumpToNextSlot();
               }
               setLastClickedIndex(index);
-              pickColor(color);
+              pickLetter(letter);
             }}
           >
             {showShortcuts ? index + 1 : null}
-          </Peg>
+          </LetterPeg>
         </li>
       ))}
     </ul>

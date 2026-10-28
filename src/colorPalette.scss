@@ -1,4 +1,4 @@
-// Design tokens - keep in sync with src/theme.ts
+// Design tokens - keep in sync with src/theme.ts. Peg colors live in src/utils/colors.ts.
 :root {
   --bg: #1b1f3b;
   --bg-raised: #262b52;
@@ -18,15 +18,6 @@
   --radius-sm: 10px;
   --shadow: 0 12px 32px rgba(10, 12, 35, 0.35);
   --shadow-soft: 0 4px 14px rgba(10, 12, 35, 0.18);
-
-  --peg-red: #ff4d5e;
-  --peg-orange: #ff8c42;
-  --peg-yellow: #ffd23f;
-  --peg-green: #2ec27e;
-  --peg-blue: #3a86ff;
-  --peg-purple: #8b5cf6;
-  --peg-brown: #a0673a;
-  --peg-grey: #9aa1b1;
 }
 
 $mobile: 767px;

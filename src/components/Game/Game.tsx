@@ -57,8 +57,8 @@ export const Game = ({ controller }: { controller: GameController }) => {
     }
   };
 
-  const pickColor = (color: string) => {
-    setChosenOption(targetSlot, color);
+  const pickLetter = (letter: string) => {
+    setChosenOption(targetSlot, letter);
     jumpToNextSlot();
   };
 
@@ -84,17 +84,17 @@ export const Game = ({ controller }: { controller: GameController }) => {
   };
 
   useKeyboardControls({
-    colors: controller.usedColors,
+    letters: controller.usedLetters,
     slotsCount,
     targetSlot,
     setTargetSlot,
-    pickColor,
+    pickLetter,
     clearSlot: () => setChosenOption(targetSlot, null),
     submit,
   });
 
-  const selectSuggestion = (colors: string[]) => {
-    controller.setChosenOptions(colors);
+  const selectSuggestion = (letters: string[]) => {
+    controller.setChosenOptions(letters);
     cheatDrawer.onClose();
   };
   const cheatPanel = <CheatPanel onSelect={selectSuggestion} options={possibleOptions} />;
@@ -103,8 +103,8 @@ export const Game = ({ controller }: { controller: GameController }) => {
     <main className="GameScreen">
       <section className="Controls" aria-label="בחירת צבעים">
         <ColorButtonPalette
-          colors={controller.usedColors}
-          pickColor={pickColor}
+          letters={controller.usedLetters}
+          pickLetter={pickLetter}
           jumpToNextSlot={jumpToNextSlot}
           showShortcuts={!isMobile}
         />
@@ -143,7 +143,7 @@ export const Game = ({ controller }: { controller: GameController }) => {
         )}
         {!isMobile && (
           <p className="Board__hint">
-            {`מקלדת: 1–${controller.usedColors.length} לבחירת צבע · חיצים למעבר · Backspace למחיקה · Enter לניחוש`}
+            {`מקלדת: 1–${controller.usedLetters.length} לבחירת צבע · חיצים למעבר · Backspace למחיקה · Enter לניחוש`}
           </p>
         )}
 

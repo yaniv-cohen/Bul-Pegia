@@ -20,7 +20,7 @@ import {
   Result,
   Round,
 } from "../types/game";
-import { COLOR_LIST, LETTER_OPTIONS } from "../utils/colors";
+import { LETTER_OPTIONS } from "../utils/colors";
 import { getAllNonRepeatingPermutations } from "../utils/getAllNonRepeatingPermutations";
 import { getAllPermutations } from "../utils/getAllPermutations";
 import { prioritizeTwoColorGuess } from "../utils/prioritizeTwoColorGuess";
@@ -43,7 +43,6 @@ export const useGame = () => {
   });
   const { slotsCount, colorsCount, maxTurns, allowRepeats, vsComputer } = settings;
   const usedLetters = useMemo(() => LETTER_OPTIONS.slice(0, colorsCount), [colorsCount]);
-  const usedColors = useMemo(() => COLOR_LIST.slice(0, colorsCount), [colorsCount]);
   const settingsValid = allowRepeats || colorsCount >= slotsCount;
 
   const [gameState, setGameState] = useState<GameState>("start");
@@ -68,8 +67,9 @@ export const useGame = () => {
   const toggleAllowRepeats = () => updateSettings((s) => ({ allowRepeats: !s.allowRepeats }));
   const setVsComputer = (value: boolean) => updateSettings(() => ({ vsComputer: value }));
 
-  const setChosenOption = (index: number, color: string | null) =>
-    setChosenOptions((current) => current.map((value, i) => (i === index ? color : value)));
+  /** The guess is kept as letters; colors are only how the palette paints them. */
+  const setChosenOption = (index: number, letter: string | null) =>
+    setChosenOptions((current) => current.map((value, i) => (i === index ? letter : value)));
 
   /** Throws if the server could not create a game. */
   const startGame = async () => {
@@ -163,7 +163,7 @@ export const useGame = () => {
   return {
     settings,
     settingsValid,
-    usedColors,
+    usedLetters,
     gameState,
     game,
     rounds,

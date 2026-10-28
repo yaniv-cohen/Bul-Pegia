@@ -14,6 +14,7 @@ function App() {
       <GameHeader
         toggleResetOnSubmit={controller.toggleResetOnSubmit}
         resetOnSubmit={controller.resetOnSubmit}
+        activeColors={controller.settings.colorsCount}
       >
         {gameState === "start" && <StartHeader controller={controller} />}
         {gameState === "active" && <Game controller={controller} />}

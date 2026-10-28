@@ -6,7 +6,7 @@ export const HistoryPanel = ({
   setChosenOption,
 }: {
   rounds: Round[];
-  setChosenOption: (index: number, color: string) => void;
+  setChosenOption: (index: number, letter: string) => void;
 }) => {
   if (rounds.length === 0) {
     return <p className="History__empty">{"הניחושים שלך יופיעו כאן"}</p>;

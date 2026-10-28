@@ -22,8 +22,8 @@ const startGame = async () => {
   return hook;
 };
 
-const choose = (hook: Awaited<ReturnType<typeof startGame>>, colors: string[]) =>
-  act(() => hook.result.current.setChosenOptions(colors));
+const choose = (hook: Awaited<ReturnType<typeof startGame>>, letters: string[]) =>
+  act(() => hook.result.current.setChosenOptions(letters));
 
 describe("settings", () => {
   test("counters stay within their limits", () => {
@@ -36,7 +36,7 @@ describe("settings", () => {
       for (let i = 0; i < 10; i++) result.current.incrementColorsCount(-1);
     });
     expect(result.current.settings.colorsCount).toBe(2);
-    expect(result.current.usedColors).toEqual(["red", "orange"]);
+    expect(result.current.usedLetters).toEqual(["A", "B"]);
   });
 
   test("no repeats with fewer colors than slots is invalid", () => {
@@ -76,7 +76,7 @@ describe("vs computer", () => {
       gameId: "ab12",
       status: "active",
     });
-    choose(hook, ["red", "red", "orange", "orange"]);
+    choose(hook, ["A", "A", "B", "B"]);
     await act(() => hook.result.current.submit());
 
     expect(mockedSubmitGuess).toHaveBeenCalledWith("ab12", "AABB");
@@ -96,9 +96,9 @@ describe("vs computer", () => {
       gameId: "ab12",
       status: "active",
     });
-    choose(hook, ["red", "red", "red", "red"]);
+    choose(hook, ["A", "A", "A", "A"]);
     await act(() => hook.result.current.submit());
-    choose(hook, ["red", "red", "red", "red"]);
+    choose(hook, ["A", "A", "A", "A"]);
     let outcome;
     await act(async () => {
       outcome = await hook.result.current.submit();
@@ -110,7 +110,7 @@ describe("vs computer", () => {
   test("a server error is reported, not thrown", async () => {
     const hook = await startGame();
     mockedSubmitGuess.mockRejectedValue(new Error("network"));
-    choose(hook, ["red", "red", "red", "red"]);
+    choose(hook, ["A", "A", "A", "A"]);
     let outcome;
     await act(async () => {
       outcome = await hook.result.current.submit();
@@ -131,7 +131,7 @@ describe("vs computer", () => {
       numberOfColors: 6,
       allowRepeats: "1",
     });
-    choose(hook, ["red", "orange", "yellow", "green"]);
+    choose(hook, ["A", "B", "C", "D"]);
     await act(() => hook.result.current.submit());
 
     expect(hook.result.current.gameState).toBe("finished");
@@ -155,7 +155,7 @@ describe("vs human", () => {
     await act(() => hook.result.current.startGame());
     expect(mockedCreateGame).not.toHaveBeenCalled();
 
-    choose(hook, ["red", "orange", "yellow", "green"]);
+    choose(hook, ["A", "B", "C", "D"]);
     await act(() => hook.result.current.submit({ black: 4, white: 0 }));
     expect(mockedSubmitGuess).not.toHaveBeenCalled();
     expect(hook.result.current.gameState).toBe("finished");

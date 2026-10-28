@@ -1,11 +1,11 @@
 import { useEffect, useRef } from "react";
 
 type Handlers = {
-  colors: string[];
+  letters: string[];
   slotsCount: number;
   targetSlot: number;
   setTargetSlot: (index: number) => void;
-  pickColor: (color: string) => void;
+  pickLetter: (letter: string) => void;
   clearSlot: () => void;
   submit: () => void;
 };
@@ -28,12 +28,12 @@ export const useKeyboardControls = (handlers: Handlers) => {
       if (event.ctrlKey || event.metaKey || event.altKey || isTyping(event.target)) {
         return;
       }
-      const { colors, slotsCount, targetSlot, setTargetSlot, pickColor, clearSlot, submit } =
+      const { letters, slotsCount, targetSlot, setTargetSlot, pickLetter, clearSlot, submit } =
         latest.current;
 
       const digit = Number(event.key);
-      if (Number.isInteger(digit) && digit >= 1 && digit <= colors.length) {
-        pickColor(colors[digit - 1]);
+      if (Number.isInteger(digit) && digit >= 1 && digit <= letters.length) {
+        pickLetter(letters[digit - 1]);
       } else if (event.key === "ArrowLeft") {
         // Slots run right-to-left, so left is the next slot.
         setTargetSlot((targetSlot + 1) % slotsCount);

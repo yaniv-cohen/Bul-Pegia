@@ -1,22 +1,23 @@
-import { COLOR_NAMES } from "../../../utils/colors";
-import { Peg } from "../../utils/Peg/Peg";
+import { usePalette } from "../../../hooks/usePalette";
+import { LetterPeg } from "../../utils/Peg/Peg";
 
 export const Option = ({
   onSelect,
   option,
 }: {
-  onSelect: (colors: string[]) => void;
+  onSelect: (letters: string[]) => void;
   option: string[];
 }) => {
+  const { swatchFor } = usePalette();
   return (
     <button
       type="button"
       className="CheatOption"
       onClick={() => onSelect(option)}
-      aria-label={"בחר: " + option.map((color) => COLOR_NAMES[color]).join(", ")}
+      aria-label={"בחר: " + option.map((letter) => swatchFor(letter).name).join(", ")}
     >
-      {option.map((color, index) => (
-        <Peg key={index} color={color} size="sm" />
+      {option.map((letter, index) => (
+        <LetterPeg key={index} letter={letter} size="sm" />
       ))}
     </button>
   );
