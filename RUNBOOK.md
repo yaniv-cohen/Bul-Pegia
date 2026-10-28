@@ -98,6 +98,8 @@ Where the tests live:
 | Start command | `gunicorn server.wsgi:app` |
 | Root directory | repo root |
 
+Render reads the Python version from `.python-version` (3.11). Flask 3 needs Python 3.9 or newer; older Render services default to Python 3.7, and the build then fails with `No matching distribution found for Flask==3.1.0`. A `PYTHON_VERSION` environment variable on the service overrides the file.
+
 > The server code moved from `server/logic/` to a `server/` package. If the Render service still uses an old start command (for example `cd server/logic && gunicorn app:app`), update it to the command above before deploying this branch.
 
 ### Front end
