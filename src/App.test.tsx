@@ -195,10 +195,10 @@ describe("vs computer", () => {
     await user.click(screen.getByRole("button", { name: "רמי הרמאי" }));
     const suggestions = screen.getAllByRole("button", { name: /^בחר:/ });
     await user.click(suggestions[0]);
-    // The opening suggestion uses exactly two colors.
+    // The most informative opening guess on 4 slots / 6 colors uses four different colors.
     const names = [1, 2, 3, 4].map((i) => slot(i).getAttribute("aria-label")!.split(": ")[1]);
     expect(names).not.toContain("ריק");
-    expect(new Set(names).size).toBe(2);
+    expect(new Set(names).size).toBe(4);
   });
 });
 

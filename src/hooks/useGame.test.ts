@@ -55,7 +55,8 @@ describe("vs computer", () => {
     expect(hook.result.current.gameState).toBe("active");
     expect(hook.result.current.game).toEqual({ gameId: "ab12", turnCount: 0 });
     expect(hook.result.current.chosenOptions).toEqual([null, null, null, null]);
-    expect(hook.result.current.possibleOptions).toHaveLength(6 ** 4 + 1);
+    expect(hook.result.current.possibleOptions).toHaveLength(6 ** 4);
+    expect(hook.result.current.recommendation).toHaveLength(4);
   });
 
   test("an incomplete guess is not sent", async () => {
@@ -86,6 +87,7 @@ describe("vs computer", () => {
     expect(hook.result.current.game.turnCount).toBe(1);
     // Only C-F remain: 4^4 combinations.
     expect(hook.result.current.possibleOptions).toHaveLength(4 ** 4);
+    expect(hook.result.current.recommendation).toHaveLength(4);
   });
 
   test("the same guess twice is rejected", async () => {

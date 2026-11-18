@@ -101,7 +101,13 @@ export const Game = ({ controller }: { controller: GameController }) => {
     controller.setChosenOptions(letters);
     cheatDrawer.onClose();
   };
-  const cheatPanel = <CheatPanel onSelect={selectSuggestion} options={possibleOptions} />;
+  const cheatPanel = (
+    <CheatPanel
+      onSelect={selectSuggestion}
+      options={possibleOptions}
+      recommendation={controller.recommendation}
+    />
+  );
 
   return (
     <main className="GameScreen">

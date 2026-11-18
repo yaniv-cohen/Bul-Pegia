@@ -23,7 +23,6 @@ import {
 import { LETTER_OPTIONS } from "../utils/colors";
 import { getAllNonRepeatingPermutations } from "../utils/getAllNonRepeatingPermutations";
 import { getAllPermutations } from "../utils/getAllPermutations";
-import { prioritizeTwoColorGuess } from "../utils/prioritizeTwoColorGuess";
 
 export type SubmitOutcome = "ok" | "incomplete" | "duplicate" | "error";
 
@@ -53,6 +52,9 @@ export const useGame = () => {
     emptyGuess(slotsCount)
   );
   const [possibleOptions, setPossibleOptions] = useState<string[][]>([]);
+  /** Every code on the board; the recommendation may be any of them. */
+  const [allCodes, setAllCodes] = useState<string[][]>([]);
+  const [recommendation, setRecommendation] = useState<string[]>();
   const [resetOnSubmit, setResetOnSubmit] = useState(false);
 
   const updateSettings = (update: (current: GameSettings) => Partial<GameSettings>) =>
@@ -78,11 +80,12 @@ export const useGame = () => {
     setRounds([]);
     setEndgameResult(undefined);
     setChosenOptions(emptyGuess(slotsCount));
-    setPossibleOptions(
-      allowRepeats
-        ? prioritizeTwoColorGuess(getAllPermutations(usedLetters, slotsCount))
-        : getAllNonRepeatingPermutations(usedLetters, slotsCount)
-    );
+    const codes = allowRepeats
+      ? getAllPermutations(usedLetters, slotsCount)
+      : getAllNonRepeatingPermutations(usedLetters, slotsCount);
+    setAllCodes(codes);
+    setPossibleOptions(codes);
+    setRecommendation(chooseBest(codes, codes));
     setGameState("active");
   };
 
@@ -143,16 +146,8 @@ export const useGame = () => {
       response.result,
       possibleOptions
     );
-    if (newOptions.length > 0) {
-      const [bestIndex, bestOption] = chooseBest(newOptions);
-      setPossibleOptions([
-        bestOption,
-        ...newOptions.slice(0, bestIndex),
-        ...newOptions.slice(bestIndex + 1),
-      ]);
-    } else {
-      setPossibleOptions([]);
-    }
+    setPossibleOptions(newOptions);
+    setRecommendation(newOptions.length > 0 ? chooseBest(newOptions, allCodes) : undefined);
 
     if (resetOnSubmit) {
       setChosenOptions(emptyGuess(slotsCount));
@@ -170,6 +165,7 @@ export const useGame = () => {
     endgameResult,
     chosenOptions,
     possibleOptions,
+    recommendation,
     resetOnSubmit,
     incrementSlotsCount,
     incrementColorsCount,
