@@ -9,12 +9,20 @@ function App() {
   const controller = useGame();
   const { gameState, endgameResult } = controller;
 
+  const goHome = () => {
+    if (gameState === "active" && !window.confirm("לצאת מהמשחק? ההתקדמות תאבד.")) {
+      return;
+    }
+    controller.backToStart();
+  };
+
   return (
     <div className="App">
       <GameHeader
         toggleResetOnSubmit={controller.toggleResetOnSubmit}
         resetOnSubmit={controller.resetOnSubmit}
         activeColors={controller.settings.colorsCount}
+        onLogoClick={goHome}
       >
         {gameState === "start" && <StartHeader controller={controller} />}
         {gameState === "active" && <Game controller={controller} />}

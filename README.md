@@ -111,7 +111,7 @@ Errors are returned as JSON with an `error` message:
 - `404 Not Found`: no game with that ID (it may have been lost when the server restarted).
 - `409 Conflict`: the game is already over. The body also includes `status`, `secretWord`, `turns` and `gameId`.
 
-![Bul Pgia](public/bulpgiaLogo.png)
+![בול פגיעה](public/logo.svg)
 
 ```
 This Api was created by the Yaniv Cohen squad.

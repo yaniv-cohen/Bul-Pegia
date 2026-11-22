@@ -26,11 +26,13 @@ export const GameHeader = ({
   toggleResetOnSubmit,
   resetOnSubmit,
   activeColors,
+  onLogoClick,
 }: {
   children: ReactNode;
   toggleResetOnSubmit: () => void;
   resetOnSubmit: boolean;
   activeColors: number;
+  onLogoClick: () => void;
 }) => {
   const colorsModal = useDisclosure();
   const isMobile = useBreakpointValue({ base: true, md: false }, { ssr: false }) ?? false;
@@ -38,7 +40,7 @@ export const GameHeader = ({
   return (
     <>
       <header className="GameHeader">
-        <Logo />
+        <Logo onClick={onLogoClick} />
         <Popover placement="bottom-start">
           {({ onClose }) => (
             <>
